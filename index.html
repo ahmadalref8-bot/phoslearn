@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- PHOS-BUILD-FINAL-1 -->
+<!-- PHOS-BUILD-FINAL-2 -->
 <html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
@@ -22,8 +22,8 @@ const C = {
 };
 const TG_LINK = "https://t.me/WJbU6YeRPg9jNTA0"; // قناة فوس الرسمية
 const TG_COMMUNITY = "https://t.me/+1b0nYcVLq5plZWZk"; // المجتمع الخاص — للمشتركين
-const AI_READY = !AI_URL.includes("REPLACE-ME"); // زر الشرح يظهر تلقائياً بعد تركيب الوركر
 const AI_URL = "https://phosai.ahmadalref8.workers.dev"; // وركر فوس — الشرح الذكي
+const AI_READY = !AI_URL.includes("REPLACE-ME"); // زر الشرح يظهر تلقائياً بعد تركيب الوركر
 
 // ============ أدوات ============
 const ri = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
@@ -1081,15 +1081,13 @@ function PhosApp() {
 
                 {hasAI ? (
                   <div style={{ marginTop: 10 }}>
-                    {!aiText && (
-                      {AI_READY ? (
-                        <button onClick={explainAI} disabled={aiLoading} style={{ width: "100%", padding: 12, borderRadius: 12, border: `2px solid ${C.cobalt}`, background: "rgba(255,255,255,0.6)", color: C.cobalt, fontWeight: 700, fontFamily: "inherit", fontSize: 14, cursor: "pointer" }}>
-                          {aiLoading ? "المساعد يفكر..." : "اشرحها لي أكثر — بالذكاء الاصطناعي"}
-                        </button>
-                      ) : (
-                        <div style={{ width: "100%", padding: 12, borderRadius: 12, background: "rgba(255,255,255,0.45)", color: "rgba(36,27,77,0.5)", fontWeight: 700, fontSize: 13, textAlign: "center", boxSizing: "border-box" }}>الشرح الذكي — يتفعّل قريباً ✦</div>
-                      )}
-                    )}
+                    {!aiText && (AI_READY ? (
+                      <button onClick={explainAI} disabled={aiLoading} style={{ width: "100%", padding: 12, borderRadius: 12, border: `2px solid ${C.cobalt}`, background: "rgba(255,255,255,0.6)", color: C.cobalt, fontWeight: 700, fontFamily: "inherit", fontSize: 14, cursor: "pointer" }}>
+                        {aiLoading ? "المساعد يفكر..." : "اشرحها لي أكثر — بالذكاء الاصطناعي"}
+                      </button>
+                    ) : (
+                      <div style={{ width: "100%", padding: 12, borderRadius: 12, background: "rgba(255,255,255,0.45)", color: "rgba(36,27,77,0.5)", fontWeight: 700, fontSize: 13, textAlign: "center", boxSizing: "border-box" }}>الشرح الذكي — يتفعّل قريباً ✦</div>
+                    ))}
                     {aiText && (
                       <div style={{ marginTop: 8, background: C.card, borderRadius: 12, padding: "12px 14px", fontSize: 14, lineHeight: 1.9, borderRight: `4px solid ${C.cobalt}`, whiteSpace: "pre-line", animation: "popIn .3s ease both" }}>
                         {aiText}
