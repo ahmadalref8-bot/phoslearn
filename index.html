@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- PHOS-BUILD-FINAL-4 -->
+<!-- PHOS-BUILD-FINAL-5 -->
 <html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
@@ -83,8 +83,25 @@ const Heart = ({ size = 20, filled = false, color = C.bad }) => (
 // ============================================================
 // فيد فوس — بطاقات مفاهيم أصلية + تمارين متولدة (لا نهائي)
 // ============================================================
+const QShape = ({ s }) => {
+  if (!s) return null;
+  const ink = C.ink, st = { stroke: ink, strokeWidth: 2.5, fill: "rgba(255,255,255,0.55)" };
+  const L = (x, y, t, anchor) => <text x={x} y={y} textAnchor={anchor || "middle"} fontSize="15" fontWeight="700" fill={ink} style={{ fontFamily: "inherit" }}>{t}</text>;
+  let inner = null;
+  if (s.k === "rect") inner = <g><rect x="40" y="28" width="160" height="92" rx="4" {...st} />{L(120, 142, `${toAr(s.w)} سم`)}{L(22, 80, `${toAr(s.h)} سم`)}</g>;
+  if (s.k === "sq") inner = <g><rect x="75" y="18" width="106" height="106" rx="4" {...st} />{L(128, 144, `${s.lbl}`)}</g>;
+  if (s.k === "rtri") inner = <g><path d="M55 125 L200 125 L200 25 Z" {...st} strokeLinejoin="round" /><rect x="186" y="111" width="14" height="14" fill="none" stroke={ink} strokeWidth="2" />{L(128, 145, `${toAr(s.b)} سم`)}{L(214, 80, `${toAr(s.a)} سم`, "start")}{L(112, 66, `${s.hLbl}`)}</g>;
+  if (s.k === "tri") inner = <g><path d="M120 22 L215 125 L25 125 Z" {...st} strokeLinejoin="round" /><line x1="120" y1="22" x2="120" y2="125" stroke={ink} strokeWidth="2" strokeDasharray="5 4" />{L(120, 145, `القاعدة ${toAr(s.b)} سم`)}{L(134, 78, `${toAr(s.h)}`, "start")}</g>;
+  if (s.k === "circ") inner = <g><circle cx="120" cy="75" r="58" {...st} /><line x1="120" y1="75" x2="178" y2="75" stroke={ink} strokeWidth="2.5" /><circle cx="120" cy="75" r="3.5" fill={ink} />{L(146, 66, `${toAr(s.r)}`)}</g>;
+  return <svg viewBox="0 0 240 152" style={{ width: "min(100%, 250px)", display: "block", margin: "0 auto 14px" }} aria-hidden="true">{inner}</svg>;
+};
 const F = (tag, title, body, ex) => ({ tag, title, body, ex });
 const FEED_STATIC = [
+  F("قانون كمي", "الخصمان المتتاليان", "خصم أ٪ ثم ب٪ لا يساوي خصم (أ + ب)٪ — طبّقهما بالترتيب على الناتج", "٢٠٠ بخصم ٢٥٪ ثم ٢٠٪؟ ١٥٠ ثم ١٢٠ — مو ١١٠."),
+  F("قانون كمي", "المتوسط بعد الإضافة", "العدد المضاف = المتوسط الجديد × العدد الجديد − المتوسط القديم × العدد القديم", "متوسط ٥ أعداد ١٢ وصار ١٤ بعد سادس؟ المضاف = ٨٤ − ٦٠ = ٢٤."),
+  F("قانون كمي", "العمل المشترك", "ينجزانه معاً في: (أ × ب) ÷ (أ + ب) يوماً", "٦ أيام و٣ أيام؟ ١٨ ÷ ٩ = يومان فقط."),
+  F("قانون كمي", "ثلاثيات فيثاغورس", "احفظ ٣-٤-٥ و٥-١٢-١٣ و٨-١٥-١٧ ومضاعفاتها — توفر التربيع كاملاً", "ضلعا قائمة ٦ و٨؟ الوتر ١٠ فوراً — ضعف ٣-٤-٥."),
+  F("قانون كمي", "الدائرة بلمحة", "المحيط = ٢ × ط × نق، والمساحة = ط × نق² — ومع ط = ٢٢/٧ خلّ نق من مضاعفات ٧", "نق = ٧؟ المحيط ٤٤ والمساحة ١٥٤ بلا كسور."),
   F("قانون كمي", "جمع الأعداد المتتالية", "مجموع الأعداد من ١ إلى ن = ن × (ن + ١) ÷ ٢", "من ١ إلى ١٠٠؟ ٥٠٥٠ في ثانيتين — بدون جمع يدوي."),
   F("قانون كمي", "مجموع الأعداد الزوجية", "من ٢ إلى س: عدد الحدود ن = س ÷ ٢، والمجموع = ن × (ن + ١)", "من ٢ إلى ٢٠؟ ن = ١٠ → المجموع ١١٠."),
   F("قانون كمي", "مجموع الأعداد الفردية", "من ١ إلى س: المجموع = مربع عدد الحدود = ((س + ١) ÷ ٢)²", "من ١ إلى ١٩؟ عدد الحدود ١٠ → المجموع ١٠٠."),
@@ -438,6 +455,35 @@ const TIERS = [T1, T2, T3];
 
 // بيانات القوالب: الباب والمفهوم لكل قالب (تُحسب مرة واحدة)
 const META = TIERS.map((tier) => tier.map((fn) => { try { const s = fn(); return { ch: s.ch, cat: s.cat }; } catch (e) { return { ch: "الكل", cat: "عام" }; } }));
+// ⟪NEWGENS⟫ دفعة THV الأولى + الهندسة بالأشكال
+const opt4 = (ans, cands) => { const s = new Set([ans]); for (const c of cands) { if (s.size === 4) break; if (c > 0 && c !== ans && !s.has(c)) s.add(c); } let k = 1; while (s.size < 4) { if (!s.has(ans + k)) s.add(ans + k); k++; } return shuffle([...s]); };
+const gRect = () => { const w = ri(6, 12), h = ri(3, w - 1); const area = w * h, per = 2 * (w + h); const askA = Math.random() < 0.5; const ans = askA ? area : per;
+  return { q: `مستطيل طوله ${toAr(w)} سم وعرضه ${toAr(h)} سم.\nما ${askA ? "مساحته" : "محيطه"}؟`, opts: opt4(ans, [askA ? per : area, ans + w, ans - h, w + h]), ans, exp: askA ? `المساحة = الطول × العرض = ${toAr(w)} × ${toAr(h)} = ${toAr(area)} سم²` : `المحيط = ٢ × (الطول + العرض) = ٢ × ${toAr(w + h)} = ${toAr(per)} سم`, cat: "الهندسة", shape: { k: "rect", w, h } }; };
+const gSq = () => { const a = ri(4, 9); const per = 4 * a, area = a * a;
+  return { q: `مربع محيطه ${toAr(per)} سم.\nما مساحته؟`, opts: opt4(area, [per, a * 2, area + a, per * 2]), ans: area, exp: `الضلع = المحيط ÷ ٤ = ${toAr(a)} سم، والمساحة = ${toAr(a)} × ${toAr(a)} = ${toAr(area)} سم²`, cat: "الهندسة", shape: { k: "sq", lbl: "؟" } }; };
+const gRtri = () => { const T = [[3, 4, 5], [6, 8, 10], [5, 12, 13], [9, 12, 15], [8, 15, 17]]; const [a, b, c] = pick(T);
+  return { q: `مثلث قائم الزاوية طولا ضلعي القائمة فيه ${toAr(a)} سم و${toAr(b)} سم.\nما طول الوتر؟`, opts: opt4(c, [a + b, c + 1, c - 1, b + 2]), ans: c, exp: `بفيثاغورس: الوتر² = ${toAr(a)}² + ${toAr(b)}² = ${toAr(a * a + b * b)}، فالوتر = ${toAr(c)} سم`, cat: "الهندسة", shape: { k: "rtri", a, b, hLbl: "؟" } }; };
+const gTri = () => { const b = pick([6, 8, 10, 12]), h = ri(4, 9); const area = (b * h) / 2;
+  return { q: `مثلث طول قاعدته ${toAr(b)} سم وارتفاعه ${toAr(h)} سم.\nما مساحته؟`, opts: opt4(area, [b * h, area + b, area - h, b + h]), ans: area, exp: `مساحة المثلث = نصف × القاعدة × الارتفاع = نصف × ${toAr(b)} × ${toAr(h)} = ${toAr(area)} سم²`, cat: "الهندسة", shape: { k: "tri", b, h } }; };
+const gCirc = () => { const r = pick([7, 14, 21]); const askA = Math.random() < 0.5; const per = 2 * 22 / 7 * r, area = 22 / 7 * r * r; const ans = Math.round(askA ? area : per);
+  return { q: `دائرة نصف قطرها ${toAr(r)} سم. (اعتبر ط = ٢٢/٧)\nما ${askA ? "مساحتها" : "محيطها"}؟`, opts: opt4(ans, [Math.round(askA ? per : area), ans + r, ans - r, ans + 2 * r]), ans, exp: askA ? `المساحة = ط × نق² = (٢٢/٧) × ${toAr(r)}² = ${toAr(ans)} سم²` : `المحيط = ٢ × ط × نق = ٢ × (٢٢/٧) × ${toAr(r)} = ${toAr(ans)} سم`, cat: "الهندسة", shape: { k: "circ", r } }; };
+const gAvgAdd = () => { const n = ri(4, 6), a = ri(10, 20), d = ri(1, 2); const na = a + d; const v = na * (n + 1) - a * n;
+  return { q: `المتوسط الحسابي لـ ${toAr(n)} أعداد هو ${toAr(a)}. أُضيف عدد جديد فأصبح المتوسط ${toAr(na)}.\nما العدد المضاف؟`, opts: opt4(v, [na, a + na, v - n, v + n]), ans: v, exp: `المجموع الجديد = ${toAr(na)} × ${toAr(n + 1)} = ${toAr(na * (n + 1))}، والقديم = ${toAr(a)} × ${toAr(n)} = ${toAr(a * n)}، فالمضاف = ${toAr(v)}`, cat: "الإحصاء والاحتمال" }; };
+const gTwoDisc = () => { const P = pick([200, 300, 400, 500]); const [p1, p2] = pick([[25, 20], [20, 10], [10, 20], [25, 40]]); const fin = P * (1 - p1 / 100) * (1 - p2 / 100); const trap = P * (1 - (p1 + p2) / 100);
+  return { q: `سلعة سعرها ${toAr(P)} ريال، خُفِّضت ${toAr(p1)}٪ ثم خُفِّض السعر الجديد ${toAr(p2)}٪.\nكم صار سعرها؟`, opts: opt4(fin, [trap, fin + 10, fin - 20, P - fin]), ans: fin, exp: `الخصمان لا يُجمعان: بعد الأول ${toAr(P * (1 - p1 / 100))}، وبعد الثاني ${toAr(fin)} ريال`, cat: "النسب والمئوية" }; };
+const gAges = () => { const y = ri(8, 13);
+  return { q: `عمر سعد اليوم ثلاثة أمثال عمر ابنه، وبعد ${toAr(y)} سنة يصبح ضِعف عمره فقط.\nكم عمر الابن اليوم؟`, opts: opt4(y, [y * 3, y + 3, y - 2, 2 * y]), ans: y, exp: `لو عمر الابن س: ٣س + ${toAr(y)} = ٢(س + ${toAr(y)}) فتكون س = ${toAr(y)} سنة`, cat: "مهارات وقوانين" }; };
+const gSpeedMin = () => { const P = pick([[60, 45, 80], [90, 45, 120], [45, 30, 90], [60, 40, 90], [30, 20, 90]]); const [d, m, v] = P;
+  return { q: `قطع سائق ${toAr(d)} كم في ${toAr(m)} دقيقة.\nما سرعته بالكيلومتر في الساعة؟`, opts: opt4(v, [d, v + 10, v - 10, d + m]), ans: v, exp: `الزمن بالساعات = ${toAr(m)} ÷ ٦٠، والسرعة = المسافة ÷ الزمن = ${toAr(v)} كم/س`, cat: "السرعة والزمن" }; };
+const gWork = () => { const P = pick([[6, 3, 2], [12, 4, 3], [10, 15, 6], [12, 6, 4], [8, 8, 4]]); const [a, b, t] = P;
+  return { q: `يُنهي ماجد عملاً وحده في ${toAr(a)} أيام، ويُنهيه صالح وحده في ${toAr(b)} أيام.\nفي كم يوم يُنهيانه معاً؟`, opts: opt4(t, [a + b, Math.abs(a - b) || t + 2, t + 1, t + 2]), ans: t, exp: `معاً = (أ × ب) ÷ (أ + ب) = ${toAr(a * b)} ÷ ${toAr(a + b)} = ${toAr(t)} أيام`, cat: "مهارات وقوانين" }; };
+T1.push(gRect, gSq, gSpeedMin);
+T2.push(gRtri, gTri, gCirc, gAvgAdd, gTwoDisc, gAges);
+T3.push(gWork);
+META[0].push({ ch: "الهندسة" }, { ch: "الهندسة" }, { ch: "السرعة والزمن" });
+META[1].push({ ch: "الهندسة" }, { ch: "الهندسة" }, { ch: "الهندسة" }, { ch: "الإحصاء والاحتمال" }, { ch: "النسب والمئوية" }, { ch: "مهارات وقوانين" });
+META[2].push({ ch: "مهارات وقوانين" });
+// ⟪/NEWGENS⟫
 const CH_MAP = META.map((t) => t.map((m) => m.ch));
 const ALL_CATS = [...new Set(META.flat().map((m) => m.cat))];
 const CAT_CH = {}; META.flat().forEach((m) => { if (!CAT_CH[m.cat]) CAT_CH[m.cat] = m.ch; });
@@ -517,6 +563,7 @@ function PhosApp() {
   const interestsRef = useRef({});
   const weakRef = useRef({});
   const [savedQs, setSavedQs] = useState([]);
+  const [savedListOpen, setSavedListOpen] = useState(false);
   const [reviewQueue, setReviewQueue] = useState(null);
   const [reviewIdx, setReviewIdx] = useState(0);
   const [skills, setSkills] = useState({});
@@ -1073,6 +1120,7 @@ function PhosApp() {
         <div key={question.id} style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", padding: "6px 20px 0", maxWidth: 560, width: "100%", margin: "0 auto", boxSizing: "border-box", animation: slide === "in" ? "slideIn .3s ease both" : "slideOut .24s ease both", overflowY: "auto" }}>
           <div style={{ fontSize: 12, fontWeight: 700, color: C.cobalt, marginBottom: question.isRetry ? 4 : 10 }}>{question.ch} · {question.cat}</div>
           {question.isRetry && <div style={{ fontSize: 11.5, fontWeight: 700, color: C.gold, marginBottom: 10 }}>سؤال مشابه للي غلطت فيه قبل قليل — ثبّته ✦</div>}
+          {question.shape && <QShape s={question.shape} />}
           <h1 style={{ fontSize: "clamp(18px, 5vw, 25px)", fontWeight: 700, lineHeight: 1.75, margin: "0 0 20px", whiteSpace: "pre-line" }}>{question.q}</h1>
 
           <div style={{ display: "grid", gap: 10 }}>
@@ -1250,6 +1298,8 @@ function PhosApp() {
               aria-label="التالي">
               <Chevron up size={18} />
             </button>
+            {feedIdx > 0 && <button onPointerDown={(e) => e.stopPropagation()} onClick={() => commitFeed(-1)}
+              style={{ position: "absolute", bottom: 24, right: 23, width: 40, height: 40, borderRadius: "50%", border: "none", background: "rgba(255,255,255,0.9)", color: C.cobalt, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0 3px 10px rgba(27,58,200,0.18)", fontWeight: 800, fontSize: 17, fontFamily: "inherit" }}>▾</button>}
           </div>
         )}
 
@@ -1336,6 +1386,7 @@ function PhosApp() {
               <button onClick={startReview} disabled={!savedQs.length} style={{ width: "100%", marginTop: 10, padding: 13, borderRadius: 16, border: `2px solid ${C.cobalt}`, background: savedQs.length ? "transparent" : C.bgSoft, color: savedQs.length ? C.cobalt : "rgba(36,27,77,0.4)", fontWeight: 700, fontFamily: "inherit", fontSize: 14, cursor: savedQs.length ? "pointer" : "default" }}>
                 ابدأ مراجعة المحفوظات
               </button>
+            <button onClick={() => setSavedListOpen(true)} disabled={!savedQs.length} style={{ width: "100%", marginTop: 8, padding: 12, borderRadius: 14, border: `1.5px solid ${C.cobalt}`, background: "transparent", color: savedQs.length ? C.cobalt : "rgba(36,27,77,0.35)", fontWeight: 700, fontFamily: "inherit", fontSize: 13.5, cursor: "pointer" }}>استعرض القائمة كاملة ({toAr(savedQs.length)})</button>
             </div>
 
             <div style={{ background: C.card, borderRadius: 20, padding: 16, marginTop: 12, boxShadow: "0 8px 24px rgba(27,58,200,0.09)" }}>
@@ -1444,6 +1495,30 @@ function PhosApp() {
         ))}
       </div>
 
+      {savedListOpen && (
+        <div style={{ position: "absolute", inset: 0, zIndex: 61, background: C.bg, display: "flex", flexDirection: "column" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "16px 20px 10px" }}>
+            <Sparkle size={20} />
+            <div style={{ fontWeight: 700, fontSize: 17 }}>محفوظاتي كاملة ({toAr(savedQs.length)})</div>
+            <button onClick={() => setSavedListOpen(false)} style={{ marginRight: "auto", border: "none", background: "rgba(255,255,255,0.7)", borderRadius: 999, padding: "7px 16px", fontFamily: "inherit", fontWeight: 700, fontSize: 13, cursor: "pointer", color: C.ink }}>إغلاق</button>
+          </div>
+          <div style={{ flex: 1, overflowY: "auto", padding: "4px 20px 30px" }}>
+            {savedQs.map((sq, si) => (
+              <div key={si} style={{ background: C.card, borderRadius: 16, padding: "14px 16px", marginBottom: 12, boxShadow: "0 5px 16px rgba(27,58,200,0.06)" }}>
+                {sq.shape && <QShape s={sq.shape} />}
+                <div style={{ fontWeight: 700, fontSize: 15, lineHeight: 1.9, whiteSpace: "pre-line" }}>{sq.q}</div>
+                <div style={{ marginTop: 8 }}>
+                  {sq.opts.map((o, oi) => (
+                    <div key={oi} style={{ fontSize: 13.5, padding: "6px 10px", borderRadius: 10, marginBottom: 4, background: o === sq.ans ? "rgba(31,169,124,0.14)" : "rgba(255,255,255,0.5)", color: o === sq.ans ? "#127a58" : C.ink, fontWeight: o === sq.ans ? 700 : 500 }}>{typeof o === "number" ? toAr(o) : o}{o === sq.ans ? " ✓" : ""}</div>
+                  ))}
+                </div>
+                {sq.exp && <div style={{ marginTop: 6, fontSize: 12.5, lineHeight: 1.8, opacity: 0.75, whiteSpace: "pre-line" }}>{sq.exp}</div>}
+              </div>
+            ))}
+            {!savedQs.length && <div style={{ textAlign: "center", opacity: 0.6, marginTop: 40 }}>ما حفظت أسئلة بعد — القلب أثناء التدريب يحفظها هنا ✦</div>}
+          </div>
+        </div>
+      )}
       {limitHit && (
         <div style={{ position: "absolute", inset: 0, background: "rgba(36,27,77,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 62, padding: 24 }} onClick={() => setLimitHit(false)}>
           <div onClick={(e) => e.stopPropagation()} style={{ background: C.card, borderRadius: 24, padding: "28px 24px", maxWidth: 360, width: "100%", textAlign: "center", animation: "popIn .35s ease both" }}>
