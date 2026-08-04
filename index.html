@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- PHOS-BUILD-FINAL-5 -->
+<!-- PHOS-BUILD-FINAL-13 -->
 <html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
@@ -92,11 +92,26 @@ const QShape = ({ s }) => {
   if (s.k === "sq") inner = <g><rect x="75" y="18" width="106" height="106" rx="4" {...st} />{L(128, 144, `${s.lbl}`)}</g>;
   if (s.k === "rtri") inner = <g><path d="M55 125 L200 125 L200 25 Z" {...st} strokeLinejoin="round" /><rect x="186" y="111" width="14" height="14" fill="none" stroke={ink} strokeWidth="2" />{L(128, 145, `${toAr(s.b)} سم`)}{L(214, 80, `${toAr(s.a)} سم`, "start")}{L(112, 66, `${s.hLbl}`)}</g>;
   if (s.k === "tri") inner = <g><path d="M120 22 L215 125 L25 125 Z" {...st} strokeLinejoin="round" /><line x1="120" y1="22" x2="120" y2="125" stroke={ink} strokeWidth="2" strokeDasharray="5 4" />{L(120, 145, `القاعدة ${toAr(s.b)} سم`)}{L(134, 78, `${toAr(s.h)}`, "start")}</g>;
+  if (s.k === "sqcirc") inner = <g><rect x="65" y="15" width="120" height="120" rx="3" {...st} /><circle cx="125" cy="75" r="60" fill="#D7C7F8" stroke={ink} strokeWidth="2.5" />{L(125, 148, `${toAr(s.a)} سم`)}</g>;
   if (s.k === "circ") inner = <g><circle cx="120" cy="75" r="58" {...st} /><line x1="120" y1="75" x2="178" y2="75" stroke={ink} strokeWidth="2.5" /><circle cx="120" cy="75" r="3.5" fill={ink} />{L(146, 66, `${toAr(s.r)}`)}</g>;
   return <svg viewBox="0 0 240 152" style={{ width: "min(100%, 250px)", display: "block", margin: "0 auto 14px" }} aria-hidden="true">{inner}</svg>;
 };
 const F = (tag, title, body, ex) => ({ tag, title, body, ex });
 const FEED_STATIC = [
+  // — بطاقات THV (الدفعة الثانية)
+  F("قانون كمي", "زاوية عقربي الساعة", "عند الساعة الكاملة: الزاوية = رقم الساعة × ٣٠°", "الثالثة تماماً؟ ٩٠° مباشرة — والسادسة؟ ١٨٠° خط مستقيم."),
+  F("قانون كمي", "أقطار المضلع", "عدد الأقطار = ن × (ن − ٣) ÷ ٢", "الخماسي؟ ٥ × ٢ ÷ ٢ = ٥ أقطار بس."),
+  F("قانون كمي", "الزاوية الخارجية للمنتظم", "مجموع الزوايا الخارجية دائماً ٣٦٠° — وعدد الأضلاع = ٣٦٠ ÷ الزاوية الخارجية", "خارجية ٤٥°؟ المضلع ثماني فوراً."),
+  F("قانون كمي", "فرق العمرين ثابت", "الفرق بين عمرين لا يتغير مهما مرت السنون — النسبة هي التي تتغير", "أخوك أصغر بـ ٤ سنوات؟ يظل أصغر بـ ٤ للأبد."),
+  F("قانون كمي", "القصّات والعلامات", "القصّات = القطع − ١، وعلامات الطريق مع البداية = المسافات + ١", "حبل ٤٠ متراً قطعاً بطول ٥؟ ٨ قطع بـ ٧ قصّات فقط."),
+  F("قانون كمي", "ثنائيات المربع الكامل", "(أ + ب)² − (أ² + ب²) = ٢أب، و(أ + ب)² − (أ − ب)² = ٤أب", "تظهر كثيراً بصيغة س + ص وس ص — احفظها جاهزة."),
+  F("قانون كمي", "س + ١/س", "إذا كان س + ١/س = ك فإن س² + ١/س² = ك² − ٢", "س + ١/س = ٣؟ المطلوب ٩ − ٢ = ٧ بدون إيجاد س."),
+  F("قانون كمي", "قسمة فرق مربعين", "(أ² − ب²) ÷ (أ − ب) = أ + ب — اختصر قبل أن تحسب", "(٢٩² − ٨١) ÷ (٢٩ − ٩)؟ الجواب ٣٨ فوراً."),
+  F("قانون كمي", "الضرب بالمرافق", "(١٠٠ + ب)(١٠٠ − ب) = ١٠٠٠٠ − ب²", "١٠٢ × ٩٨؟ ١٠٠٠٠ − ٤ = ٩٩٩٦ ذهنياً."),
+  F("قانون كمي", "تماثل النسبة المئوية", "أ٪ من ب = ب٪ من أ — اقلبها إذا كان الحساب أسهل", "٨٪ من ٥٠ صعبة؟ خذها ٥٠٪ من ٨ = ٤."),
+  F("قانون كمي", "التشابه والمساحة والحجم", "الأطوال بنسبة ك؟ المساحات بنسبة ك² والحجوم بنسبة ك³", "نسبة الأضلاع ٢ : ٣؟ المساحات ٤ : ٩ — مو ٢ : ٣."),
+  F("قانون كمي", "السعر قبل الخصم", "الأصلي = السعر بعد الخصم ÷ (١٠٠ − الخصم)٪", "بعد خصم ٣٠٪ صار ٢١٠؟ الأصلي = ٢١٠ ÷ ٠٫٧ = ٣٠٠."),
+  F("قانون كمي", "القاسم والمضاعف بالمواقف", "تقسيمٌ لأكبر قطع متساوية = القاسم المشترك الأكبر، والتقاءٌ متكرر = المضاعف المشترك الأصغر", "أكبر مربع يقسم مستطيل ٢١ × ٣٥؟ ضلعه ٧."),
   F("قانون كمي", "الخصمان المتتاليان", "خصم أ٪ ثم ب٪ لا يساوي خصم (أ + ب)٪ — طبّقهما بالترتيب على الناتج", "٢٠٠ بخصم ٢٥٪ ثم ٢٠٪؟ ١٥٠ ثم ١٢٠ — مو ١١٠."),
   F("قانون كمي", "المتوسط بعد الإضافة", "العدد المضاف = المتوسط الجديد × العدد الجديد − المتوسط القديم × العدد القديم", "متوسط ٥ أعداد ١٢ وصار ١٤ بعد سادس؟ المضاف = ٨٤ − ٦٠ = ٢٤."),
   F("قانون كمي", "العمل المشترك", "ينجزانه معاً في: (أ × ب) ÷ (أ + ب) يوماً", "٦ أيام و٣ أيام؟ ١٨ ÷ ٩ = يومان فقط."),
@@ -483,6 +498,258 @@ T3.push(gWork);
 META[0].push({ ch: "الهندسة" }, { ch: "الهندسة" }, { ch: "السرعة والزمن" });
 META[1].push({ ch: "الهندسة" }, { ch: "الهندسة" }, { ch: "الهندسة" }, { ch: "الإحصاء والاحتمال" }, { ch: "النسب والمئوية" }, { ch: "مهارات وقوانين" });
 META[2].push({ ch: "مهارات وقوانين" });
+const gRatioSplit = () => { const a = ri(2, 4), b = ri(a + 1, 6), k = ri(20, 60); const M = (a + b) * k; const big = b * k;
+  return { q: `قُسم مبلغ ${toAr(M)} ريالاً بين شخصين بنسبة ${toAr(a)} : ${toAr(b)}.\nكم نصيب صاحب النصيب الأكبر؟`, opts: opt4(big, [a * k, M - big + 10, big + k, Math.round(M / 2)]), ans: big, exp: `مجموع الأجزاء = ${toAr(a + b)}، قيمة الجزء = ${toAr(M)} ÷ ${toAr(a + b)} = ${toAr(k)}، فالأكبر = ${toAr(b)} × ${toAr(k)} = ${toAr(big)}`, cat: "النسب والمئوية" }; };
+const gPercentOf = () => { const b = pick([40, 50, 80, 200, 400]), p = pick([5, 10, 15, 20, 25, 40]); const a = p * b / 100;
+  return { q: `العدد ${toAr(a)} يمثل كم بالمئة من العدد ${toAr(b)}؟`, opts: opt4(p, [p * 2, Math.max(1, p - 5), p + 10, Math.round(b / a)]), ans: p, exp: `النسبة = (${toAr(a)} ÷ ${toAr(b)}) × ١٠٠ = ${toAr(p)}٪`, cat: "النسب والمئوية" }; };
+const gSeq = () => { const f = ri(2, 9), d = ri(3, 7), n = ri(6, 9); const ans = f + (n - 1) * d;
+  return { q: `متتابعة حسابية حدها الأول ${toAr(f)} وأساسها ${toAr(d)}.\nما حدها رقم ${toAr(n)}؟`, opts: opt4(ans, [f + n * d, ans - d, ans + d, f * n]), ans, exp: `الحد النوني = الأول + (ن − ١) × الأساس = ${toAr(f)} + ${toAr(n - 1)} × ${toAr(d)} = ${toAr(ans)}`, cat: "مهارات وقوانين" }; };
+const gDice = () => { const C2 = pick([[2, "٢/٣", "٤"], [3, "١/٢", "٣"], [4, "١/٣", "٢"], [5, "١/٦", "١"]]); const [k, ansS, cnt] = C2;
+  const opts = shuffle(["٢/٣", "١/٢", "١/٣", "١/٦"]);
+  return { q: `عند رمي حجر نرد منتظم مرة واحدة،\nما احتمال ظهور عدد أكبر من ${toAr(k)}؟`, opts, ans: ansS, exp: `الأعداد الأكبر من ${toAr(k)} عددها ${cnt} من ٦ نواتج، والاحتمال بعد الاختصار = ${ansS}`, cat: "الإحصاء والاحتمال" }; };
+const gPow = () => { const a = ri(2, 5), b = ri(2, 5); const ans = 2 ** (a + b);
+  return { q: `ما قيمة: ٢^${toAr(a)} × ٢^${toAr(b)} ؟`, opts: opt4(ans, [2 ** a * b, 2 ** (a + b - 1), 2 ** (a + b + 1), (a + b) * 2]), ans, exp: `عند ضرب أسس بنفس الأساس تُجمع الأسس: ٢^${toAr(a + b)} = ${toAr(ans)}`, cat: "الجبر والأسس والجذور" }; };
+const gRoot = () => { const a = ri(2, 5), b = pick([2, 3, 5]); const N = a * a * b; const ansS = `${toAr(a)}√${toAr(b)}`;
+  const opts = shuffle([ansS, `${toAr(b)}√${toAr(a)}`, `${toAr(a * b)}√${toAr(1) === "١" ? toAr(b) : toAr(b)}`, `${toAr(a + b)}√${toAr(b)}`].filter((v, i, arr) => arr.indexOf(v) === i)); while (opts.length < 4) opts.push(`${toAr(a)}√${toAr(b + opts.length)}`);
+  return { q: `بسّط: √${toAr(N)}`, opts, ans: ansS, exp: `√${toAr(N)} = √(${toAr(a * a)} × ${toAr(b)}) = ${ansS}`, cat: "الجبر والأسس والجذور" }; };
+const gTriAngle = () => { const A = pick([35, 40, 50, 55, 65, 70]), B = pick([45, 60, 75, 80]); const ans = 180 - A - B;
+  return { q: `مثلث قياس زاويتين فيه ${toAr(A)}° و${toAr(B)}°.\nما قياس الزاوية الثالثة؟`, opts: opt4(ans, [180 - A, 180 - B, ans + 10, ans - 10]), ans, exp: `مجموع زوايا المثلث ١٨٠°، فالثالثة = ١٨٠ − ${toAr(A)} − ${toAr(B)} = ${toAr(ans)}°`, cat: "الهندسة" }; };
+const gCompare = () => { const OPTS = ["القيمة الأولى أكبر", "القيمة الثانية أكبر", "القيمتان متساويتان", "المعطيات غير كافية"];
+  const a = pick([20, 30, 40]), b = pick([50, 60, 80]); const x = ri(2, 5), y = ri(2, 5); const m = ri(4, 9);
+  const cases = [
+    { t: `القيمة الأولى: ${toAr(a)}٪ من ${toAr(b)}\nالقيمة الثانية: ${toAr(b)}٪ من ${toAr(a)}`, ans: OPTS[2], ex: `س٪ من ص = ص٪ من س دائماً — كلاهما ${toAr(a * b / 100)}` },
+    { t: `لعددين موجبين س = ${toAr(x)} و ص = ${toAr(y)}\nالقيمة الأولى: (س + ص)²\nالقيمة الثانية: س² + ص²`, ans: OPTS[0], ex: `(س+ص)² = س² + ص² + ٢ س ص، والزيادة ٢×${toAr(x)}×${toAr(y)} موجبة` },
+    { t: `القيمة الأولى: المتوسط الحسابي للأعداد ${toAr(m)}، ${toAr(m + 2)}، ${toAr(m + 4)}\nالقيمة الثانية: ${toAr(m + 2)}`, ans: OPTS[2], ex: `متوسط أعداد متتابعة بفرق ثابت هو الأوسط = ${toAr(m + 2)}` },
+    { t: `القيمة الأولى: ٣/٧\nالقيمة الثانية: ٥/٩`, ans: OPTS[1], ex: `بالضرب التبادلي: ٣×٩ = ٢٧ مقابل ٥×٧ = ٣٥ — الثانية أكبر` },
+  ];
+  const c = pick(cases);
+  return { q: `قارن بين:\n${c.t}`, opts: [...OPTS], ans: c.ans, exp: c.ex, cat: "مهارات وقوانين" }; };
+T1.push(gPercentOf, gTriAngle);
+T2.push(gRatioSplit, gSeq, gDice, gPow, gRoot, gCompare);
+META[0].push({ ch: "النسب والمئوية" }, { ch: "الهندسة" });
+META[1].push({ ch: "النسب والمئوية" }, { ch: "مهارات وقوانين" }, { ch: "الإحصاء والاحتمال" }, { ch: "الجبر والأسس والجذور" }, { ch: "الجبر والأسس والجذور" }, { ch: "مهارات وقوانين" });
+const gSolveEq = () => { const x = ri(3, 9), a2 = ri(2, 6), b2 = ri(1, 15); const c2 = a2 * x + b2;
+  return { q: `إذا كان ${toAr(a2)}س + ${toAr(b2)} = ${toAr(c2)}\nفما قيمة س؟`, opts: opt4(x, [x + 1, x - 1, c2 - b2, Math.max(1, x + 2)]), ans: x, exp: `${toAr(a2)}س = ${toAr(c2)} − ${toAr(b2)} = ${toAr(c2 - b2)}، فتكون س = ${toAr(c2 - b2)} ÷ ${toAr(a2)} = ${toAr(x)}`, cat: "الجبر والأسس والجذور" }; };
+const gSector = () => { const C3 = pick([[90, "ربع"], [60, "سدس"], [120, "ثلث"], [45, "ثُمن"]]); const [th, nm] = C3; const M = pick([72, 120, 144, 240]); const ans = M * th / 360;
+  return { q: `دائرة مساحتها ${toAr(M)} سم².\nما مساحة قطاع منها زاويته المركزية ${toAr(th)}°؟`, opts: opt4(ans, [Math.round(M / 2), ans * 2, ans + 6, Math.round(M / 3)]), ans, exp: `القطاع = المساحة × (${toAr(th)} ÷ ٣٦٠) = ${nm} الدائرة = ${toAr(ans)} سم²`, cat: "الهندسة" }; };
+const gBalls = () => { const C4 = pick([[2, 4, "١/٣"], [3, 3, "١/٢"], [1, 5, "١/٦"], [4, 2, "٢/٣"], [2, 6, "١/٤"]]); const [r2, b3, ansS] = C4;
+  const base = ["١/٢", "١/٣", "١/٦", "٢/٣", "١/٤"].filter((v) => v !== ansS); const opts = shuffle([ansS, ...shuffle(base).slice(0, 3)]);
+  return { q: `كيس فيه ${toAr(r2)} كرات حمراء و${toAr(b3)} كرات زرقاء متماثلة.\nما احتمال سحب كرة حمراء عشوائياً؟`, opts, ans: ansS, exp: `الاحتمال = عدد الأحمر ÷ الكل = ${toAr(r2)} ÷ ${toAr(r2 + b3)} = ${ansS}`, cat: "الإحصاء والاحتمال" }; };
+T1.push(gSolveEq);
+T2.push(gSector, gBalls);
+META[0].push({ ch: "الجبر والأسس والجذور" });
+META[1].push({ ch: "الهندسة" }, { ch: "الإحصاء والاحتمال" });
+const gRemainder = () => { const d = pick([7, 9, 11, 13]), q2 = ri(4, 9), r2 = ri(1, d - 2); const N = d * q2 + r2;
+  return { q: `ما باقي قسمة ${toAr(N)} على ${toAr(d)}؟`, opts: opt4(r2, [q2, d - r2, r2 + 1, Math.max(1, r2 - 1)]), ans: r2, exp: `${toAr(N)} = ${toAr(d)} × ${toAr(q2)} + ${toAr(r2)}، فالباقي ${toAr(r2)}`, cat: "مهارات وقوانين" }; };
+const gLCM = () => { const P2 = pick([[4, 6, 12], [6, 8, 24], [4, 10, 20], [6, 9, 18], [8, 12, 24], [10, 15, 30]]); const [a3, b4, L] = P2;
+  return { q: `ما أصغر عدد يقبل القسمة على ${toAr(a3)} و${toAr(b4)} معاً؟`, opts: opt4(L, [a3 * b4, L * 2, L + a3, a3 + b4]), ans: L, exp: `المضاعف المشترك الأصغر لـ ${toAr(a3)} و${toAr(b4)} هو ${toAr(L)}`, cat: "مهارات وقوانين" }; };
+const gPoles = () => { const m2 = pick([25, 40, 50, 100]), n2 = ri(6, 12); const L2 = m2 * n2; const ans = n2 + 1;
+  return { q: `طريق طوله ${toAr(L2)} متر، وُضعت علامة كل ${toAr(m2)} متراً مع علامة عند بدايته.\nكم علامة على الطريق؟`, opts: opt4(ans, [n2, n2 + 2, ans + 2, Math.round(L2 / m2 / 2)]), ans, exp: `عدد المسافات = ${toAr(L2)} ÷ ${toAr(m2)} = ${toAr(n2)}، والعلامات = المسافات + ١ = ${toAr(ans)}`, cat: "مهارات وقوانين" }; };
+const gInverse = () => { const P3 = pick([[6, 10, 4, 15], [8, 6, 12, 4], [5, 12, 10, 6], [9, 8, 6, 12], [4, 9, 6, 6]]); const [n3, d3, m3, ans] = P3;
+  return { q: `${toAr(n3)} عمال ينجزون مشروعاً في ${toAr(d3)} أيام.\nكم يوماً يحتاج ${toAr(m3)} عمال لإنجازه بنفس المعدل؟`, opts: opt4(ans, [Math.round(d3 * m3 / n3), d3 + (m3 - n3), ans + 2, Math.max(1, ans - 2)]), ans, exp: `تناسب عكسي: الأيام = (${toAr(n3)} × ${toAr(d3)}) ÷ ${toAr(m3)} = ${toAr(ans)}`, cat: "مهارات وقوانين" }; };
+const gTaps = () => { const P4 = pick([[2, 3, 6], [3, 6, 6], [4, 6, 12], [2, 6, 3], [4, 12, 6]]); const [a4, b5, t2] = P4;
+  return { q: `حنفية تملأ حوضاً وحدها في ${toAr(a4)} ساعات، وفتحة تصريف تفرغه وحدها في ${toAr(b5)} ساعات.\nإذا فُتحتا معاً والحوض فارغ، ففي كم ساعة يمتلئ؟`, opts: opt4(t2, [a4 + b5, b5 - a4 || t2 + 1, t2 + 2, a4]), ans: t2, exp: `معدل الملء معاً = ١/${toAr(a4)} − ١/${toAr(b5)}، فالزمن = (${toAr(a4)} × ${toAr(b5)}) ÷ (${toAr(b5)} − ${toAr(a4)}) = ${toAr(t2)} ساعات`, cat: "مهارات وقوانين" }; };
+const gFracCmp = () => { const C5 = pick([[["٣/٥", "٢/٣", "٤/٧", "٥/٩"], "٢/٣"], [["٥/٨", "٣/٤", "٧/١٢", "٢/٥"], "٣/٤"], [["٤/٩", "٥/١١", "١/٢", "٣/٧"], "١/٢"], [["٧/١٠", "٣/٥", "٢/٤", "٥/٨"], "٧/١٠"]]); const [arr, ansS] = C5;
+  return { q: `أي الكسور التالية أكبر؟`, opts: shuffle([...arr]), ans: ansS, exp: `بالضرب التبادلي بين كل كسرين يتضح أن ${ansS} هو الأكبر`, cat: "مهارات وقوانين" }; };
+const gUnitConv = () => { const P5 = pick([[10, 36], [20, 72], [15, 54], [25, 90]]); const [ms, kmh] = P5;
+  return { q: `جسم يتحرك بسرعة ${toAr(ms)} أمتار في الثانية.\nما سرعته بالكيلومتر في الساعة؟`, opts: opt4(kmh, [ms * 6, kmh + 10, kmh - 18, ms * 60]), ans: kmh, exp: `كم/س = م/ث × ٣٫٦ = ${toAr(ms)} × ٣٫٦ = ${toAr(kmh)}`, cat: "السرعة والزمن" }; };
+const gEvenOddPow = () => { const a5 = ri(2, 7); const n4 = pick([3, 5, 7, 4, 6, 8]); const odd = n4 % 2 === 1; const OP = ["موجبة", "سالبة", "صفر", "لا يمكن تحديدها"]; const ansS = odd ? "سالبة" : "موجبة";
+  return { q: `ما إشارة قيمة المقدار: (−${toAr(a5)})^${toAr(n4)} ؟`, opts: [...OP], ans: ansS, exp: `الأس ${odd ? "فردي فيبقى السالب سالباً" : "زوجي فيصبح الناتج موجباً"}`, cat: "الجبر والأسس والجذور" }; };
+const gHand = () => { const n5 = ri(5, 9); const ans = n5 * (n5 - 1) / 2;
+  return { q: `في اجتماع صافح كل شخص جميع الحاضرين مرة واحدة، وكان عددهم ${toAr(n5)} أشخاص.\nكم مصافحة حدثت؟`, opts: opt4(ans, [n5 * (n5 - 1), ans + n5, n5 * 2, ans - n5 + 1]), ans, exp: `المصافحات = ن(ن − ١) ÷ ٢ = ${toAr(n5)} × ${toAr(n5 - 1)} ÷ ٢ = ${toAr(ans)}`, cat: "مهارات وقوانين" }; };
+T1.push(gPoles, gUnitConv, gRemainder);
+T2.push(gLCM, gInverse, gFracCmp, gEvenOddPow, gHand);
+T3.push(gTaps);
+META[0].push({ ch: "مهارات وقوانين" }, { ch: "السرعة والزمن" }, { ch: "مهارات وقوانين" });
+META[1].push({ ch: "مهارات وقوانين" }, { ch: "مهارات وقوانين" }, { ch: "مهارات وقوانين" }, { ch: "الجبر والأسس والجذور" }, { ch: "مهارات وقوانين" });
+META[2].push({ ch: "مهارات وقوانين" });
+const gBox = () => { const a6 = ri(2, 5), b6 = ri(3, 6), c6 = ri(2, 5); const V = a6 * b6 * c6;
+  return { q: `متوازي مستطيلات أبعاده ${toAr(a6)} و${toAr(b6)} و${toAr(c6)} سم.\nما حجمه؟`, opts: opt4(V, [a6 * b6 + c6, V + a6, V - b6, 2 * (a6 + b6 + c6)]), ans: V, exp: `الحجم = الطول × العرض × الارتفاع = ${toAr(V)} سم³`, cat: "الهندسة" }; };
+const gCube = () => { const L3 = ri(2, 6); const S2 = 6 * L3 * L3;
+  return { q: `مكعب مساحة سطحه الكلية ${toAr(S2)} سم².\nما طول حرفه؟`, opts: opt4(L3, [L3 + 1, L3 * 2, Math.max(1, L3 - 1), L3 + 2]), ans: L3, exp: `مساحة السطح = ٦ × الحرف²، فالحرف² = ${toAr(L3 * L3)} والحرف = ${toAr(L3)} سم`, cat: "الهندسة" }; };
+const gDist = () => { const P6 = pick([[0, 0, 3, 4, 5], [1, 2, 7, 10, 10], [2, 1, 5, 5, 5], [1, 1, 13, 6, 13]]); const [x1, y1, x2, y2, D] = P6;
+  return { q: `ما المسافة بين النقطة (${toAr(x1)}، ${toAr(y1)}) والنقطة (${toAr(x2)}، ${toAr(y2)})؟`, opts: opt4(D, [x2 - x1 + (y2 - y1), D + 2, Math.max(1, D - 2), D + 1]), ans: D, exp: `المسافة = √((${toAr(x2)}−${toAr(x1)})² + (${toAr(y2)}−${toAr(y1)})²) = ${toAr(D)}`, cat: "الهندسة" }; };
+const gMid = () => { const x1 = ri(1, 5) * 2, y1 = ri(1, 5) * 2, x2 = ri(1, 5) * 2, y2 = ri(1, 5) * 2; const mx = (x1 + x2) / 2, my = (y1 + y2) / 2; const F2 = (x, y) => `(${toAr(x)}، ${toAr(y)})`; const ansS = F2(mx, my);
+  const opts = [ansS, F2(mx + 1, my), F2(mx, my + 1), F2(x1 + x2, y1 + y2)].filter((v, i, arr) => arr.indexOf(v) === i); while (opts.length < 4) opts.push(F2(mx + opts.length, my + 1));
+  return { q: `ما إحداثيا نقطة منتصف القطعة الواصلة بين (${toAr(x1)}، ${toAr(y1)}) و(${toAr(x2)}، ${toAr(y2)})؟`, opts: shuffle(opts), ans: ansS, exp: `المنتصف = (مجموع السينات ÷ ٢، مجموع الصادات ÷ ٢) = ${ansS}`, cat: "الهندسة" }; };
+T2.push(gBox, gCube, gDist, gMid);
+META[1].push({ ch: "الهندسة" }, { ch: "الهندسة" }, { ch: "الهندسة" }, { ch: "الهندسة" });
+const gVertAngle = () => { const A = pick([35, 48, 62, 75, 110, 125]); const ans = 180 - A;
+  return { q: `زاويتان متجاورتان على مستقيم، قياس الأولى ${toAr(A)}°.\nما قياس الثانية؟`, opts: opt4(ans, [A, 90 - A > 0 ? 90 - A : A + 10, ans + 10, ans - 10]), ans, exp: `مجموع الزاويتين على المستقيم ١٨٠°، فالثانية = ١٨٠ − ${toAr(A)} = ${toAr(ans)}°`, cat: "الهندسة" }; };
+const gPolySum = () => { const n6 = ri(5, 9); const ans = (n6 - 2) * 180;
+  return { q: `ما مجموع قياسات الزوايا الداخلية لمضلع عدد أضلاعه ${toAr(n6)}؟`, opts: opt4(ans, [n6 * 180, ans - 180, ans + 180, 360]), ans, exp: `المجموع = (ن − ٢) × ١٨٠ = ${toAr(n6 - 2)} × ١٨٠ = ${toAr(ans)}°`, cat: "الهندسة" }; };
+const gPolyAngle = () => { const P7 = pick([[5, 108], [6, 120], [8, 135], [9, 140], [10, 144]]); const [n7, ans] = P7;
+  return { q: `ما قياس الزاوية الداخلية الواحدة في مضلع منتظم عدد أضلاعه ${toAr(n7)}؟`, opts: opt4(ans, [Math.round(360 / n7), ans - 12, ans + 12, 180 - ans]), ans, exp: `الزاوية = (ن − ٢) × ١٨٠ ÷ ن = ${toAr(ans)}°`, cat: "الهندسة" }; };
+const g306090 = () => { const h2 = pick([8, 10, 12, 16]); const ans = h2 / 2;
+  return { q: `مثلث قائم قياسا زاويتيه الأخريين ٣٠° و٦٠°، وطول وتره ${toAr(h2)} سم.\nما طول الضلع المقابل للزاوية ٣٠°؟`, opts: opt4(ans, [h2, ans + 2, ans - 1, h2 - 2]), ans, exp: `في مثلث ٣٠-٦٠-٩٠: المقابل لـ٣٠ = نصف الوتر = ${toAr(ans)} سم`, cat: "الهندسة" }; };
+const gSquareCircle = () => { const a7 = pick([4, 6, 8, 10]); const k2 = (a7 / 2) * (a7 / 2); const sq2 = a7 * a7; const ansS = `${toAr(sq2)} − ${toAr(k2)}ط`;
+  const mk2 = (s2, k3) => `${toAr(s2)} − ${toAr(k3)}ط`;
+  const opts = shuffle([ansS, mk2(sq2, sq2), mk2(sq2 / 2, k2), `${toAr(k2)}ط`]);
+  return { q: `مربع طول ضلعه ${toAr(a7)} سم رُسمت داخله أكبر دائرة ممكنة.\nما مساحة المنطقة المظللة خارج الدائرة وداخل المربع؟`, opts, ans: ansS, exp: `نق الدائرة = ${toAr(a7 / 2)}، فالمظلل = ${toAr(sq2)} − ط × ${toAr(a7 / 2)}² = ${ansS} سم²`, cat: "الهندسة", shape: { k: "sqcirc", a: a7 } }; };
+const gTriInRect = () => { const w2 = ri(6, 12), h3 = ri(4, 8); const ans = w2 * h3 / 2;
+  return { q: `مستطيل طوله ${toAr(w2)} سم وعرضه ${toAr(h3)} سم، رُسم داخله مثلث قاعدته أحد طولي المستطيل ورأسه على الضلع المقابل.\nما مساحة المثلث؟`, opts: opt4(ans, [w2 * h3, ans + h3, ans - w2 > 0 ? ans - w2 : ans + 3, w2 + h3]), ans, exp: `المثلث داخل المستطيل بهذه الصورة مساحته نصف المستطيل = ${toAr(ans)} سم²`, cat: "الهندسة", shape: { k: "rect", w: w2, h: h3 } }; };
+const gCircleEq = () => { const P8 = pick([[25, 5], [36, 6], [49, 7], [64, 8], [81, 9]]); const [N2, r3] = P8;
+  return { q: `دائرة مركزها نقطة الأصل ومعادلتها: س² + ص² = ${toAr(N2)}\nما طول نصف قطرها؟`, opts: opt4(r3, [N2, r3 * 2, r3 + 2, Math.max(1, r3 - 2)]), ans: r3, exp: `المعادلة س² + ص² = نق²، فنق = √${toAr(N2)} = ${toAr(r3)}`, cat: "الهندسة" }; };
+const gLaps = () => { const d2 = pick([14, 21, 28]); const k4 = ri(2, 3); const ans = Math.round(k4 * 22 / 7 * d2);
+  return { q: `دار عدّاء حول حديقة دائرية قطرها ${toAr(d2)} متراً ${k4 === 2 ? "دورتين كاملتين" : "ثلاث دورات كاملة"}. (اعتبر ط = ٢٢/٧)\nكم متراً قطع تقريباً؟`, opts: opt4(ans, [Math.round(22 / 7 * d2), ans + d2, ans - d2, k4 * d2]), ans, exp: `المسافة = عدد الدورات × المحيط = ${toAr(k4)} × (٢٢/٧ × ${toAr(d2)}) = ${toAr(ans)} متراً`, cat: "الهندسة" }; };
+T1.push(gVertAngle, gPolySum);
+T2.push(gPolyAngle, g306090, gSquareCircle, gTriInRect, gCircleEq, gLaps);
+META[0].push({ ch: "الهندسة" }, { ch: "الهندسة" });
+META[1].push({ ch: "الهندسة" }, { ch: "الهندسة" }, { ch: "الهندسة" }, { ch: "الهندسة" }, { ch: "الهندسة" }, { ch: "الهندسة" });
+const gTrap = () => { const P9 = pick([[6, 10, 5, 40], [4, 8, 6, 36], [5, 9, 4, 28], [7, 11, 6, 54]]); const [a8, b7, h4, ans] = P9;
+  return { q: `شبه منحرف طولا قاعدتيه المتوازيتين ${toAr(a8)} سم و${toAr(b7)} سم، وارتفاعه ${toAr(h4)} سم.\nما مساحته؟`, opts: opt4(ans, [(a8 + b7) * h4, ans + h4, ans - a8, a8 * b7]), ans, exp: `المساحة = نصف مجموع القاعدتين × الارتفاع = ${toAr((a8 + b7) / 2)} × ${toAr(h4)} = ${toAr(ans)} سم²`, cat: "الهندسة" }; };
+const gSimilar = () => { const k5 = ri(2, 4); const s3 = pick([3, 4, 5]); const ans = s3 * k5;
+  return { q: `مثلثان متشابهان، أطوال أضلاع الأصغر ٣ و٤ و٥ سم، ونسبة التشابه ١ : ${toAr(k5)}.\nما طول الضلع المقابل للضلع ${toAr(s3)} في المثلث الأكبر؟`, opts: opt4(ans, [s3 + k5, ans + s3, s3 * (k5 + 1), ans - 2 > 0 ? ans - 2 : ans + 2]), ans, exp: `في التشابه تُضرب الأطوال بالنسبة: ${toAr(s3)} × ${toAr(k5)} = ${toAr(ans)} سم`, cat: "الهندسة" }; };
+const gTangent = () => { const P10 = pick([[13, 5, 12], [10, 6, 8], [17, 8, 15], [15, 9, 12]]); const [d3, r4, ans] = P10;
+  return { q: `نقطة تبعد ${toAr(d3)} سم عن مركز دائرة نصف قطرها ${toAr(r4)} سم.\nما طول المماس المرسوم من هذه النقطة للدائرة؟`, opts: opt4(ans, [d3 - r4, d3 + r4, ans + 2, ans - 2 > 0 ? ans - 2 : ans + 3]), ans, exp: `المماس عمودي على نصف القطر، فبفيثاغورس: المماس = √(${toAr(d3)}² − ${toAr(r4)}²) = ${toAr(ans)} سم`, cat: "الهندسة" }; };
+const gRhomb = () => { const d4 = pick([6, 8, 10]), d5 = pick([12, 14, 16]); const ans = d4 * d5 / 2;
+  return { q: `معين طولا قطريه ${toAr(d4)} سم و${toAr(d5)} سم.\nما مساحته؟`, opts: opt4(ans, [d4 * d5, ans + d4, d4 + d5, ans - d5 > 0 ? ans - d5 : ans + 4]), ans, exp: `مساحة المعين = نصف حاصل ضرب القطرين = ${toAr(ans)} سم²`, cat: "الهندسة" }; };
+T2.push(gTrap, gSimilar, gTangent, gRhomb);
+META[1].push({ ch: "الهندسة" }, { ch: "الهندسة" }, { ch: "الهندسة" }, { ch: "الهندسة" });
+const gScaleArea = () => { const k6 = ri(2, 4); const ans = k6 * k6;
+  return { q: `ضوعف طول كل ضلع من أضلاع مربع ${toAr(k6)} مرات.\nكم مرة تتضاعف مساحته؟`, opts: opt4(ans, [k6, k6 * 2, ans + k6, k6 + 2]), ans, exp: `المساحة تتناسب مع مربع النسبة: ${toAr(k6)}² = ${toAr(ans)} مرات — لا ${toAr(k6)} فقط`, cat: "الهندسة" }; };
+const gAvgSpeed = () => { const P11 = pick([[40, 60, 48], [30, 60, 40], [20, 30, 24], [60, 120, 80]]); const [v1, v2, ans] = P11;
+  return { q: `قطع سائق طريقاً بسرعة ${toAr(v1)} كم/س وعاد بنفس الطريق بسرعة ${toAr(v2)} كم/س.\nما متوسط سرعته للرحلة كاملة؟`, opts: opt4(ans, [(v1 + v2) / 2, v2 - v1, ans + 5, ans - 5]), ans, exp: `المتوسط لمسافتين متساويتين = ٢×${toAr(v1)}×${toAr(v2)} ÷ (${toAr(v1)}+${toAr(v2)}) = ${toAr(ans)} — وليس المتوسط الحسابي ${toAr((v1 + v2) / 2)}`, cat: "السرعة والزمن" }; };
+const gProfit = () => { const C7 = pick([200, 300, 400, 500]); const p3 = pick([10, 15, 20, 25]); const ans = C7 * (100 + p3) / 100;
+  return { q: `اشترى تاجر سلعة بـ ${toAr(C7)} ريال وباعها بربح ${toAr(p3)}٪.\nبكم باعها؟`, opts: opt4(ans, [C7 * p3 / 100, C7 - C7 * p3 / 100, ans + 20, ans - 30]), ans, exp: `البيع = التكلفة × (١٠٠ + ${toAr(p3)})٪ = ${toAr(ans)} ريال`, cat: "النسب والمئوية" }; };
+const gPercentChange = () => { const P12 = pick([[40, 50, 25], [50, 60, 20], [80, 120, 50], [60, 75, 25]]); const [A2, B2, ans] = P12;
+  return { q: `ارتفع سعر سلعة من ${toAr(A2)} ريالاً إلى ${toAr(B2)} ريالاً.\nما نسبة الزيادة؟`, opts: opt4(ans, [B2 - A2, Math.round((B2 - A2) / B2 * 100), ans + 10, ans - 5]), ans, exp: `النسبة = الفرق ÷ الأصل × ١٠٠ = ${toAr(B2 - A2)} ÷ ${toAr(A2)} × ١٠٠ = ${toAr(ans)}٪ — القسمة على القديم لا الجديد`, cat: "النسب والمئوية" }; };
+const gMedian = () => { const base = ri(3, 9); const arr = shuffle([base, base + 4, base + 2, base + 7, base + 11]); const ans = base + 4;
+  return { q: `ما وسيط الأعداد: ${arr.map(toAr).join("، ")} ؟`, opts: opt4(ans, [base + 2, base + 7, Math.round(arr.reduce((x, y) => x + y, 0) / 5), base]), ans, exp: `بعد الترتيب يكون الأوسط (الثالث) هو ${toAr(ans)}`, cat: "الإحصاء والاحتمال" }; };
+const gArrange = () => { const P13 = pick([[3, 6], [4, 24], [5, 120]]); const [n8, ans] = P13;
+  return { q: `بكم طريقة يمكن ترتيب ${toAr(n8)} أشخاص في صف واحد؟`, opts: opt4(ans, [n8 * n8, ans / 2, ans * n8, n8 * 2]), ans, exp: `عدد الترتيبات = ${toAr(n8)}! = ${toAr(ans)} طريقة`, cat: "مهارات وقوانين" }; };
+const gPrimeCount = () => { const P14 = pick([[1, 10, 4], [10, 20, 4], [20, 30, 2], [30, 40, 2]]); const [a9, b8, ans] = P14;
+  return { q: `كم عدداً أولياً يقع بين ${toAr(a9)} و${toAr(b8)}؟`, opts: opt4(ans, [ans + 1, ans + 2, Math.max(1, ans - 1), ans + 3]), ans, exp: `عدّها بين ${toAr(a9)} و${toAr(b8)} يعطي ${toAr(ans)} أعداد أولية`, cat: "مهارات وقوانين" }; };
+const gDiffSquares = () => { const P15 = pick([[37, 36, 73], [51, 49, 200], [45, 44, 89], [62, 38, 2400]]); const [a10, b9, ans] = P15;
+  return { q: `ما قيمة: ${toAr(a10)}² − ${toAr(b9)}² ؟`, opts: opt4(ans, [(a10 - b9) * (a10 - b9), ans + a10, ans - b9 > 0 ? ans - b9 : ans + 7, (a10 + b9)]), ans, exp: `فرق مربعين = (${toAr(a10)}−${toAr(b9)})(${toAr(a10)}+${toAr(b9)}) = ${toAr(a10 - b9)} × ${toAr(a10 + b9)} = ${toAr(ans)} — بلا تربيع`, cat: "الجبر والأسس والجذور" }; };
+T1.push(gProfit, gPercentChange);
+T2.push(gScaleArea, gMedian, gArrange, gPrimeCount, gDiffSquares);
+T3.push(gAvgSpeed);
+META[0].push({ ch: "النسب والمئوية" }, { ch: "النسب والمئوية" });
+META[1].push({ ch: "الهندسة" }, { ch: "الإحصاء والاحتمال" }, { ch: "مهارات وقوانين" }, { ch: "مهارات وقوانين" }, { ch: "الجبر والأسس والجذور" });
+META[2].push({ ch: "السرعة والزمن" });
+// — دفعة THV الثانية: ص٣–٥٣ (عدا المقروء سابقاً) — ٨٢ مولداً
+// — ص٣-٦
+const gRectFromPer = () => { const w = ri(5, 10), h = ri(3, w - 1); return nq("الهندسة", "المستطيل من المحيط", `مستطيل محيطه ${toAr(2 * (w + h))} سم وطوله ${toAr(w)} سم.\nما مساحته؟`, w * h, `العرض = نصف المحيط − الطول = ${toAr(w + h)} − ${toAr(w)} = ${toAr(h)} سم، فالمساحة = ${toAr(w)} × ${toAr(h)} = ${toAr(w * h)} سم²`); };
+const gFailPct = () => { const P = pick([[30, 90, 3], [40, 90, 4], [20, 85, 3], [50, 90, 5], [40, 95, 2], [60, 95, 3]]); const [n, p, f] = P; return nq("النسب والمئوية", "نسبة المتبقي", `في فصلٍ ${toAr(n)} طالباً نجح ${toAr(p)}٪ منهم.\nكم طالباً لم ينجح؟`, f, `نسبة غير الناجحين = ١٠٠ − ${toAr(p)} = ${toAr(100 - p)}٪، وعددهم = ${toAr(n)} × ${toAr(100 - p)}٪ = ${toAr(f)} — لا تحسب الناجحين`); };
+const gIsosBase = () => { const A = pick([40, 50, 80, 100, 36]); const b = (180 - A) / 2; return nq("الهندسة", "متساوي الساقين", `مثلث متساوي الساقين قياس زاوية رأسه ${toAr(A)}°.\nما قياس إحدى زاويتي القاعدة؟`, b, `زاويتا القاعدة متساويتان: (١٨٠ − ${toAr(A)}) ÷ ٢ = ${toAr(b)}°`); };
+const gGeoSeq = () => { const a = pick([2, 3, 4]), r = pick([2, 3]); const s = [a, a * r, a * r * r, a * r ** 3]; return nq("الجبر والأسس والجذور", "النمط الهندسي", `أكمل النمط:\n${s.map(toAr).join("، ")}، ...`, a * r ** 4, `كل حد = السابق × ${toAr(r)}، فالتالي = ${toAr(a * r ** 3)} × ${toAr(r)} = ${toAr(a * r ** 4)}`); };
+const gCubeVol = () => { const e = pick([3, 4, 5, 6]); return nq("الهندسة", "حرف المكعب من الحجم", `مكعب حجمه ${toAr(e ** 3)} سم³.\nما طول حرفه؟`, e, `الحجم = الحرف³، فالحرف = ∛${toAr(e ** 3)} = ${toAr(e)} سم`); };
+const gAvgNew = () => { const n = pick([3, 4, 5]), a = ri(5, 9); const v = pick([a - n - 1, a + n + 1].filter((x) => x > 0)); const na = (a * n + v) / (n + 1); if (!Number.isInteger(na)) return gAvgNew(); return nq("الإحصاء والاحتمال", "المتوسط بعد الإضافة", `متوسط ${toAr(n)} أعداد هو ${toAr(a)}. أُضيف إليها العدد ${toAr(v)}.\nما المتوسط الجديد؟`, na, `المجموع الجديد = ${toAr(a * n)} + ${toAr(v)} = ${toAr(a * n + v)}، والمتوسط = ${toAr(a * n + v)} ÷ ${toAr(n + 1)} = ${toAr(na)}`); };
+// — ص٧-٨
+const gClockAfter = () => { const s = pick([[3, "الثالثة"], [4, "الرابعة"], [5, "الخامسة"], [9, "التاسعة"]]); const h = pick([50, 26, 27, 49, 74]); const add = h % 24; const f = (s[0] + add - 1) % 12 + 1; const NM = ["الواحدة", "الثانية", "الثالثة", "الرابعة", "الخامسة", "السادسة", "السابعة", "الثامنة", "التاسعة", "العاشرة", "الحادية عشرة", "الثانية عشرة"]; const ans = NM[f - 1]; return tqz("مهارات وقوانين", "دوري الساعات", `إذا كانت الساعة الآن ${s[1]} تماماً، فماذا تكون بعد ${toAr(h)} ساعة؟`, ans, `${toAr(h)} = ${toAr(h - add)} (أيام كاملة) + ${toAr(add)}، فنضيف ${toAr(add)} فقط: تصبح ${ans}`, shuffle([ans, NM[f % 12], NM[(f + 4) % 12], NM[(f + 7) % 12]])); };
+const gWholeFromPct = () => { const P = pick([[40, 60, 150], [25, 30, 120], [20, 18, 90], [30, 45, 150], [60, 90, 150], [75, 60, 80]]); const [p, v, w] = P; return nq("النسب والمئوية", "الكل من الجزء", `ما العدد الذي ${toAr(p)}٪ منه يساوي ${toAr(v)}؟`, w, `العدد = ${toAr(v)} ÷ ${toAr(p)}٪ = ${toAr(v)} × ١٠٠ ÷ ${toAr(p)} = ${toAr(w)}`); };
+const gSqAreaToPer = () => { const a = pick([5, 6, 7, 8, 9]); return nq("الهندسة", "محيط المربع من مساحته", `مربع مساحته ${toAr(a * a)} سم².\nما محيطه؟`, 4 * a, `الضلع = √${toAr(a * a)} = ${toAr(a)} سم، والمحيط = ٤ × ${toAr(a)} = ${toAr(4 * a)} سم`); };
+// — ص٩-١٠
+const gSqSumTrick = () => { const a = ri(3, 7), b = ri(2, a - 1); return nq("الجبر والأسس والجذور", "مربع المجموع", `ما قيمة: (${toAr(a)} + ${toAr(b)})² − (${toAr(a)}² + ${toAr(b)}²) ؟`, 2 * a * b, `(أ + ب)² = أ² + ٢أب + ب²، فالفرق = ٢أب = ٢ × ${toAr(a)} × ${toAr(b)} = ${toAr(2 * a * b)}`); };
+const gRadFromCirc = () => { const r = pick([7, 14, 21]); return nq("الهندسة", "نصف القطر من المحيط", `دائرة محيطها ${toAr(Math.round(2 * 22 / 7 * r))} سم. (اعتبر ط = ٢٢/٧)\nما نصف قطرها؟`, r, `المحيط = ٢ × ط × نق، فنق = ${toAr(Math.round(2 * 22 / 7 * r))} × ٧ ÷ ٤٤ = ${toAr(r)} سم`); };
+const gScaleModel = () => { const k = pick([100, 200, 300]); const h = pick([4, 5, 6, 8]); const real = h * k / 100; return nq("النسب والمئوية", "مقياس الرسم", `صُنع نموذج لبرجٍ بمقياس ١ : ${toAr(k)}. إذا كان ارتفاع النموذج ${toAr(h)} سم،\nفما الارتفاع الحقيقي بالمتر؟`, real, `الحقيقي = ${toAr(h)} × ${toAr(k)} = ${toAr(h * k)} سم = ${toAr(real)} أمتار`); };
+const gSysSum = () => { const x = ri(5, 9), y = ri(1, x - 1); return nq("الجبر والأسس والجذور", "معادلتان", `إذا كان س + ص = ${toAr(x + y)} و س − ص = ${toAr(x - y)}\nفما قيمة س؟`, x, `بجمع المعادلتين: ٢س = ${toAr(2 * x)}، فتكون س = ${toAr(x)}`); };
+const gDiag = () => { const n = pick([5, 6, 7, 8]); const d = n * (n - 3) / 2; return nq("الهندسة", "أقطار المضلع", `كم قطراً في مضلع عدد أضلاعه ${toAr(n)}؟`, d, `عدد الأقطار = ن(ن − ٣) ÷ ٢ = ${toAr(n)} × ${toAr(n - 3)} ÷ ٢ = ${toAr(d)}`); };
+// — ص١١، ١٣
+const gClockAngle = () => { const P = pick([[3, 90], [4, 120], [6, 180], [2, 60], [5, 150], [1, 30]]); const [h, a] = P; return nq("الهندسة", "زاوية عقربي الساعة", `ما قياس الزاوية الصغرى بين عقربي الساعة عند الساعة ${["الواحدة", "الثانية", "الثالثة", "الرابعة", "الخامسة", "السادسة"][h - 1]} تماماً؟`, a, `كل ساعة تقابل ٣٦٠ ÷ ١٢ = ٣٠°، فالزاوية = ${toAr(h)} × ٣٠ = ${toAr(a)}°`); };
+const gRemainderSeq = () => { const T = pick([[120, 25, 3, 60], [80, 25, 2, 30], [90, 20, 4, 54], [60, 50, 3, 20]]); const [n, p, f, ans] = T; const afterP = n * (100 - p) / 100; return nq("النسب والمئوية", "الباقي بعد عمليتين", `مستودع فيه ${toAr(n)} كيساً. بِيع ${toAr(p)}٪ منها، ثم بِيع ${f === 2 ? "نصف" : f === 3 ? "ثلث" : "ربع"} الباقي.\nكم كيساً بقي؟`, ans, `بعد البيع الأول يبقى ${toAr(afterP)}، وبعد بيع ${f === 2 ? "نصفها" : f === 3 ? "ثلثها" : "ربعها"} يبقى ${toAr(afterP)} − ${toAr(afterP / f)} = ${toAr(ans)} كيساً`); };
+const gPctOfPct = () => { const p1 = pick([50, 25, 20]), p2 = pick([20, 40, 10]); const N = pick([600, 400, 800]); const ans = N * p1 * p2 / 10000; return nq("النسب والمئوية", "نسبة من نسبة", `${toAr(p1)}٪ من ${toAr(p2)}٪ من ${toAr(N)} = ؟`, ans, `اضرب النسب: ${toAr(p1)}٪ × ${toAr(p2)}٪ × ${toAr(N)} = ${toAr(ans)}`); };
+const gNegSquareSub = () => { const s = ri(2, 5), k = ri(3, 9); const ans = -(s * s) - k; return nq("الجبر والأسس والجذور", "فخ الإشارة مع التربيع", `إذا كان س = −${toAr(s)}، فما قيمة: −س² − ${toAr(k)} ؟`, ans, `س² = ${toAr(s * s)} موجبة، و−س² = −${toAr(s * s)}، فالناتج = −${toAr(s * s)} − ${toAr(k)} = −${toAr(s * s + k)}`); };
+// — ص١٤-١٥
+const gSumDouble = () => { const k = pick([2, 3]); const s = ri(6, 12); const sum = s + k * s; return nq("مهارات وقوانين", "مجموع بنسبة", `مجموع عددين ${toAr(sum)} وأحدهما ${k === 2 ? "ضعف" : "ثلاثة أمثال"} الآخر.
+ما العدد الأكبر؟`, k * s, `لو الأصغر س: س + ${toAr(k)}س = ${toAr(sum)}، فالأصغر = ${toAr(s)} والأكبر = ${toAr(k * s)}`); };
+const gTriType = () => { const P = pick([[6, 8, 10, "قائم الزاوية"], [3, 4, 5, "قائم الزاوية"], [5, 5, 5, "متساوي الأضلاع"], [4, 4, 7, "متساوي الساقين"], [4, 6, 8, "مختلف الأضلاع"]]); const [a, b, c, t] = P; const O = ["قائم الزاوية", "متساوي الأضلاع", "متساوي الساقين", "مختلف الأضلاع"]; return tqz("الهندسة", "نوع المثلث", `مثلث أطوال أضلاعه ${toAr(a)} و${toAr(b)} و${toAr(c)} سم.\nما نوعه؟`, t, t === "قائم الزاوية" ? `${toAr(a)}² + ${toAr(b)}² = ${toAr(c)}²، فهو قائم الزاوية بعكس فيثاغورس` : `قارن الأضلاع: ${t}`, O); };
+const gTwoItems = () => { const p1 = ri(2, 4), p2 = ri(3, 6); const n1 = ri(2, 4), n2 = ri(2, 3); const tot = n1 * p1 + n2 * p2; return nq("الجبر والأسس والجذور", "ثمن صنفين", `ثمن ${toAr(n1)} أقلام و${toAr(n2)} دفاتر معاً ${toAr(tot)} ريالاً، وثمن القلم الواحد ${toAr(p1)} ريال.\nما ثمن الدفتر الواحد؟`, p2, `ثمن الدفاتر = ${toAr(tot)} − ${toAr(n1 * p1)} = ${toAr(n2 * p2)}، فالدفتر = ${toAr(n2 * p2)} ÷ ${toAr(n2)} = ${toAr(p2)} ريالات`); };
+const gSquaresSeq = () => { const k = ri(4, 7); const s = [1, 4, 9, 16, 25, 36, 49].slice(k - 4, k); return nq("الجبر والأسس والجذور", "نمط المربعات", `ما العدد التالي في النمط:\n${s.map(toAr).join("، ")}، ...؟`, (k + 1) ** 2, `النمط مربعات الأعداد: ${toAr(k + 1)}² = ${toAr((k + 1) ** 2)}`); };
+// — ص١٦-١٧
+const gRootSumTrap = () => { const P = pick([[36, 64, 10], [9, 16, 5], [144, 25, 13], [64, 36, 10]]); const [a, b, r] = P; return nq("الجبر والأسس والجذور", "جذر المجموع", `ما قيمة: √(${toAr(a)} + ${toAr(b)}) ؟`, r, `اجمع أولاً ثم خذ الجذر: √${toAr(a + b)} = ${toAr(r)} — وليس √${toAr(a)} + √${toAr(b)}`); };
+const gBoxEdges = () => { const a = ri(3, 6), b = ri(3, 6), c = ri(2, 5); return nq("الهندسة", "أحرف متوازي المستطيلات", `متوازي مستطيلات أبعاده ${toAr(a)} و${toAr(b)} و${toAr(c)} سم.\nما مجموع أطوال أحرفه جميعاً؟`, 4 * (a + b + c), `لكل بُعدٍ ٤ أحرف: المجموع = ٤ × (${toAr(a)} + ${toAr(b)} + ${toAr(c)}) = ${toAr(4 * (a + b + c))} سم`); };
+const gSidesFromExt = () => { const n = pick([8, 6, 9, 10, 12]); return nq("الهندسة", "الأضلاع من الزاوية الخارجية", `مضلع منتظم قياس زاويته الخارجية ${toAr(360 / n)}°.\nكم عدد أضلاعه؟`, n, `مجموع الزوايا الخارجية ٣٦٠°، فعدد الأضلاع = ٣٦٠ ÷ ${toAr(360 / n)} = ${toAr(n)}`); };
+// — ص١٨-١٩
+const gQuadAngle = () => { const a = pick([100, 110, 95]), b = pick([80, 75, 85]), c = pick([95, 90, 70]); const d = 360 - a - b - c; return nq("الهندسة", "زوايا الرباعي", `شكل رباعي قياسات ثلاث من زواياه: ${toAr(a)}° و${toAr(b)}° و${toAr(c)}°.\nما قياس الزاوية الرابعة؟`, d, `مجموع زوايا الرباعي ٣٦٠°، فالرابعة = ٣٦٠ − ${toAr(a + b + c)} = ${toAr(d)}°`); };
+const gPalinOdo = () => { const P = pick([[15951, 110], [12921, 110], [14941, 110], [12321, 100], [13431, 100]]); const [n, d] = P; return nq("مهارات وقوانين", "العداد المتناظر", `عدّاد المسافات في سيارة يُظهر ${toAr(n)} كم، وهو عدد متناظر (يُقرأ من الجهتين بالتساوي).\nما أقل مسافة تقطعها لتظهر قراءة متناظرة جديدة؟`, d, `أقرب متناظر تالٍ هو ${toAr(n + d)}، والفرق = ${toAr(d)} كم`); };
+const gSolveThenEval = () => { const x = ri(4, 8); const a = pick([2, 3]), b = ri(1, 5); const c = a * x - b; const k = pick([3, 4]), m = ri(1, 4); return nq("الجبر والأسس والجذور", "حلّ ثم عوّض", `إذا كان ${toAr(a)}س − ${toAr(b)} = ${toAr(c)}\nفما قيمة ${toAr(k)}س + ${toAr(m)} ؟`, k * x + m, `من المعادلة: س = ${toAr(x)}، ثم ${toAr(k)} × ${toAr(x)} + ${toAr(m)} = ${toAr(k * x + m)} — المطلوب مقدار آخر لا س`); };
+const gAvgRemoved = () => { const n = pick([4, 5, 6]), a = ri(6, 10), na = a - 1; const rm = a * n - na * (n - 1); return nq("الإحصاء والاحتمال", "العدد المحذوف", `المتوسط الحسابي لـ ${toAr(n)} أعداد هو ${toAr(a)}. حُذف أحدها فصار متوسط الباقي ${toAr(na)}.\nما العدد المحذوف؟`, rm, `المحذوف = المجموع القديم − الجديد = ${toAr(a * n)} − ${toAr(na * (n - 1))} = ${toAr(rm)}`); };
+const gOrderOps = () => { const N = pick([40, 24, 32, 48]); const d = pick([8, 4]), m = 2; const ans = N - N / d * m; return nq("مهارات وقوانين", "أولوية العمليات", `ما قيمة: ${toAr(N)} − ${toAr(N)} ÷ ${toAr(d)} × ${toAr(m)} ؟`, ans, `القسمة والضرب أولاً من اليمين لليسار: ${toAr(N)} ÷ ${toAr(d)} × ${toAr(m)} = ${toAr(N / d * m)}، ثم ${toAr(N)} − ${toAr(N / d * m)} = ${toAr(ans)}`); };
+const gRatioFromParts = () => { const P = pick([[2, 3, "٢ : ٣"], [3, 4, "٣ : ٤"], [2, 5, "٢ : ٥"], [3, 5, "٣ : ٥"]]); const [a, b, s] = P; const W = ["", "", "نصف", "ثلث", "ربع", "خمس"]; return tqz("النسب والمئوية", "نسبة من تساوي الأجزاء", `${W[a]} العدد س يساوي ${W[b]} العدد ص.\nما النسبة س : ص؟`, s, `س ÷ ${toAr(a)} = ص ÷ ${toAr(b)} تعني س : ص = ${s}`, shuffle([s, `${toAr(b)} : ${toAr(a)}`, "١ : ١", `${toAr(a)} : ${toAr(a + b)}`])); };
+// — ص٢١-٢٢
+const gEqualPer = () => { const w = ri(8, 12), h = ri(4, w - 2); const s = (w + h) / 2; if (!Number.isInteger(s)) return gEqualPer(); return nq("الهندسة", "تساوي المحيطين", `محيط مربعٍ يساوي محيط مستطيل طوله ${toAr(w)} سم وعرضه ${toAr(h)} سم.\nما طول ضلع المربع؟`, s, `محيط المستطيل = ٢ × (${toAr(w)} + ${toAr(h)}) = ${toAr(2 * (w + h))}، فضلع المربع = ${toAr(2 * (w + h))} ÷ ٤ = ${toAr(s)} سم`); };
+const gFactDiv = () => { const n = pick([6, 7, 8]), k = n - 2; return nq("مهارات وقوانين", "قسمة المضروب", `ما ناتج: ${toAr(n)}! ÷ ${toAr(k)}! ؟`, n * (n - 1), `اختصر: ${toAr(n)}! ÷ ${toAr(k)}! = ${toAr(n)} × ${toAr(n - 1)} = ${toAr(n * (n - 1))}`); };
+const gCompRatio = () => { const k = pick([2, 4, 5]); const x = 90 / (k + 1); if (!Number.isInteger(x)) return gCompRatio(); const comp = Math.random() < 0.5; const tot = comp ? 90 : 180; const y = tot / (k + 1); if (!Number.isInteger(y)) return gCompRatio(); return nq("الهندسة", "زاويتان بنسبة", `زاويتان ${comp ? "متتامّتان" : "متكاملتان"} قياس إحداهما ${k === 2 ? "ضعف" : `${toAr(k)} أمثال`} الأخرى.\nما قياس الزاوية الصغرى؟`, y, `س + ${toAr(k)}س = ${toAr(tot)}، فتكون س = ${toAr(tot)} ÷ ${toAr(k + 1)} = ${toAr(y)}°`); };
+const gFracEq = () => { const P = pick([[3, 6, 3, 6], [2, 4, 6, 8], [2, 6, 4, 6], [4, 12, 2, 6]]); const [d1, d2, rhs, x] = P; return nq("الجبر والأسس والجذور", "معادلة كسرية", `أوجد قيمة س:\nس/${toAr(d1)} + س/${toAr(d2)} = ${toAr(rhs)}`, x, `وحّد المقامات: (${toAr(d2 / d1)}س + س) ÷ ${toAr(d2)} = ${toAr(rhs)}، فتكون س = ${toAr(x)}`); };
+const gCountEvens = () => { const a = pick([11, 13, 21]), b = a + pick([18, 14, 16]); const first = a + 1, last = b - 1; const cnt = (last - first) / 2 + 1; return nq("مهارات وقوانين", "عدّ الأعداد الزوجية", `كم عدداً زوجياً يقع بين ${toAr(a)} و${toAr(b)}؟`, cnt, `أولها ${toAr(first)} وآخرها ${toAr(last)}: العدد = (${toAr(last)} − ${toAr(first)}) ÷ ٢ + ١ = ${toAr(cnt)}`); };
+// — ص٢٣-٢٤
+const gPoolLaps = () => { const L = pick([25, 50]), n = ri(3, 6); return nq("مهارات وقوانين", "ذهاب وإياب", `مسبح طوله ${toAr(L)} متراً. سبح لاعب ذهاباً وإياباً ${toAr(n)} مرات.\nكم متراً قطع؟`, L * 2 * n, `الذهاب والإياب = ${toAr(2 * L)} متراً، والمجموع = ${toAr(2 * L)} × ${toAr(n)} = ${toAr(2 * L * n)} متراً`); };
+const gAreaIncPct = () => { const P = pick([[4, 6, 125], [5, 10, 300], [4, 8, 300], [10, 12, 44], [5, 6, 44]]); const [a, b, p] = P; return nq("النسب والمئوية", "زيادة المساحة", `زاد طول ضلع مربع من ${toAr(a)} سم إلى ${toAr(b)} سم.\nما نسبة الزيادة في مساحته؟`, p, `المساحة من ${toAr(a * a)} إلى ${toAr(b * b)}: الزيادة = ${toAr(b * b - a * a)} ÷ ${toAr(a * a)} × ١٠٠ = ${toAr(p)}٪`); };
+// — ص٢٦-٢٧
+const gHeadsLegs = () => { const s = ri(5, 10), c = ri(6, 14); const heads = s + c, legs = 4 * s + 2 * c; return nq("مهارات وقوانين", "الرؤوس والأرجل", `في مزرعة دجاجٌ وأغنام: عدد الرؤوس ${toAr(heads)} وعدد الأرجل ${toAr(legs)}.\nكم عدد الأغنام؟`, s, `لو كلها دجاجاً لكانت الأرجل ${toAr(2 * heads)}، والزيادة ${toAr(legs - 2 * heads)} ÷ ٢ = ${toAr(s)} أغنام`); };
+const gPickPrime = () => { const P = pick([[[21, 23, 25, 27], 23], [[33, 35, 37, 39], 37], [[51, 53, 55, 57], 53], [[87, 89, 91, 93], 89]]); const [arr, p] = P; return tqz("مهارات وقوانين", "تمييز الأولي", `أيٌّ مما يلي عدد أولي؟`, toAr(p), `${toAr(p)} لا يقبل القسمة إلا على ١ ونفسه، وبقية الأعداد مضاعفات لأعداد أصغر`, shuffle(arr.map(toAr))); };
+const gSlowClock = () => { const m = pick([2, 3, 4]), h = pick([5, 6]); const late = m * h; const mm = 60 - late; return tqz("مهارات وقوانين", "الساعة المتأخرة", `ساعةٌ تتأخر ${toAr(m)} دقائق كل ساعة. ضُبطت بدقة عند الثانية عشرة ظهراً.\nماذا تُشير عندما يكون الوقت الحقيقي ${h === 5 ? "الخامسة" : "السادسة"} مساءً؟`, `${toAr(h - 1)}:${toAr(mm)}`, `تأخرت ${toAr(m)} × ${toAr(h)} = ${toAr(late)} دقيقة، فتشير إلى ${toAr(h - 1)}:${toAr(mm)}`, shuffle([`${toAr(h - 1)}:${toAr(mm)}`, `${toAr(h)}:${toAr(late)}`, `${toAr(h - 1)}:${toAr(late)}`, `${toAr(h)}:${toAr(mm)}`])); };
+const gRectPerFromArea = () => { const w = ri(4, 8), L = w + ri(2, 4); return nq("الهندسة", "المحيط من المساحة", `مستطيل مساحته ${toAr(L * w)} سم² وعرضه ${toAr(w)} سم.\nما محيطه؟`, 2 * (L + w), `الطول = ${toAr(L * w)} ÷ ${toAr(w)} = ${toAr(L)} سم، والمحيط = ٢ × (${toAr(L)} + ${toAr(w)}) = ${toAr(2 * (L + w))} سم`); };
+// — ص٢٨-٢٩
+const gChainSub = () => { const a = pick([2, 3]), b = pick([3, 4]); return nq("الجبر والأسس والجذور", "تعويض متسلسل", `إذا كان س = ${toAr(a)}ص، وكان ص = ${toAr(b)}ع،\nفإن س تساوي كم ضِعفاً من ع؟`, a * b, `عوّض: س = ${toAr(a)} × ${toAr(b)}ع = ${toAr(a * b)}ع`); };
+const gAltSum = () => { const N = pick([100, 60, 80, 40]); return nq("مهارات وقوانين", "المجموع المتناوب", `ما ناتج:\n${toAr(N)} − ${toAr(N - 1)} + ${toAr(N - 2)} − ${toAr(N - 3)} + ... + ٢ − ١ ؟`, N / 2, `كل زوجٍ (مثل ${toAr(N)} − ${toAr(N - 1)}) يساوي ١، وعدد الأزواج = ${toAr(N / 2)}، فالناتج ${toAr(N / 2)}`); };
+const gAgeAtBirth = () => { const k = ri(9, 14), s = ri(3, 6); return nq("مهارات وقوانين", "العمر عند الولادة", `عمر خالد اليوم ${toAr(k)} سنة وعمر أخيه الأصغر ${toAr(s)} سنوات.\nكم كان عمر خالد عندما وُلد أخوه؟`, k - s, `فرق العمرين ثابت دائماً: ${toAr(k)} − ${toAr(s)} = ${toAr(k - s)} سنوات`); };
+// — ص٣٠-٣١
+const gCuts = () => { const p = ri(3, 5); const n = p * ri(6, 10); return nq("مهارات وقوانين", "القصّات والقطع", `حبل طوله ${toAr(n)} متراً يُراد قصّه إلى قطع طول كل منها ${toAr(p)} أمتار.\nكم قصّة نحتاج؟`, n / p - 1, `عدد القطع = ${toAr(n / p)}، وعدد القصّات = القطع − ١ = ${toAr(n / p - 1)} — القصّة الأخيرة تعطي قطعتين`); };
+const gSimAreaRatio = () => { const a = pick([2, 3]), b = a + pick([1, 2]); return tqz("الهندسة", "نسبة مساحتي متشابهين", `مثلثان متشابهان النسبة بين طولي ضلعين متناظرين فيهما ${toAr(a)} : ${toAr(b)}.\nما النسبة بين مساحتيهما؟`, `${toAr(a * a)} : ${toAr(b * b)}`, `نسبة المساحات = مربع نسبة الأطوال = ${toAr(a)}² : ${toAr(b)}² = ${toAr(a * a)} : ${toAr(b * b)}`, shuffle([`${toAr(a * a)} : ${toAr(b * b)}`, `${toAr(a)} : ${toAr(b)}`, `${toAr(2 * a)} : ${toAr(2 * b)}`, `${toAr(a)} : ${toAr(b * b)}`])); };
+const gRatioDiff = () => { const a = pick([2, 3]), b = a + pick([1, 2]); const k = pick([4, 5, 8]); return nq("النسب والمئوية", "الفرق من النسبة", `عددان النسبة بينهما ${toAr(a)} : ${toAr(b)} ومجموعهما ${toAr(k * (a + b))}.\nما الفرق بينهما؟`, k * (b - a), `قيمة الجزء = ${toAr(k * (a + b))} ÷ ${toAr(a + b)} = ${toAr(k)}، والفرق = (${toAr(b)} − ${toAr(a)}) × ${toAr(k)} = ${toAr(k * (b - a))}`); };
+const gZeroExp = () => { const a = pick([5, 7, 9, 3]); return nq("الجبر والأسس والجذور", "الأس صفر", `ما قيمة: ${toAr(a)}⁰ + ${toAr(a)}¹ ؟`, 1 + a, `أي عدد (غير الصفر) أسّه صفر يساوي ١، فالناتج = ١ + ${toAr(a)} = ${toAr(1 + a)}`); };
+const gTrainPole = () => { const L = pick([100, 150, 200]), t = pick([5, 10]); if (L % t !== 0) return gTrainPole(); return nq("السرعة والزمن", "قطار يتجاوز عموداً", `قطار طوله ${toAr(L)} متر تجاوز عموداً ثابتاً في ${toAr(t)} ثوانٍ.\nما سرعته بالمتر في الثانية؟`, L / t, `لتجاوز العمود يقطع القطار طوله كاملاً: السرعة = ${toAr(L)} ÷ ${toAr(t)} = ${toAr(L / t)} م/ث`); };
+const gSqFromDiag = () => { const d = pick([6, 8, 10, 12]); return nq("الهندسة", "المربع من قطره", `مربع طول قطره ${toAr(d)} سم.\nما مساحته؟`, d * d / 2, `مساحة المربع = القطر² ÷ ٢ = ${toAr(d * d)} ÷ ٢ = ${toAr(d * d / 2)} سم²`); };
+// — ص٣٢-٣٣
+const gOrigPrice = () => { const P = pick([[30, 210, 300], [20, 240, 300], [25, 150, 200], [10, 360, 400], [40, 120, 200]]); const [d, s, o] = P; return nq("النسب والمئوية", "السعر قبل الخصم", `بعد خصم ${toAr(d)}٪ أصبح سعر سلعة ${toAr(s)} ريالاً.\nما سعرها الأصلي؟`, o, `السعر بعد الخصم = ${toAr(100 - d)}٪ من الأصلي، فالأصلي = ${toAr(s)} ÷ ${toAr(100 - d)}٪ = ${toAr(o)} ريال`); };
+const gNeededScore = () => { const n = pick([3, 4]); const a = pick([70, 75, 80]); const t = a + pick([5, 10]); const need = t * (n + 1) - a * n; if (need > 100) return gNeededScore(); return nq("الإحصاء والاحتمال", "الدرجة المطلوبة", `متوسط درجات طالب في ${toAr(n)} اختبارات هو ${toAr(a)}.\nكم يحتاج في الاختبار التالي ليصبح متوسطه ${toAr(t)}؟`, need, `المطلوب مجموعه = ${toAr(t)} × ${toAr(n + 1)} = ${toAr(t * (n + 1))}، وعنده ${toAr(a * n)}، فيحتاج ${toAr(need)}`); };
+const gSameExp = () => { const P = pick([[2, 5, 3, 1000], [4, 25, 2, 10000], [2, 50, 2, 10000], [5, 20, 2, 10000]]); const [a, b, e, ans] = P; return nq("الجبر والأسس والجذور", "أساسان بنفس الأس", `ما قيمة: ${toAr(a)}${e === 3 ? "³" : "²"} × ${toAr(b)}${e === 3 ? "³" : "²"} ؟`, ans, `عند تساوي الأسس اضرب الأساسين: (${toAr(a)} × ${toAr(b)})${e === 3 ? "³" : "²"} = ${toAr(a * b)}${e === 3 ? "³" : "²"} = ${toAr(ans)}`); };
+// — ص٣٤-٣٥
+const gTwoDice = () => { const P = pick([[7, "١/٦", ["١/٦", "١/١٢", "٧/٣٦", "١/٧"], 6], [6, "٥/٣٦", ["٥/٣٦", "١/٦", "١/١٢", "٦/٣٦"], 5], [10, "١/١٢", ["١/١٢", "١/٦", "١/١٠", "٥/٣٦"], 3], [12, "١/٣٦", ["١/٣٦", "١/١٢", "١/٦", "٢/٣٦"], 1]]); const [s, ans, opts, cnt] = P; return tqz("الإحصاء والاحتمال", "مجموع حجري نرد", `عند رمي حجري نرد منتظمين معاً،\nما احتمال أن يكون مجموع الوجهين ${toAr(s)}؟`, ans, `النواتج الكلية ٣٦، والمجموع ${toAr(s)} يظهر بـ ${toAr(cnt)} ${cnt === 1 ? "طريقة" : "طرق"}، فالاحتمال بعد الاختصار ${ans}`, shuffle([...opts])); };
+const gRectRatioPer = () => { const k = pick([2, 3, 4]); const a = 3, b = 2; const per = 2 * (a + b) * k; return nq("الهندسة", "مستطيل من نسبة ومحيط", `مستطيل النسبة بين طوله وعرضه ${toAr(a)} : ${toAr(b)} ومحيطه ${toAr(per)} سم.\nما مساحته؟`, a * k * b * k, `نصف المحيط = ${toAr(per / 2)} يوزَّع ${toAr(a)} : ${toAr(b)}، فالطول ${toAr(a * k)} والعرض ${toAr(b * k)}، والمساحة = ${toAr(a * k * b * k)} سم²`); };
+const gSuppDiff = () => { const d = pick([40, 20, 60, 30]); const big = (180 + d) / 2; return nq("الهندسة", "متكاملتان بفرق", `زاويتان متكاملتان الفرق بينهما ${toAr(d)}°.\nما قياس الكبرى؟`, big, `الكبرى = (١٨٠ + ${toAr(d)}) ÷ ٢ = ${toAr(big)}° — مجموعهما ١٨٠ وفرقهما ${toAr(d)}`); };
+const gCubeRatio = () => { const a = pick([2, 3]), b = a * 2; return tqz("الهندسة", "نسبة حجمي مكعبين", `مكعبان طولا حرفيهما ${toAr(a)} سم و${toAr(b)} سم.\nما النسبة بين حجميهما؟`, `١ : ${toAr(8)}`, `نسبة الحجوم = مكعب نسبة الأحرف = (${toAr(a)} : ${toAr(b)})³ = ١ : ٨`, shuffle([`١ : ${toAr(8)}`, `١ : ${toAr(2)}`, `١ : ${toAr(4)}`, `١ : ${toAr(6)}`])); };
+// — ص٣٦، ٣٨
+const gSqEqTriple = () => { const k = pick([3, 4, 5, 6]); return nq("الجبر والأسس والجذور", "مربعه يساوي أمثاله", `ما العدد الموجب الذي مربعه يساوي ${k === 3 ? "ثلاثة" : k === 4 ? "أربعة" : k === 5 ? "خمسة" : "ستة"} أمثاله؟`, k, `س² = ${toAr(k)}س، وبالقسمة على س: س = ${toAr(k)}`); };
+const gClock24 = () => { const P = pick([[14, 30, "٢:٣٠ مساءً"], [16, 15, "٤:١٥ مساءً"], [13, 45, "١:٤٥ مساءً"], [20, 20, "٨:٢٠ مساءً"]]); const [h, m, ans] = P; return tqz("مهارات وقوانين", "نظام ٢٤ ساعة", `ساعة رقمية تُظهر ${toAr(h)}:${toAr(m)}.\nما الوقت بنظام الـ ١٢ ساعة؟`, ans, `اطرح ١٢ من الساعات بعد الظهر: ${toAr(h)} − ١٢ = ${toAr(h - 12)}، فالوقت ${ans}`, shuffle([ans, `${toAr(h - 12)}:${toAr(m)} صباحاً`, `${toAr(h - 11)}:${toAr(m)} مساءً`, `${toAr(h - 12 + 1)}:${toAr(m === 30 ? 15 : 30)} مساءً`])); };
+const gPctSymm = () => { const a = pick([6, 8, 4]), b = pick([50, 25]); const ans = a * b / 100 * 2; return nq("النسب والمئوية", "تماثل النسبة", `ما قيمة: ${toAr(a)}٪ من ${toAr(b)} + ${toAr(b)}٪ من ${toAr(a)} ؟`, ans, `أ٪ من ب = ب٪ من أ، فكل حدٍّ = ${toAr(a * b / 100)}، والمجموع = ${toAr(ans)}`); };
+const gSqTriPer = () => { const s = pick([6, 9, 12]); return nq("الهندسة", "تساوي محيطين", `مربع ومثلث متساوي الأضلاع لهما المحيط نفسه. طول ضلع المربع ${toAr(s)} سم.\nما طول ضلع المثلث؟`, 4 * s / 3, `المحيط = ٤ × ${toAr(s)} = ${toAr(4 * s)}، وضلع المثلث = ${toAr(4 * s)} ÷ ٣ = ${toAr(4 * s / 3)} سم`); };
+const gGaussSum = () => { const n = pick([20, 30, 40, 100]); return nq("مهارات وقوانين", "مجموع الأعداد المتتالية", `ما ناتج: ١ + ٢ + ٣ + ... + ${toAr(n)} ؟`, n * (n + 1) / 2, `المجموع = ن × (ن + ١) ÷ ٢ = ${toAr(n)} × ${toAr(n + 1)} ÷ ٢ = ${toAr(n * (n + 1) / 2)}`); };
+const gPerMinute = () => { const v = pick([90, 60, 120]); return nq("السرعة والزمن", "أمتار في الدقيقة", `سيارة تسير بسرعة ${toAr(v)} كم/س.\nكم متراً تقطع في دقيقة واحدة؟`, v * 1000 / 60, `في الساعة ${toAr(v * 1000)} متر، وفي الدقيقة = ${toAr(v * 1000)} ÷ ٦٠ = ${toAr(v * 1000 / 60)} متراً`); };
+// — ص٣٩-٤٠
+const gTriBase = () => { const b = pick([8, 10, 12]), h = pick([6, 9, 7]); return nq("الهندسة", "القاعدة من المساحة", `مثلث مساحته ${toAr(b * h / 2)} سم² وارتفاعه ${toAr(h)} سم.\nما طول قاعدته؟`, b, `القاعدة = ٢ × المساحة ÷ الارتفاع = ${toAr(b * h)} ÷ ${toAr(h)} = ${toAr(b)} سم`); };
+const gParaAngle = () => { const a = pick([65, 70, 55, 110, 125]); return nq("الهندسة", "زوايا متوازي الأضلاع", `متوازي أضلاع قياس إحدى زواياه ${toAr(a)}°.\nما قياس الزاوية المجاورة لها؟`, 180 - a, `الزاويتان المتجاورتان في متوازي الأضلاع متكاملتان: ١٨٠ − ${toAr(a)} = ${toAr(180 - a)}°`); };
+// — ص٤١-٤٢
+const gMaxProduct = () => { const s = pick([6, 8, 10]); return nq("الجبر والأسس والجذور", "أكبر حاصل ضرب", `س وص عددان صحيحان موجبان مجموعهما ${toAr(s)}.\nما أكبر قيمة ممكنة لحاصل ضربهما؟`, (s / 2) ** 2, `الحاصل أكبر ما يمكن عند تساويهما: ${toAr(s / 2)} × ${toAr(s / 2)} = ${toAr((s / 2) ** 2)}`); };
+const gWordToEq = () => { const k = pick([3, 4]), c = pick([500, 300, 200]), R = pick([2000, 1000]); const ans = `${toAr(k)}س − ${toAr(c)} = ${toAr(R)}`; return tqz("الجبر والأسس والجذور", "من العبارة إلى المعادلة", `«أقلُّ بـ ${toAr(c)} من ${toAr(k)} أمثال سعر سلعةٍ يساوي ${toAr(R)}».\nأي معادلة تمثل العبارة إذا كان السعر س؟`, ans, `${toAr(k)} أمثال السعر = ${toAr(k)}س، وأقل منها بـ ${toAr(c)} يعني الطرح: ${ans}`, shuffle([ans, `${toAr(k)}س + ${toAr(c)} = ${toAr(R)}`, `${toAr(c)} − ${toAr(k)}س = ${toAr(R)}`, `${toAr(k)}(س − ${toAr(c)}) = ${toAr(R)}`])); };
+const gSlopeTwoPts = () => { const m = pick([1, 2, 3]); const x1 = ri(1, 3), dx = pick([1, 2]); const y1 = ri(1, 4); const x2 = x1 + dx, y2 = y1 + m * dx; return nq("الهندسة", "ميل المستقيم", `ما ميل المستقيم المار بالنقطتين (${toAr(x1)}، ${toAr(y1)}) و(${toAr(x2)}، ${toAr(y2)})؟`, m, `الميل = فرق الصادات ÷ فرق السينات = (${toAr(y2)} − ${toAr(y1)}) ÷ (${toAr(x2)} − ${toAr(x1)}) = ${toAr(m)}`); };
+const gLineEq = () => { const m = pick([2, 3, 4]), c = pick([1, 5, 7]); const ans = `ص = ${toAr(m)}س + ${toAr(c)}`; return tqz("الهندسة", "معادلة المستقيم", `ما معادلة المستقيم الذي ميله ${toAr(m)} ويقطع محور الصادات عند النقطة (٠، ${toAr(c)})؟`, ans, `الصورة: ص = الميل × س + المقطع الصادي، أي ${ans}`, shuffle([ans, `ص = ${toAr(c)}س + ${toAr(m)}`, `ص = ${toAr(m)}س − ${toAr(c)}`, `س = ${toAr(m)}ص + ${toAr(c)}`])); };
+// — ص٤٣-٤٤
+const gSumProdToSquares = () => { const s = pick([5, 4, 6]), p = pick([1, 2, 3]); return nq("الجبر والأسس والجذور", "س²+ص² من المجموع والضرب", `إذا كان س + ص = ${toAr(s)} وكان س ص = ${toAr(p)}،\nفما قيمة س² + ص²؟`, s * s - 2 * p, `س² + ص² = (س + ص)² − ٢س ص = ${toAr(s * s)} − ${toAr(2 * p)} = ${toAr(s * s - 2 * p)}`); };
+const gXPlusInvX = () => { const k = pick([3, 4, 5]); return nq("الجبر والأسس والجذور", "س + ١/س", `إذا كان س + ١/س = ${toAr(k)}،\nفما قيمة س² + ١/س² ؟`, k * k - 2, `بتربيع الطرفين: س² + ٢ + ١/س² = ${toAr(k * k)}، فالمطلوب = ${toAr(k * k)} − ٢ = ${toAr(k * k - 2)}`); };
+const gDiffSqSystem = () => { const x = ri(4, 7), y = ri(1, 3); const d = x * x - y * y; return nq("الجبر والأسس والجذور", "نظام فرق المربعين", `إذا كان س² − ص² = ${toAr(d)} وكان س − ص = ${toAr(x - y)}،\nفما قيمة س؟`, x, `س + ص = ${toAr(d)} ÷ ${toAr(x - y)} = ${toAr(x + y)}، وبجمعها مع س − ص = ${toAr(x - y)}: ٢س = ${toAr(2 * x)}، فتكون س = ${toAr(x)}`); };
+const gProdConjugate = () => { const b = pick([2, 3, 4]); const ans = 10000 - b * b; return nq("مهارات وقوانين", "ضرب بالمرافق", `ما ناتج: ${toAr(100 + b)} × ${toAr(100 - b)} ؟`, ans, `(١٠٠ + ${toAr(b)})(١٠٠ − ${toAr(b)}) = ١٠٠² − ${toAr(b)}² = ${toAr(10000)} − ${toAr(b * b)} = ${toAr(ans)}`); };
+const gDiffSqDivide = () => { const a = pick([29, 21, 31, 41]), b = pick([9, 4, 6]); return nq("الجبر والأسس والجذور", "قسمة فرق مربعين", `ما قيمة: (${toAr(a)}² − ${toAr(b * b)}) ÷ (${toAr(a)} − ${toAr(b)}) ؟`, a + b, `البسط = (${toAr(a)} − ${toAr(b)})(${toAr(a)} + ${toAr(b)})، وبعد الاختصار يبقى ${toAr(a)} + ${toAr(b)} = ${toAr(a + b)}`); };
+// — ص٤٥-٤٦
+const gSqDiffExpand = () => { const a = ri(2, 5), b = ri(1, a - 1); return nq("الجبر والأسس والجذور", "فرق مربعي مجموع وفرق", `ما قيمة: (${toAr(a)} + ${toAr(b)})² − (${toAr(a)} − ${toAr(b)})² ؟`, 4 * a * b, `(أ + ب)² − (أ − ب)² = ٤أب = ٤ × ${toAr(a)} × ${toAr(b)} = ${toAr(4 * a * b)}`); };
+const gRootConjugate = () => { const P = pick([[7, 5], [11, 3], [13, 6], [10, 2]]); const [a, b] = P; return nq("الجبر والأسس والجذور", "جذور مترافقة", `ما ناتج: (√${toAr(a)} + √${toAr(b)}) × (√${toAr(a)} − √${toAr(b)}) ؟`, a - b, `فرق مربعين: (√${toAr(a)})² − (√${toAr(b)})² = ${toAr(a)} − ${toAr(b)} = ${toAr(a - b)}`); };
+const gGCDTiles = () => { const g = pick([7, 6, 8]); const a = g * pick([3, 4]), b = g * pick([5, 7]); return nq("مهارات وقوانين", "القاسم المشترك الأكبر", `مستطيل أبعاده ${toAr(a)} سم × ${toAr(b)} سم قُسِّم إلى مربعات متطابقة أكبر ما يمكن.\nما طول ضلع المربع الواحد؟`, g, `طول الضلع = القاسم المشترك الأكبر للعددين ${toAr(a)} و${toAr(b)} = ${toAr(g)} سم`); };
+const gLCMCount = () => { const P = pick([[3, 5, 60], [4, 6, 48], [3, 4, 36], [6, 8, 48]]); const [a, b, T] = P; const lcm = (x, y) => { const g = (m, n) => (n ? g(n, m % n) : m); return x * y / g(x, y); }; const L = lcm(a, b); return nq("مهارات وقوانين", "الالتقاء بالمضاعف المشترك", `يزور محمد جدّه كل ${toAr(a)} أيام، ويزوره خالد كل ${toAr(b)} أيام، وقد زاراه اليوم معاً.\nكم مرة يلتقيان عنده خلال الـ ${toAr(T)} يوماً القادمة؟`, T / L, `يلتقيان كل ${toAr(L)} يوماً (المضاعف المشترك الأصغر)، فعدد المرات = ${toAr(T)} ÷ ${toAr(L)} = ${toAr(T / L)}`); };
+// — ص٤٩، ٥١
+const gMoneyFloor = () => { const M = pick([4, 5, 7]); const p = pick([[0.75, "٠٫٧٥"], [1.5, "١٫٥"]]); const n = Math.floor(M / p[0]); return nq("مهارات وقوانين", "أكبر عدد يمكن شراؤه", `مع طالبٍ ${toAr(M)} ريالات، وسعر القلم الواحد ${p[1]} ريال.\nما أكبر عدد من الأقلام يستطيع شراءه؟`, n, `${toAr(M)} ÷ ${p[1]} = ${toAr(Math.round(M / p[0] * 100) / 100)}، ونأخذ الجزء الصحيح فقط: ${toAr(n)} أقلام`); };
+const gJuiceKg = () => { const k = pick([4, 3]); const n = pick([12, 8]); const c = 1.25; const ans = n * c * k; return nq("النسب والمئوية", "تناسب متعدد الخطوات", `نحتاج ${toAr(k)} كجم برتقال لصنع جالون واحد من العصير.\nكم كجم نحتاج لملء ${toAr(n)} قارورة سعة الواحدة ١٫٢٥ جالون؟`, ans, `الجالونات = ${toAr(n)} × ١٫٢٥ = ${toAr(n * c)}، والكمية = ${toAr(n * c)} × ${toAr(k)} = ${toAr(ans)} كجم`); };
+const gJarWeight = () => { const P = pick([[2, 0.8, "٢", "٠٫٨", "٣ أرباع", 0.75, "٠٫٤"], [2.6, 1.1, "٢٫٦", "١٫١", "٣ أرباع", 0.75, "٠٫٦"]]); const [full, after, fs, as_, frac, fr, es] = P; const eaten = full - after; const content = eaten / fr; const empty = Math.round((full - content) * 10) / 10; return tqz("مهارات وقوانين", "وزن الوعاء", `وزن علبة طعام ممتلئةً ${fs} كجم. بعد أكل ${frac} محتواها صار وزنها ${as_} كجم.\nما وزن العلبة فارغةً؟`, `${es} كجم`, `المأكول = ${fs} − ${as_} = ${toAr(Math.round(eaten * 10) / 10)} كجم وهو ${frac} المحتوى، فالمحتوى كاملاً = ${toAr(content)} كجم، والعلبة = ${fs} − ${toAr(content)} = ${es} كجم`, shuffle([`${es} كجم`, `${as_} كجم`, `١ كجم`, `${toAr(Math.round(eaten * 10) / 10)} كجم`])); };
+T1.push(gRectFromPer, gFailPct, gIsosBase, gGeoSeq, gCubeVol, gWholeFromPct, gSqAreaToPer, gClockAngle, gSumDouble, gTriType, gTwoItems, gSquaresSeq, gQuadAngle, gOrderOps, gPoolLaps, gPickPrime, gRectPerFromArea, gChainSub, gAgeAtBirth, gZeroExp, gSqEqTriple, gClock24, gTriBase, gParaAngle);
+META[0].push({ ch: "الهندسة" }, { ch: "النسب والمئوية" }, { ch: "الهندسة" }, { ch: "الجبر والأسس والجذور" }, { ch: "الهندسة" }, { ch: "النسب والمئوية" }, { ch: "الهندسة" }, { ch: "الهندسة" }, { ch: "مهارات وقوانين" }, { ch: "الهندسة" }, { ch: "الجبر والأسس والجذور" }, { ch: "الجبر والأسس والجذور" }, { ch: "الهندسة" }, { ch: "مهارات وقوانين" }, { ch: "مهارات وقوانين" }, { ch: "مهارات وقوانين" }, { ch: "الهندسة" }, { ch: "الجبر والأسس والجذور" }, { ch: "مهارات وقوانين" }, { ch: "الجبر والأسس والجذور" }, { ch: "الجبر والأسس والجذور" }, { ch: "مهارات وقوانين" }, { ch: "الهندسة" }, { ch: "الهندسة" });
+T2.push(gAvgNew, gClockAfter, gSqSumTrick, gRadFromCirc, gScaleModel, gSysSum, gDiag, gRemainderSeq, gPctOfPct, gNegSquareSub, gRootSumTrap, gBoxEdges, gSidesFromExt, gSolveThenEval, gAvgRemoved, gRatioFromParts, gEqualPer, gFactDiv, gCompRatio, gFracEq, gCountEvens, gAreaIncPct, gAltSum, gCuts, gRatioDiff, gTrainPole, gSqFromDiag, gOrigPrice, gNeededScore, gSameExp, gRectRatioPer, gSuppDiff, gPctSymm, gSqTriPer, gGaussSum, gPerMinute, gMaxProduct, gWordToEq, gSlopeTwoPts, gLineEq, gSumProdToSquares, gProdConjugate, gDiffSqDivide, gSqDiffExpand, gRootConjugate, gGCDTiles, gLCMCount, gMoneyFloor, gJuiceKg);
+META[1].push({ ch: "الإحصاء والاحتمال" }, { ch: "مهارات وقوانين" }, { ch: "الجبر والأسس والجذور" }, { ch: "الهندسة" }, { ch: "النسب والمئوية" }, { ch: "الجبر والأسس والجذور" }, { ch: "الهندسة" }, { ch: "النسب والمئوية" }, { ch: "النسب والمئوية" }, { ch: "الجبر والأسس والجذور" }, { ch: "الجبر والأسس والجذور" }, { ch: "الهندسة" }, { ch: "الهندسة" }, { ch: "الجبر والأسس والجذور" }, { ch: "الإحصاء والاحتمال" }, { ch: "النسب والمئوية" }, { ch: "الهندسة" }, { ch: "مهارات وقوانين" }, { ch: "الهندسة" }, { ch: "الجبر والأسس والجذور" }, { ch: "مهارات وقوانين" }, { ch: "النسب والمئوية" }, { ch: "مهارات وقوانين" }, { ch: "مهارات وقوانين" }, { ch: "النسب والمئوية" }, { ch: "السرعة والزمن" }, { ch: "الهندسة" }, { ch: "النسب والمئوية" }, { ch: "الإحصاء والاحتمال" }, { ch: "الجبر والأسس والجذور" }, { ch: "الهندسة" }, { ch: "الهندسة" }, { ch: "النسب والمئوية" }, { ch: "الهندسة" }, { ch: "مهارات وقوانين" }, { ch: "السرعة والزمن" }, { ch: "الجبر والأسس والجذور" }, { ch: "الجبر والأسس والجذور" }, { ch: "الهندسة" }, { ch: "الهندسة" }, { ch: "الجبر والأسس والجذور" }, { ch: "مهارات وقوانين" }, { ch: "الجبر والأسس والجذور" }, { ch: "الجبر والأسس والجذور" }, { ch: "الجبر والأسس والجذور" }, { ch: "مهارات وقوانين" }, { ch: "مهارات وقوانين" }, { ch: "مهارات وقوانين" }, { ch: "النسب والمئوية" });
+T3.push(gPalinOdo, gHeadsLegs, gSlowClock, gSimAreaRatio, gTwoDice, gCubeRatio, gXPlusInvX, gDiffSqSystem, gJarWeight);
+META[2].push({ ch: "مهارات وقوانين" }, { ch: "مهارات وقوانين" }, { ch: "مهارات وقوانين" }, { ch: "الهندسة" }, { ch: "الإحصاء والاحتمال" }, { ch: "الهندسة" }, { ch: "الجبر والأسس والجذور" }, { ch: "الجبر والأسس والجذور" }, { ch: "مهارات وقوانين" });
+// — دفعة THV الثانية-ب: ص٥٤–٦٠ — ٤ مولدات
+// — ص٥٤، ٥٦
+const gCupsCeil = () => { const P = pick([[22.4, 3, 8, "٢٢٫٤"], [17.5, 4, 5, "١٧٫٥"], [13.6, 3, 5, "١٣٫٦"], [21.5, 5, 5, "٢١٫٥"]]); const [v, c, n, vs] = P; return nq("مهارات وقوانين", "أقل عدد يكفي", `غلاية فيها ${vs} لتراً من الماء، نفرغها بكوبٍ سعته ${toAr(c)} لترات.\nما أقل عدد أكواب ممتلئة أو ناقصة يلزم لتفريغها كاملة؟`, n, `${vs} ÷ ${toAr(c)} ≈ ${toAr(Math.round(v / c * 10) / 10)}، وبما أن الباقي يحتاج كوباً إضافياً نقرّب لأعلى: ${toAr(n)} أكواب`); };
+// — ص٥٧-٥٨
+const gComplexFrac = () => { const n = pick([2, 3, 4]); return tqz("مهارات وقوانين", "الكسر المركب", `بسّط المقدار:\n١ ÷ (١ + ١/${toAr(n)})`, `${toAr(n)}/${toAr(n + 1)}`, `المقام = (${toAr(n)} + ١)/${toAr(n)} = ${toAr(n + 1)}/${toAr(n)}، والقسمة عليه = الضرب بمقلوبه: ${toAr(n)}/${toAr(n + 1)}`, shuffle([`${toAr(n)}/${toAr(n + 1)}`, `${toAr(n + 1)}/${toAr(n)}`, `١/${toAr(n + 1)}`, `${toAr(n)}/${toAr(n - 1)}`])); };
+const gAlgFracSimplify = () => { const ans = "س ص"; return tqz("الجبر والأسس والجذور", "تبسيط كسر جبري", `بسّط المقدار:\n(س + ص) ÷ (١/س + ١/ص)`, ans, `المقام = (ص + س)/(س ص)، فالمقدار = (س + ص) × س ص/(س + ص) = س ص بعد الاختصار`, shuffle([ans, "س + ص", "١/(س ص)", "س/ص"])); };
+// — ص٥٩-٦٠
+const gTopHeavyCmp = () => { const P = pick([["١٠٠٠/٩٩٩", "١٠٠/٩٩", "١/٩٩٩", "١/٩٩"], ["١٠٠/٩٩", "١٠/٩", "١/٩٩", "١/٩"]]); const [f1, f2, e1, e2] = P; return cqz("مهارات وقوانين", `القيمة الأولى: ${f1}\nالقيمة الثانية: ${f2}`, 1, `كلاهما = ١ + كسر صغير: الأولى ١ + ${e1} والثانية ١ + ${e2}، و${e2} أكبر — فالقيمة الثانية أكبر`); };
+T2.push(gCupsCeil, gComplexFrac, gAlgFracSimplify);
+META[1].push({ ch: "مهارات وقوانين" }, { ch: "مهارات وقوانين" }, { ch: "الجبر والأسس والجذور" });
+T3.push(gTopHeavyCmp);
+META[2].push({ ch: "مهارات وقوانين" });
 // ⟪/NEWGENS⟫
 const CH_MAP = META.map((t) => t.map((m) => m.ch));
 const ALL_CATS = [...new Set(META.flat().map((m) => m.cat))];
@@ -837,6 +1104,17 @@ function PhosApp() {
     if (s2) { setQuestion(s2.q); setPicked(s2.picked); setPhase(s2.phase); setAiMsgs(s2.ai || []); }
     setAiDraft(""); setSlide("in");
   };
+  const startCardQuiz = () => {
+    if (savedCards.length < 3) return;
+    const pool = FEED_STATIC.map((c) => c.body);
+    const qs = shuffle([...savedCards]).slice(0, 10).map((c) => {
+      const ds = shuffle(pool.filter((bd) => bd !== c.body)).slice(0, 3);
+      return { q: `ما نصّ قانون «${c.title}»؟`, opts: shuffle([c.body, ...ds]), ans: c.body, exp: c.ex || "", cat: c.tag, id: Math.random().toString(36).slice(2) };
+    });
+    setReviewQueue(qs); setReviewIdx(0); setHistPos(null);
+    setQuestion(qs[0]); setPicked(null); setPhase("answering"); setSlide("in"); setAiMsgs([]); setAiDraft("");
+    setScreen("quiz");
+  };
 
 
   // ====== الشرح الذكي ======
@@ -1160,13 +1438,12 @@ function PhosApp() {
                     {aiLoading && (
                       <div style={{ marginTop: 8, background: C.card, borderRadius: 12, padding: "12px 14px", fontSize: 13.5, color: "rgba(36,27,77,0.6)", fontWeight: 700, animation: "pulse 1.1s ease infinite" }}>المساعد يكتب…</div>
                     )}
-                    {aiMsgs.length === 0 && !aiLoading && (AI_READY ? (
-                      <button onClick={() => aiAsk(null)} style={{ width: "100%", padding: 12, borderRadius: 12, border: `2px solid ${C.cobalt}`, background: "rgba(255,255,255,0.6)", color: C.cobalt, fontWeight: 700, fontFamily: "inherit", fontSize: 14, cursor: "pointer" }}>
-                        اشرحها لي أكثر — بالذكاء الاصطناعي
+                    {aiMsgs.length === 0 && !aiLoading && (
+                      <button onClick={() => AI_READY && aiAsk(null)} style={{ border: "none", background: "none", cursor: AI_READY ? "pointer" : "default", display: "flex", flexDirection: "column", alignItems: "center", gap: 4, margin: "4px auto 0", fontFamily: "inherit", opacity: AI_READY ? 1 : 0.45 }}>
+                        <span style={{ width: 54, height: 54, borderRadius: "50%", background: C.card, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 6px 16px rgba(27,58,200,0.16)", border: `2px solid ${C.bgSoft}` }}><Sparkle size={30} /></span>
+                        <span style={{ fontSize: 11.5, fontWeight: 700, color: C.cobalt }}>{AI_READY ? "مساعد ذكي ✦" : "المساعد الذكي — قريباً"}</span>
                       </button>
-                    ) : (
-                      <div style={{ width: "100%", padding: 12, borderRadius: 12, background: "rgba(255,255,255,0.45)", color: "rgba(36,27,77,0.5)", fontWeight: 700, fontSize: 13, textAlign: "center", boxSizing: "border-box" }}>الشرح الذكي — يتفعّل قريباً ✦</div>
-                    ))}
+                    )}
                     {AI_READY && aiMsgs.length > 0 && histPos === null && aiMsgs.filter((m) => m.role === "user").length < 5 && (
                       <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
                         <input value={aiDraft} onChange={(e) => setAiDraft(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") sendFollow(); }} placeholder="اسأل المساعد عن أي خطوة…" style={{ flex: 1, border: `1.5px solid ${C.bgSoft}`, borderRadius: 12, padding: "11px 13px", fontFamily: "inherit", fontSize: 13.5, background: "rgba(255,255,255,0.85)", color: C.ink }} />
@@ -1293,13 +1570,8 @@ function PhosApp() {
             <div style={{ position: "absolute", bottom: 10, left: 0, right: 0, textAlign: "center", fontSize: 11.5, color: "rgba(36,27,77,0.45)", pointerEvents: "none" }}>
               اسحب للأعلى
             </div>
-            <button onPointerDown={(e) => e.stopPropagation()} onClick={() => commitFeed(1)}
-              style={{ position: "absolute", bottom: 78, right: 20, width: 46, height: 46, borderRadius: "50%", border: "none", background: C.cobalt, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0 4px 14px rgba(27,58,200,0.3)" }}
-              aria-label="التالي">
-              <Chevron up size={18} />
-            </button>
-            {feedIdx > 0 && <button onPointerDown={(e) => e.stopPropagation()} onClick={() => commitFeed(-1)}
-              style={{ position: "absolute", bottom: 24, right: 23, width: 40, height: 40, borderRadius: "50%", border: "none", background: "rgba(255,255,255,0.9)", color: C.cobalt, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0 3px 10px rgba(27,58,200,0.18)", fontWeight: 800, fontSize: 17, fontFamily: "inherit" }}>▾</button>}
+            
+            
           </div>
         )}
 
@@ -1395,6 +1667,7 @@ function PhosApp() {
               <button onClick={() => savedCards.length && setScreen("savedFeed")} disabled={!savedCards.length} style={{ width: "100%", marginTop: 10, padding: 13, borderRadius: 16, border: `2px solid ${C.cobalt}`, background: savedCards.length ? "transparent" : C.bgSoft, color: savedCards.length ? C.cobalt : "rgba(36,27,77,0.4)", fontWeight: 700, fontFamily: "inherit", fontSize: 14, cursor: savedCards.length ? "pointer" : "default" }}>
                 استعرض البطاقات
               </button>
+            <button onClick={startCardQuiz} disabled={savedCards.length < 3} style={{ width: "100%", marginTop: 8, padding: 12, borderRadius: 14, border: "none", background: savedCards.length >= 3 ? C.cobalt : "rgba(27,58,200,0.25)", color: "#fff", fontWeight: 700, fontFamily: "inherit", fontSize: 13.5, cursor: "pointer" }}>اختبرني على بطاقاتي ✦{savedCards.length < 3 ? " (احفظ ٣ بطاقات أولاً)" : ""}</button>
             </div>
 
             <a href={TG_LINK} target="_blank" rel="noreferrer" style={{ display: "block", textDecoration: "none", background: C.cobalt, borderRadius: 20, padding: 16, marginTop: 12, boxShadow: "0 8px 24px rgba(27,58,200,0.2)" }}>
