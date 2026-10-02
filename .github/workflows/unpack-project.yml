@@ -1,0 +1,52 @@
+name: Bootstrap Phoslearn project
+
+on:
+  push:
+    branches:
+      - codex/deploy-tap-recurring
+    paths:
+      - .github/workflows/unpack-project.yml
+
+permissions:
+  contents: write
+
+jobs:
+  unpack-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out bootstrap branch
+        uses: actions/checkout@v4
+        with:
+          ref: codex/deploy-tap-recurring
+          fetch-depth: 0
+
+      - name: Extract the reviewed project archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive="phoslearn-tap-recurring-2026-09-27.zip"
+          test -f "$archive"
+          unpack_dir="$(mktemp -d)"
+          unzip -q "$archive" -d "$unpack_dir"
+          project_dir="$unpack_dir/phoslearn-tap-recurring"
+          test -f "$project_dir/package.json"
+          test -f "$project_dir/vercel.json"
+          test -f "$project_dir/src/components/PublicPages.jsx"
+          cp -a "$project_dir/." .
+
+      - name: Run security and subscription tests
+        run: npm test
+
+      - name: Commit extracted project files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No extracted changes to commit."
+            exit 0
+          fi
+          git commit -m "Deploy Tap recurring subscription app"
+          git push origin HEAD:codex/deploy-tap-recurring
