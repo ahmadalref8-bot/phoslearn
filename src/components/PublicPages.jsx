@@ -49,28 +49,76 @@ function SupportContact({ short = false }) {
 
 export function SiteFooter({ compact = false, style = {} }) {
   return (
-    <footer style={{ padding: compact ? "12px 14px" : "24px 20px", textAlign: "center", fontSize: compact ? 10.5 : 12.5, lineHeight: 1.9, color: COLORS.ink, ...style }}>
-      <nav aria-label="روابط الموقع القانونية" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: compact ? "4px 10px" : "7px 16px" }}>
-        {PUBLIC_LINKS.map(([href, label]) => (
-          <a key={href} href={href} style={{ color: COLORS.cobalt, fontWeight: 700, textDecoration: "none" }}>{label}</a>
-        ))}
-      </nav>
-      {!compact && <div style={{ marginTop: 10 }}><SupportContact short /> · © فوس</div>}
+    <footer style={{
+      marginTop: compact ? 14 : 30,
+      padding: compact ? "16px 12px" : "28px 20px",
+      background: "rgba(255,255,255,.82)",
+      borderTop: `1px solid ${COLORS.bgSoft}`,
+      color: COLORS.ink,
+      textAlign: "center",
+      ...style,
+    }}>
+      <div style={{ maxWidth: 860, margin: "0 auto" }}>
+        {!compact && <div style={{ color: COLORS.cobalt, fontSize: 20, fontWeight: 700, marginBottom: 15 }}>فوس ✦</div>}
+        <nav
+          aria-label="روابط الموقع القانونية"
+          style={{
+            display: "grid",
+            gridTemplateColumns: `repeat(auto-fit, minmax(${compact ? 118 : 140}px, 1fr))`,
+            gap: compact ? 7 : 10,
+          }}
+        >
+          {PUBLIC_LINKS.map(([href, label]) => (
+            <a
+              key={href}
+              href={href}
+              style={{
+                display: "flex",
+                minHeight: compact ? 36 : 42,
+                padding: compact ? "7px 9px" : "9px 12px",
+                alignItems: "center",
+                justifyContent: "center",
+                border: `1px solid ${COLORS.bgSoft}`,
+                borderRadius: 12,
+                background: COLORS.card,
+                color: COLORS.cobalt,
+                fontSize: compact ? 11.5 : 13,
+                fontWeight: 700,
+                lineHeight: 1.45,
+                textDecoration: "none",
+              }}
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
+        {!compact && (
+          <div style={{ marginTop: 16, fontSize: 12.5, lineHeight: 1.9, opacity: 0.82 }}>
+            <SupportContact short /> · © فوس
+          </div>
+        )}
+      </div>
     </footer>
   );
 }
 
 function Section({ title, children }) {
   return (
-    <section style={{ marginTop: 24 }}>
-      <h2 style={{ color: COLORS.cobalt, fontSize: 20, margin: "0 0 8px" }}>{title}</h2>
+    <section style={{
+      marginTop: 16,
+      padding: "18px clamp(16px, 3vw, 22px)",
+      border: `1px solid ${COLORS.bgSoft}`,
+      borderRadius: 18,
+      background: "#FAF8FF",
+    }}>
+      <h2 style={{ color: COLORS.cobalt, fontSize: 19, margin: "0 0 8px" }}>{title}</h2>
       <div style={{ fontSize: 15, lineHeight: 2, color: COLORS.ink }}>{children}</div>
     </section>
   );
 }
 
 function Bullets({ children }) {
-  return <ul style={{ margin: "8px 0", paddingRight: 22 }}>{children}</ul>;
+  return <ul style={{ margin: "8px 0 0", paddingRight: 22, display: "grid", gap: 7 }}>{children}</ul>;
 }
 
 function AboutPage() {
@@ -243,10 +291,12 @@ export default function PublicPage({ pathname = window.location.pathname }) {
       <header style={{ background: "rgba(255,255,255,.88)", borderBottom: `1px solid ${COLORS.bgSoft}` }}>
         <div style={{ maxWidth: 920, margin: "0 auto", padding: "14px 20px", display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap" }}>
           <a href="/" style={{ color: COLORS.cobalt, fontSize: 23, fontWeight: 700, textDecoration: "none" }}>فوس ✦</a>
-          <nav aria-label="التنقل الرئيسي" style={{ marginRight: "auto", display: "flex", flexWrap: "wrap", gap: "8px 14px" }}>
+          <nav aria-label="التنقل الرئيسي" style={{ marginRight: "auto", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "7px 9px" }}>
             <a href="/about" style={{ color: COLORS.ink, textDecoration: "none", fontWeight: 700, fontSize: 13 }}>من نحن</a>
             <a href="/pricing" style={{ color: COLORS.ink, textDecoration: "none", fontWeight: 700, fontSize: 13 }}>الأسعار</a>
-            <a href="/" style={{ color: "#fff", background: COLORS.cobalt, textDecoration: "none", fontWeight: 700, fontSize: 13, borderRadius: 10, padding: "6px 11px" }}>افتح التطبيق</a>
+            <a href="/terms" style={{ color: COLORS.ink, textDecoration: "none", fontWeight: 700, fontSize: 13 }}>الشروط</a>
+            <a href="/privacy" style={{ color: COLORS.ink, textDecoration: "none", fontWeight: 700, fontSize: 13 }}>الخصوصية</a>
+            <a href="/" style={{ color: "#fff", background: COLORS.cobalt, textDecoration: "none", fontWeight: 700, fontSize: 13, borderRadius: 10, padding: "7px 12px" }}>افتح التطبيق</a>
           </nav>
         </div>
       </header>
