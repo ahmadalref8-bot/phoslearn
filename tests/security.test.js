@@ -184,7 +184,7 @@ test("renewal is MIT, bounded, and sized for the first 50 subscribers", async ()
   assert.match(renewal, /payment_agreement: \{ id: row\.tap_payment_agreement_id \}/);
   assert.match(renewal, /idempotent: row\.reference_transaction/);
   assert.equal(vercel.functions["api/renew-subscriptions.js"].maxDuration, 300);
-  assert.deepEqual(vercel.crons, [{ path: "/api/renew-subscriptions", schedule: "5 * * * *" }]);
+  assert.deepEqual(vercel.crons, [{ path: "/api/renew-subscriptions", schedule: "5 0 * * *" }]);
 });
 
 test("database schema serializes subscription changes and preserves one claimed due cycle", async () => {
