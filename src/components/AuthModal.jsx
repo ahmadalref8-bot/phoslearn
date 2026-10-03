@@ -105,7 +105,7 @@ export default function AuthModal({ open, onClose, onSend, onVerifyOtp, onPasswo
           <p style={{ lineHeight: 1.9, fontSize: 14 }}>تسجيل الدخول غير مفعّل في هذه النسخة بعد. أضف مفاتيح Supabase في إعدادات النشر أولًا.</p>
         ) : sent ? (
           <form onSubmit={verifyCode}>
-            <p style={{ lineHeight: 1.9, fontSize: 14 }}>أرسلنا رسالة دخول إلى <b dir="ltr">{email}</b>. إذا احتوت على رمز من 6 أرقام فاكتبه هنا؛ وإذا وصل رابط فافتحه مؤقتًا.</p>
+            <p style={{ lineHeight: 1.9, fontSize: 14 }}>أرسلنا رمز دخول من 6 أرقام إلى <b dir="ltr">{email}</b>. اكتبه هنا لإكمال الدخول داخل فوس.</p>
             <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 7 }}>رمز الدخول</label>
             <input
               type="text"
@@ -125,7 +125,7 @@ export default function AuthModal({ open, onClose, onSend, onVerifyOtp, onPasswo
           </form>
         ) : (
           <form onSubmit={submit}>
-            <p style={{ lineHeight: 1.9, fontSize: 14, opacity: 0.78 }}>{mode === "password" ? "ادخل ببريدك وكلمة المرور مباشرة؛ هذا الخيار للحسابات الموجودة ولا يرسل بريدًا." : "اكتب بريدك وسنرسل رسالة دخول، وإذا لم يكن لديك حساب سننشئه تلقائيًا."}</p>
+            <p style={{ lineHeight: 1.9, fontSize: 14, opacity: 0.78 }}>{mode === "password" ? "ادخل ببريدك وكلمة المرور مباشرة؛ هذا الخيار للحسابات الموجودة ولا يرسل بريدًا." : "اكتب بريدك وسنرسل رمزًا من 6 أرقام، وإذا لم يكن لديك حساب سننشئه تلقائيًا."}</p>
             <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 7 }}>البريد الإلكتروني</label>
             <input type="email" dir="ltr" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="name@example.com" style={{ width: "100%", boxSizing: "border-box", border: "1px solid rgba(36,27,77,0.2)", borderRadius: 14, padding: "13px 14px", fontSize: 16, outlineColor: color }} />
             {mode === "password" && (
@@ -135,8 +135,8 @@ export default function AuthModal({ open, onClose, onSend, onVerifyOtp, onPasswo
               </>
             )}
             {error && <div role="alert" style={{ color: "#C83C55", fontSize: 12.5, marginTop: 8 }}>{error}</div>}
-            <button type="submit" disabled={loading} style={{ width: "100%", border: "none", background: color, color: "#fff", borderRadius: 14, padding: 14, marginTop: 12, fontFamily: "inherit", fontWeight: 700, fontSize: 15, cursor: loading ? "wait" : "pointer", opacity: loading ? 0.65 : 1 }}>{loading ? "جارٍ التنفيذ…" : mode === "password" ? "دخول" : "أرسل رسالة الدخول"}</button>
-            <button type="button" onClick={() => { setMode(mode === "password" ? "magic" : "password"); setError(""); }} style={{ width: "100%", border: "none", background: "none", color, padding: 11, marginTop: 3, fontFamily: "inherit", fontWeight: 700, cursor: "pointer" }}>{mode === "password" ? "الدخول أو إنشاء حساب بالبريد" : "الدخول بكلمة المرور"}</button>
+            <button type="submit" disabled={loading} style={{ width: "100%", border: "none", background: color, color: "#fff", borderRadius: 14, padding: 14, marginTop: 12, fontFamily: "inherit", fontWeight: 700, fontSize: 15, cursor: loading ? "wait" : "pointer", opacity: loading ? 0.65 : 1 }}>{loading ? "جارٍ التنفيذ…" : mode === "password" ? "دخول" : "أرسل رمز الدخول"}</button>
+            <button type="button" onClick={() => { setMode(mode === "password" ? "magic" : "password"); setError(""); }} style={{ width: "100%", border: "none", background: "none", color, padding: 11, marginTop: 3, fontFamily: "inherit", fontWeight: 700, cursor: "pointer" }}>{mode === "password" ? "الدخول أو إنشاء حساب برمز البريد" : "الدخول بكلمة المرور"}</button>
           </form>
         )}
         <button type="button" onClick={onClose} style={{ width: "100%", border: "none", background: "none", color: "rgba(36,27,77,0.58)", padding: 11, marginTop: 5, fontFamily: "inherit", fontWeight: 700, cursor: "pointer" }}>إغلاق</button>
