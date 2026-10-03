@@ -2281,7 +2281,9 @@ export default function PhosApp() {
                 <IconUser size={22} color={C.cobalt} />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div dir="ltr" style={{ fontWeight: 700, fontSize: 14.5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textAlign: "right" }}>{user?.email || "لم تسجّل الدخول"}</div>
+                <div dir="ltr" style={{ fontWeight: 700, fontSize: 14.5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textAlign: "right" }}>
+                  {user?.email || "لم تسجّل الدخول"}
+                </div>
                 <div style={{ fontSize: 11.5, opacity: 0.58, marginTop: 3 }}>
                   {accessLoading ? "جارٍ التحقق…" : plan === "season" ? "اشتراك ٩٠ يومًا" : plan === "month" ? "اشتراك ٣٠ يومًا" : "الخطة المجانية"}
                 </div>
@@ -2292,25 +2294,11 @@ export default function PhosApp() {
                 <button onClick={() => setAuthOpen(true)} style={{ border: "none", background: C.cobalt, color: "#fff", borderRadius: 10, padding: "8px 11px", fontFamily: "inherit", fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}>دخول</button>
               )}
             </div>
-            {accessError && <div style={{ color: C.bad, background: "#FFF1F2", borderRadius: 12, padding: "9px 11px", fontSize: 12.5, fontWeight: 700, marginTop: 8 }}>{accessError}</div>}
-
-            {isPaid && (currentPeriodEnd || activeUntil) && (
-                  <div style={{ opacity: 0.7, marginTop: 2 }}>
-                    {inRenewalGrace
-                      ? `التجديد قيد المعالجة؛ تنتهي مهلة المحاولة في ${new Date(activeUntil).toLocaleDateString("ar-SA")}`
-                      : autoRenew && !cancelAtPeriodEnd
-                      ? `التجديد القادم في ${new Date(currentPeriodEnd || activeUntil).toLocaleDateString("ar-SA")}`
-                      : `التجديد متوقف؛ المزايا مفتوحة حتى ${new Date(currentPeriodEnd || activeUntil).toLocaleDateString("ar-SA")}`}
-                  </div>
-                )}
-                {accessError && <div style={{ color: C.bad, marginTop: 2 }}>{accessError}</div>}
+            {accessError && (
+              <div role="alert" style={{ color: C.bad, background: "#FFF1F2", borderRadius: 12, padding: "9px 11px", fontSize: 12.5, fontWeight: 700, marginTop: 8 }}>
+                {accessError}
               </div>
-              {user ? (
-                <button onClick={signOut} style={{ border: "none", background: "none", color: C.cobalt, fontFamily: "inherit", fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}>خروج</button>
-              ) : (
-                <button onClick={() => setAuthOpen(true)} style={{ border: "none", background: C.cobalt, color: "#fff", borderRadius: 10, padding: "7px 11px", fontFamily: "inherit", fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}>دخول</button>
-              )}
-            </div>
+            )}
 
             {isPaid && (
               <div style={{ background: cancelAtPeriodEnd || !autoRenew ? "#FFF8E8" : "rgba(255,255,255,0.72)", borderRadius: 16, padding: "13px 15px", marginTop: 10, fontSize: 12.5, lineHeight: 1.8 }}>
