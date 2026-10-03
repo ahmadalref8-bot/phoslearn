@@ -81,8 +81,8 @@ export default function AuthModal({ open, onClose, onSend, onVerifyOtp, onPasswo
   const verifyCode = async (event) => {
     event.preventDefault();
     const cleanCode = normalizeOtp(code);
-    if (cleanCode.length !== 8) {
-      setError("اكتب رمز الدخول المكوّن من 8 أرقام.");
+    if (cleanCode.length < 6 || cleanCode.length > 8) {
+      setError("اكتب رمز الدخول كاملًا كما وصلك في البريد.");
       return;
     }
     setCode(cleanCode);
@@ -105,7 +105,7 @@ export default function AuthModal({ open, onClose, onSend, onVerifyOtp, onPasswo
           <p style={{ lineHeight: 1.9, fontSize: 14 }}>تسجيل الدخول غير مفعّل في هذه النسخة بعد. أضف مفاتيح Supabase في إعدادات النشر أولًا.</p>
         ) : sent ? (
           <form onSubmit={verifyCode}>
-            <p style={{ lineHeight: 1.9, fontSize: 14 }}>أرسلنا رمز دخول من 8 أرقام إلى <b dir="ltr">{email}</b>. اكتبه هنا لإكمال الدخول داخل فوس.</p>
+            <p style={{ lineHeight: 1.9, fontSize: 14 }}>أرسلنا رمز دخول إلى <b dir="ltr">{email}</b>. اكتبه هنا لإكمال الدخول داخل فوس.</p>
             <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 7 }}>رمز الدخول</label>
             <input
               type="text"
@@ -115,17 +115,17 @@ export default function AuthModal({ open, onClose, onSend, onVerifyOtp, onPasswo
               maxLength={8}
               value={code}
               onChange={(event) => setCode(normalizeOtp(event.target.value))}
-              placeholder="00000000"
+              placeholder="000000"
               autoFocus
               style={{ width: "100%", boxSizing: "border-box", border: "1px solid rgba(36,27,77,0.2)", borderRadius: 14, padding: "13px 14px", fontSize: 22, fontWeight: 700, letterSpacing: 6, textAlign: "center", outlineColor: color }}
             />
             {error && <div role="alert" style={{ color: "#C83C55", fontSize: 12.5, marginTop: 8 }}>{error}</div>}
-            <button type="submit" disabled={loading || code.length !== 8} style={{ width: "100%", border: "none", background: color, color: "#fff", borderRadius: 14, padding: 14, marginTop: 12, fontFamily: "inherit", fontWeight: 700, fontSize: 15, cursor: loading ? "wait" : "pointer", opacity: loading || code.length !== 8 ? 0.55 : 1 }}>{loading ? "جارٍ التحقق…" : "تأكيد الرمز"}</button>
+            <button type="submit" disabled={loading || code.length < 6} style={{ width: "100%", border: "none", background: color, color: "#fff", borderRadius: 14, padding: 14, marginTop: 12, fontFamily: "inherit", fontWeight: 700, fontSize: 15, cursor: loading ? "wait" : "pointer", opacity: loading || code.length < 6 ? 0.55 : 1 }}>{loading ? "جارٍ التحقق…" : "تأكيد الرمز"}</button>
             <button type="button" onClick={() => { setSent(false); setCode(""); setError(""); }} style={{ width: "100%", border: `2px solid ${color}`, color, background: "transparent", borderRadius: 14, padding: 11, marginTop: 8, fontFamily: "inherit", fontWeight: 700, cursor: "pointer" }}>تغيير البريد</button>
           </form>
         ) : (
           <form onSubmit={submit}>
-            <p style={{ lineHeight: 1.9, fontSize: 14, opacity: 0.78 }}>{mode === "password" ? "ادخل ببريدك وكلمة المرور مباشرة؛ هذا الخيار للحسابات الموجودة ولا يرسل بريدًا." : "اكتب بريدك وسنرسل رمزًا من 8 أرقام، وإذا لم يكن لديك حساب سننشئه تلقائيًا."}</p>
+            <p style={{ lineHeight: 1.9, fontSize: 14, opacity: 0.78 }}>{mode === "password" ? "ادخل ببريدك وكلمة المرور مباشرة؛ هذا الخيار للحسابات الموجودة ولا يرسل بريدًا." : "اكتب بريدك وسنرسل رمز دخول، وإذا لم يكن لديك حساب سننشئه تلقائيًا."}</p>
             <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 7 }}>البريد الإلكتروني</label>
             <input type="email" dir="ltr" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="name@example.com" style={{ width: "100%", boxSizing: "border-box", border: "1px solid rgba(36,27,77,0.2)", borderRadius: 14, padding: "13px 14px", fontSize: 16, outlineColor: color }} />
             {mode === "password" && (
