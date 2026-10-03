@@ -138,12 +138,55 @@ function AboutPage() {
 }
 
 function PlanCard({ title, price, period, featured = false }) {
+  const features = ["تدريب بلا حدود", "فيد تكيفي", "شرح ذكي", "تقرير أداء كامل", "مجتمع المشتركين"];
   return (
-    <article style={{ background: featured ? COLORS.bgSoft : "#FAF8FF", border: `2px solid ${featured ? COLORS.cobalt : "transparent"}`, borderRadius: 20, padding: 20, position: "relative" }}>
-      {featured && <div style={{ position: "absolute", top: -12, right: 16, background: COLORS.gold, color: "#fff", borderRadius: 999, padding: "4px 12px", fontSize: 12, fontWeight: 700 }}>الأفضل قيمة</div>}
-      <h2 style={{ margin: 0, fontSize: 20 }}>{title}</h2>
-      <div style={{ color: COLORS.cobalt, fontWeight: 700, fontSize: 25, marginTop: 10 }}>{price} ر.س <span style={{ fontSize: 13, color: COLORS.ink }}>/ كل {period}</span></div>
-      <p style={{ lineHeight: 1.9, marginBottom: 0 }}>أسئلة تدريب بلا حدود، فيد تكيفي، شرح ذكي ضمن الاستخدام العادل، تقرير أداء كامل، ومجتمع فوس الخاص.</p>
+    <article style={{
+      background: featured ? `linear-gradient(155deg, ${COLORS.cobalt}, #12277E)` : "#FFFFFF",
+      color: featured ? "#fff" : COLORS.ink,
+      border: featured ? "none" : `1px solid ${COLORS.bgSoft}`,
+      borderRadius: 24,
+      padding: "24px 21px 21px",
+      position: "relative",
+      boxShadow: featured ? "0 18px 42px rgba(27,58,200,.24)" : "0 12px 30px rgba(36,27,77,.08)",
+      overflow: "hidden",
+    }}>
+      {featured && (
+        <>
+          <div style={{ position: "absolute", width: 150, height: 150, borderRadius: "50%", background: "rgba(255,255,255,.07)", left: -45, top: -65 }} />
+          <div style={{ position: "absolute", top: 15, left: 15, background: COLORS.gold, color: "#fff", borderRadius: 999, padding: "4px 11px", fontSize: 11, fontWeight: 700 }}>الأفضل قيمة</div>
+        </>
+      )}
+      <div style={{ position: "relative" }}>
+        <div style={{ fontSize: 13, fontWeight: 700, opacity: featured ? .78 : .58 }}>وصول كامل لمدة</div>
+        <h2 style={{ margin: "3px 0 0", fontSize: 21, color: "inherit" }}>{title}</h2>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginTop: 15 }}>
+          <strong style={{ fontSize: 38, lineHeight: 1, color: featured ? "#fff" : COLORS.cobalt }}>{price}</strong>
+          <span style={{ fontSize: 14, fontWeight: 700 }}>ر.س</span>
+        </div>
+        <div style={{ fontSize: 12, marginTop: 7, opacity: featured ? .75 : .6 }}>يتجدد تلقائيًا كل {period} حتى الإلغاء</div>
+
+        <div style={{ height: 1, background: featured ? "rgba(255,255,255,.18)" : COLORS.bgSoft, margin: "18px 0 14px" }} />
+        <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 9 }}>
+          {features.map((feature) => (
+            <li key={feature} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13.5, margin: 0 }}>
+              <span style={{ width: 20, height: 20, flex: "0 0 auto", borderRadius: "50%", display: "grid", placeItems: "center", background: featured ? "rgba(255,255,255,.16)" : COLORS.bgSoft, color: featured ? "#fff" : COLORS.cobalt, fontSize: 11, fontWeight: 700 }}>✓</span>
+              {feature}
+            </li>
+          ))}
+        </ul>
+
+        <a href="/?plans=1" style={{
+          display: "block",
+          marginTop: 20,
+          padding: "13px 15px",
+          borderRadius: 14,
+          background: featured ? "#fff" : COLORS.cobalt,
+          color: featured ? COLORS.cobalt : "#fff",
+          textAlign: "center",
+          textDecoration: "none",
+          fontWeight: 700,
+        }}>اختر هذه الباقة</a>
+      </div>
     </article>
   );
 }
@@ -151,17 +194,40 @@ function PlanCard({ title, price, period, featured = false }) {
 function PricingPage() {
   return (
     <>
-      <h1>باقات فوس وأسعارها</h1>
-      <p>الأسعار بالريال السعودي. الباقتان اشتراكان متجددان تلقائيًا حتى الإلغاء، ويُعرض ذلك بوضوح قبل الدفع.</p>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: 16, marginTop: 24 }}>
-        <PlanCard title="اشتراك 30 يومًا" price="19" period="30 يومًا" />
-        <PlanCard title="اشتراك 90 يومًا" price="39" period="90 يومًا" featured />
+      <div style={{
+        background: `linear-gradient(135deg, ${COLORS.cobalt}, #12277E)`,
+        color: "#fff",
+        borderRadius: 24,
+        padding: "clamp(24px, 5vw, 38px)",
+        position: "relative",
+        overflow: "hidden",
+        marginBottom: 22,
+      }}>
+        <div style={{ position: "absolute", width: 180, height: 180, borderRadius: "50%", background: "rgba(255,255,255,.07)", left: -45, top: -80 }} />
+        <div style={{ position: "relative" }}>
+          <div style={{ display: "inline-block", background: "rgba(255,255,255,.14)", borderRadius: 999, padding: "5px 11px", fontSize: 12, fontWeight: 700 }}>باقات بسيطة وواضحة</div>
+          <h1 style={{ color: "#fff", marginTop: 11, marginBottom: 7 }}>اختر مدة فوس المناسبة لك</h1>
+          <p style={{ margin: 0, maxWidth: 610, opacity: .84 }}>نفس المزايا في الباقتين. الفرق فقط في المدة والسعر.</p>
+        </div>
       </div>
-      <Section title="التجديد والإلغاء">
-        <p>يتجدد الاشتراك تلقائيًا بالقيمة والدورة المختارتين ما لم يلغِ العميل التجديد قبل موعد الخصم التالي. إذا تم الإلغاء قبل ذلك الموعد فلا تحدث دفعة جديدة، ويستمر الوصول إلى المزايا حتى نهاية المدة المدفوعة الحالية.</p>
-      </Section>
-      <p style={{ background: "#FFF8E8", borderRadius: 14, padding: 14, fontSize: 13.5, lineHeight: 1.9 }}>إلغاء التجديد لا يعني استرداد قيمة المدة الحالية. راجع <a href="/refund-policy">سياسة المدفوعات والاسترداد</a> و<a href="/terms">الشروط والأحكام</a>.</p>
-      <a href="/?plans=1" style={{ display: "block", maxWidth: 360, margin: "22px auto 0", background: COLORS.cobalt, color: "#fff", textDecoration: "none", textAlign: "center", borderRadius: 16, padding: 15, fontWeight: 700 }}>ابدأ الاشتراك</a>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(245px, 1fr))", gap: 16, alignItems: "stretch" }}>
+        <PlanCard title="30 يومًا" price="19" period="30 يومًا" />
+        <PlanCard title="90 يومًا" price="39" period="90 يومًا" featured />
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10, marginTop: 18 }}>
+        <div style={{ background: "#FAF8FF", border: `1px solid ${COLORS.bgSoft}`, borderRadius: 16, padding: "14px 15px" }}>
+          <div style={{ color: COLORS.cobalt, fontWeight: 700, fontSize: 14 }}>التجديد</div>
+          <p style={{ margin: "4px 0 0", fontSize: 12.5, lineHeight: 1.8 }}>يتجدد الاشتراك بحسب المدة المختارة ما لم توقف التجديد قبل موعد الخصم التالي.</p>
+        </div>
+        <div style={{ background: "#FAF8FF", border: `1px solid ${COLORS.bgSoft}`, borderRadius: 16, padding: "14px 15px" }}>
+          <div style={{ color: COLORS.cobalt, fontWeight: 700, fontSize: 14 }}>الإلغاء</div>
+          <p style={{ margin: "4px 0 0", fontSize: 12.5, lineHeight: 1.8 }}>عند إيقاف التجديد تبقى مزاياك فعالة حتى نهاية المدة المدفوعة الحالية.</p>
+        </div>
+      </div>
+
+      <p style={{ background: "#FFF8E8", borderRadius: 14, padding: 14, fontSize: 12.5, lineHeight: 1.8, marginTop: 12 }}>إلغاء التجديد لا يعني استرداد قيمة المدة الحالية. راجع <a href="/refund-policy">سياسة المدفوعات والاسترداد</a> و<a href="/terms">الشروط والأحكام</a>.</p>
     </>
   );
 }
