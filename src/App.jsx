@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import AuthModal from "./components/AuthModal.jsx";
-import { LEGAL_VERSION, SiteFooter } from "./components/PublicPages.jsx";
+import { LEGAL_VERSION } from "./components/PublicPages.jsx";
 import useMembership from "./hooks/useMembership.js";
 
 // ============ هوية فوس (هادئة وبسيطة) ============
@@ -1781,7 +1781,6 @@ export default function PhosApp() {
             </button>
           </div>
         )}
-        <SiteFooter compact style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "rgba(255,255,255,0.58)" }} />
       </div>
     );
   }
@@ -2127,10 +2126,9 @@ export default function PhosApp() {
         {tab === "feed" && !isPaid && (
           <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 28, textAlign: "center" }}>
             <Sparkle size={46} />
-            <h2 style={{ fontSize: 24, fontWeight: 700, margin: "16px 0 8px", lineHeight: 1.6 }}>فيد فوس — مفاهيم تتشكل من أخطائك</h2>
-            <p style={{ fontSize: 14.5, lineHeight: 2, opacity: 0.8, maxWidth: 340, margin: "0 0 18px" }}>كل ما حليت أسئلة أكثر، الفيد يقرأ ضعفك ويطعمك القوانين والفخاخ اللي أنت تحتاجها بالضبط — مع الشرح الذكي والتقرير الكامل والمجتمع الخاص.</p>
+            <h2 style={{ fontSize: 24, fontWeight: 700, margin: "16px 0 18px", lineHeight: 1.6 }}>فيد فوس</h2>
             <button onClick={() => setPaywall(true)} style={{ ...primaryBtn, width: "100%", maxWidth: 340, padding: 15, fontSize: 15.5 }}>اشترك في فوس — يبدأ من ١٩ ر.س</button>
-            <button onClick={() => setTab("train")} style={{ border: "none", background: "none", color: "rgba(36,27,77,0.55)", fontFamily: "inherit", fontWeight: 700, fontSize: 13, marginTop: 14, cursor: "pointer" }}>لك ١٠ أسئلة مجانية كل يوم — ابدأ التدريب</button>
+            <button onClick={() => setTab("train")} style={{ border: "none", background: "none", color: "rgba(36,27,77,0.55)", fontFamily: "inherit", fontWeight: 700, fontSize: 13, marginTop: 14, cursor: "pointer" }}>ابدأ التدريب</button>
           </div>
         )}
 
@@ -2174,7 +2172,7 @@ export default function PhosApp() {
             <button onClick={startQuiz} style={{ ...primaryBtn, width: "100%", marginTop: 6, padding: 17, fontSize: 17 }}>
               ابدأ التدريب — {TIER_LABEL[tier]} · {chapter}
             </button>
-            {!isPaid && <div style={{ fontSize: 12.5, fontWeight: 700, color: freeLeft <= 2 ? "#E4536B" : C.cobalt, textAlign: "center", marginTop: 8 }}>باقي لك اليوم: {toAr(freeLeft)} من ١٠ أسئلة ✦</div>}
+            {!isPaid && <div style={{ fontSize: 12.5, fontWeight: 700, color: freeLeft <= 2 ? "#E4536B" : C.cobalt, textAlign: "center", marginTop: 8 }}>المتبقي اليوم: {toAr(freeLeft)} ✦</div>}
 
             <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
               {[["أسئلة", toAr(solved)], ["الدقة", `${toAr(accuracy)}٪`], ["أفضل سلسلة", toAr(best)]].map(([k, v]) => (
@@ -2334,15 +2332,15 @@ export default function PhosApp() {
               </div>
 
               {checkoutError && <div role="alert" style={{ color: C.bad, fontSize: 12.5, fontWeight: 700, marginTop: 8 }}>{checkoutError}</div>}
-              <div style={{ fontSize: 11.5, opacity: 0.65, marginTop: 8, lineHeight: 1.7 }}>الدفع عبر صفحة Tap الآمنة. تُحفظ وسيلة الدفع لدى Tap للتجديد التلقائي بعد موافقتك الصريحة. يمكنك إلغاء التجديد من هذه الصفحة، ويظل الوصول حتى نهاية المدة الحالية. لغير المشترك ١٠ أسئلة مجانية يوميًا، والمساعد الذكي بحد وقائي ٢٠٠ طلب يوميًا.</div>
+              <div style={{ fontSize: 11.5, opacity: 0.65, marginTop: 8, lineHeight: 1.7 }}>الدفع عبر صفحة Tap الآمنة. تُحفظ وسيلة الدفع لدى Tap للتجديد التلقائي بعد موافقتك الصريحة. يمكنك إلغاء التجديد من هذه الصفحة، ويظل الوصول حتى نهاية المدة الحالية. المساعد الذكي يخضع لحد استخدام عادل لحماية الخدمة.</div>
             </div>
+
+            <a href="/about" style={{ display: "block", width: "100%", marginTop: 16, padding: 12, borderRadius: 14, boxSizing: "border-box", textAlign: "center", textDecoration: "none", background: "rgba(255,255,255,0.72)", color: C.cobalt, fontWeight: 700, fontSize: 13.5 }}>معلومات فوس والسياسات</a>
 
             <button onClick={() => { try { if (progressStorageKey) localStorage.removeItem(progressStorageKey); } catch (e) {} setXp(0); setBest(0); setSolved(0); setCorrectCount(0); setStreak(0); setSkills({}); setSavedQs([]); setSavedTitles([]); setSavedCards([]); setInterests({}); setDayStreak(0); setLastDay(""); interestsRef.current = {}; weakRef.current = {}; setFcBase(null); setProfile(null); setObStep(0); setObAns({}); setIntroSeen(false); setScreen("welcome"); }} style={{ width: "100%", marginTop: 16, padding: 12, borderRadius: 14, border: "none", background: "rgba(255,255,255,0.6)", color: C.ink, fontWeight: 700, fontFamily: "inherit", fontSize: 13.5, cursor: "pointer" }}>إعادة ضبط تقدمي</button>
           </div>
         )}
       </div>
-
-      <SiteFooter compact style={{ background: "rgba(255,255,255,0.72)", borderTop: `1px solid ${C.bgSoft}`, padding: "7px 10px" }} />
 
       {/* شريط التنقل — أيقونات بسيطة */}
       <div style={{ display: "flex", background: "rgba(255,255,255,0.94)", borderTop: `1px solid ${C.bgSoft}`, zIndex: 5 }}>
@@ -2386,8 +2384,8 @@ export default function PhosApp() {
         <div style={{ position: "absolute", inset: 0, background: "rgba(36,27,77,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 62, padding: 24 }} onClick={() => setLimitHit(false)}>
           <div onClick={(e) => e.stopPropagation()} style={{ background: C.card, borderRadius: 24, padding: "28px 24px", maxWidth: 360, width: "100%", textAlign: "center", animation: "popIn .35s ease both" }}>
             <Sparkle size={44} />
-            <h3 style={{ fontSize: 19, fontWeight: 700, margin: "12px 0 8px" }}>خلّصت أسئلتك العشرة اليوم ✦</h3>
-            <p style={{ fontSize: 14, lineHeight: 1.9, opacity: 0.8, margin: "0 0 16px" }}>شرارتك اشتعلت وتعبك محفوظ. ترجع لك ١٠ أسئلة جديدة بكرة — أو افتح أسئلة بلا حدود بالاشتراك.</p>
+            <h3 style={{ fontSize: 19, fontWeight: 700, margin: "12px 0 8px" }}>أنهيت تدريبك المجاني اليوم ✦</h3>
+            <p style={{ fontSize: 14, lineHeight: 1.9, opacity: 0.8, margin: "0 0 16px" }}>تقدمك محفوظ، وترجع لك أسئلة مجانية جديدة بكرة — أو افتح تدريبًا بلا حدود بالاشتراك.</p>
             <button onClick={() => { setLimitHit(false); setPaywall(true); }} style={{ ...primaryBtn, width: "100%", padding: 14, fontSize: 15.5 }}>شوف الباقات — تبدأ من ١٩ ر.س</button>
             <button onClick={() => { setLimitHit(false); setTab("lib"); }} style={{ border: "none", background: "none", color: "rgba(36,27,77,0.55)", fontFamily: "inherit", fontWeight: 700, fontSize: 13, marginTop: 10, cursor: "pointer" }}>أكمل في المرجع لحين بكرة</button>
           </div>
