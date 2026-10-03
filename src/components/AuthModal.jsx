@@ -12,29 +12,38 @@ function normalizeOtp(value) {
 
 const OTP_COOLDOWN_SECONDS = 60;
 const OTP_STORAGE_PREFIX = "phos-otp-cooldown:";
+const cooldownMemory = new Map();
 
 function cooldownKey(email) {
   return `${OTP_STORAGE_PREFIX}${String(email || "").trim().toLowerCase()}`;
 }
 
 function readCooldown(email) {
-  if (typeof window === "undefined" || !email) return 0;
-  try {
-    const until = Number(window.sessionStorage.getItem(cooldownKey(email)) || 0);
-    const remaining = Math.max(0, Math.ceil((until - Date.now()) / 1000));
-    if (!remaining) window.sessionStorage.removeItem(cooldownKey(email));
-    return remaining;
-  } catch (error) {
-    return 0;
+  if (!email) return 0;
+  const key = cooldownKey(email);
+  let until = Number(cooldownMemory.get(key) || 0);
+  if (typeof window !== "undefined") {
+    try {
+      until = Math.max(until, Number(window.sessionStorage.getItem(key) || 0));
+    } catch (error) {}
   }
+  const remaining = Math.max(0, Math.ceil((until - Date.now()) / 1000));
+  if (!remaining) {
+    cooldownMemory.delete(key);
+    if (typeof window !== "undefined") {
+      try { window.sessionStorage.removeItem(key); } catch (error) {}
+    }
+  }
+  return remaining;
 }
 
 function saveCooldown(email, seconds = OTP_COOLDOWN_SECONDS) {
   const safeSeconds = Math.max(1, Number(seconds) || OTP_COOLDOWN_SECONDS);
+  const key = cooldownKey(email);
+  const until = Date.now() + safeSeconds * 1000;
+  cooldownMemory.set(key, until);
   if (typeof window !== "undefined") {
-    try {
-      window.sessionStorage.setItem(cooldownKey(email), String(Date.now() + safeSeconds * 1000));
-    } catch (error) {}
+    try { window.sessionStorage.setItem(key, String(until)); } catch (error) {}
   }
   return safeSeconds;
 }
@@ -142,7 +151,7 @@ export default function AuthModal({ open, onClose, onSend, onVerifyOtp, onPasswo
       }
     } catch (sendError) {
       const retrySeconds = retryAfterSeconds(sendError);
-      if (isRateLimitError(sendError)) {
+      if (mode !== "password" && isRateLimitError(sendError)) {
         setCooldown(saveCooldown(clean, retrySeconds || OTP_COOLDOWN_SECONDS));
         setNotice("استخدم آخر رمز وصلك، ثم أعد الإرسال بعد انتهاء العدّاد.");
         setSent(true);
