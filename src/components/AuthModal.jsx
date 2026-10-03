@@ -5,7 +5,7 @@ function friendlyAuthError(authError) {
   if (raw.includes("rate") || raw.includes("too many") || authError?.status === 429) {
     return "تم طلب روابط كثيرة خلال وقت قصير. انتظر ساعة من آخر محاولة، ثم اطلب رابطًا واحدًا جديدًا.";
   }
-  if (raw.includes("invalid login") || raw.includes("invalid credentials")) {
+  if (raw.includes("invalid login") || raw.includes("invalid credentials") || raw.includes("invalid_credentials")) {
     return "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
   }
   if (raw.includes("not authorized") || raw.includes("email address")) {
