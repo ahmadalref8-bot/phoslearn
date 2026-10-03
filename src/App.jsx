@@ -881,6 +881,7 @@ export default function PhosApp() {
     refresh: refreshMembership,
     sendMagicLink,
     signInWithPassword,
+    signUpWithPassword,
     signOut,
   } = useMembership();
   const [screen, setScreen] = useState("loading");
@@ -1657,31 +1658,54 @@ export default function PhosApp() {
         }}
         onSend={sendMagicLink}
         onPasswordSignIn={signInWithPassword}
+        onCreateAccount={signUpWithPassword}
         configured={authConfigured}
         color={C.cobalt}
         ink={C.ink}
       />
       {paywall && (
-        <div style={{ position: "absolute", inset: 0, background: "rgba(36,27,77,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 60, padding: 24 }} onClick={() => setPaywall(false)}>
-          <div onClick={(e) => e.stopPropagation()} style={{ background: C.card, borderRadius: 24, padding: "28px 24px", maxWidth: 360, width: "100%", textAlign: "center", animation: "popIn .35s ease both" }}>
-            <Sparkle size={40} />
-            <h3 style={{ fontSize: 19, fontWeight: 700, margin: "12px 0 8px" }}>اشترك في فوس كاملاً</h3>
-            <p style={{ fontSize: 14, lineHeight: 1.9, opacity: 0.8, margin: "0 0 16px" }}>أسئلة بلا حدود + الفيد التكيفي اللي يتشكل من أخطائك + الشرح الذكي لكل سؤال ضمن الاستخدام العادل + التقرير الكامل وتوقع درجتك + المجتمع الخاص.</p>
-            {profile && profile.when && <div style={{ fontSize: 12, fontWeight: 700, color: C.cobalt, marginBottom: 10 }}>اختبارك «{prTxt(profile.when)}» → الأنسب لك: {recMonthly ? "اشتراك ٣٠ يومًا" : "اشتراك ٩٠ يومًا"}</div>}
-            {recMonthly ? (
-              <>
-                <button disabled={Boolean(checkoutPlan)} onClick={() => beginCheckout("month")} style={{ ...primaryBtn, width: "100%", padding: 14, fontSize: 15.5, opacity: checkoutPlan ? 0.65 : 1 }}>{checkoutPlan === "month" ? "جارٍ فتح الدفع…" : "١٩ ر.س كل ٣٠ يومًا · الأنسب لاختبارك"}</button>
-                <button disabled={Boolean(checkoutPlan)} onClick={() => beginCheckout("season")} style={{ width: "100%", marginTop: 8, padding: 12, borderRadius: 16, border: `2px solid ${C.cobalt}`, background: "transparent", color: C.cobalt, fontWeight: 700, fontFamily: "inherit", fontSize: 14, cursor: checkoutPlan ? "wait" : "pointer", opacity: checkoutPlan ? 0.65 : 1 }}>{checkoutPlan === "season" ? "جارٍ فتح الدفع…" : "٣٩ ر.س كل ٩٠ يومًا · وفّر ٣٢٪"}</button>
-              </>
-            ) : (
-              <>
-                <button disabled={Boolean(checkoutPlan)} onClick={() => beginCheckout("season")} style={{ ...primaryBtn, width: "100%", padding: 14, fontSize: 15.5, opacity: checkoutPlan ? 0.65 : 1 }}>{checkoutPlan === "season" ? "جارٍ فتح الدفع…" : "٣٩ ر.س كل ٩٠ يومًا · وفّر ٣٢٪"}</button>
-                <button disabled={Boolean(checkoutPlan)} onClick={() => beginCheckout("month")} style={{ width: "100%", marginTop: 8, padding: 12, borderRadius: 16, border: `2px solid ${C.cobalt}`, background: "transparent", color: C.cobalt, fontWeight: 700, fontFamily: "inherit", fontSize: 14, cursor: checkoutPlan ? "wait" : "pointer", opacity: checkoutPlan ? 0.65 : 1 }}>{checkoutPlan === "month" ? "جارٍ فتح الدفع…" : "١٩ ر.س كل ٣٠ يومًا"}</button>
-              </>
-            )}
-            {checkoutError && <div role="alert" style={{ color: C.bad, fontSize: 12.5, marginTop: 9 }}>{checkoutError}</div>}
-            <div style={{ fontSize: 11.5, opacity: 0.65, marginTop: 9, lineHeight: 1.7 }}>اشتراك متجدد تلقائيًا حتى الإلغاء. الإلغاء يوقف الخصم القادم وتبقى مزاياك حتى نهاية المدة المدفوعة.</div>
-            <button onClick={() => setPaywall(false)} style={{ border: "none", background: "none", color: "rgba(36,27,77,0.55)", fontFamily: "inherit", fontWeight: 700, fontSize: 13, marginTop: 10, cursor: "pointer" }}>لاحقاً</button>
+        <div style={{ position: "absolute", inset: 0, background: "rgba(22,17,52,0.68)", backdropFilter: "blur(5px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 60, padding: 18 }} onClick={() => setPaywall(false)}>
+          <div onClick={(e) => e.stopPropagation()} style={{ background: C.card, borderRadius: 28, maxWidth: 430, width: "100%", maxHeight: "92vh", overflowY: "auto", boxShadow: "0 28px 80px rgba(22,17,52,0.34)", animation: "popIn .35s ease both" }}>
+            <div style={{ background: `linear-gradient(135deg, ${C.cobalt}, ${C.cobaltDark})`, color: "#fff", padding: "24px 22px 21px", borderRadius: "28px 28px 22px 22px", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", width: 130, height: 130, borderRadius: "50%", background: "rgba(255,255,255,0.08)", left: -35, top: -55 }} />
+              <button onClick={() => setPaywall(false)} aria-label="إغلاق" style={{ position: "absolute", top: 13, left: 14, width: 32, height: 32, borderRadius: "50%", border: "none", background: "rgba(255,255,255,0.16)", color: "#fff", fontSize: 18, cursor: "pointer" }}>×</button>
+              <Sparkle size={34} color="#fff" glow={false} />
+              <h3 style={{ fontSize: 23, fontWeight: 700, margin: "10px 0 5px" }}>فوس كامل، بلا حدود</h3>
+              <div style={{ fontSize: 13.5, opacity: 0.84 }}>تدريب، شرح ذكي، تقرير أداء، ومجتمع المشتركين.</div>
+            </div>
+
+            <div style={{ padding: "18px 18px 20px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 8, marginBottom: 15 }}>
+                {["تدريب بلا حدود", "فيد تكيفي", "شرح ذكي", "تقرير كامل"].map((feature) => (
+                  <div key={feature} style={{ background: C.bgSoft, borderRadius: 12, padding: "8px 9px", textAlign: "center", color: C.cobalt, fontSize: 11.5, fontWeight: 700 }}>{feature}</div>
+                ))}
+              </div>
+
+              {profile && profile.when && <div style={{ background: "#FFF8E8", color: "#8A5A08", borderRadius: 13, padding: "9px 12px", fontSize: 12, fontWeight: 700, marginBottom: 11 }}>اختبارك «{prTxt(profile.when)}» — اختر المدة الأنسب لك.</div>}
+
+              <div style={{ display: "grid", gap: 10 }}>
+                <button disabled={Boolean(checkoutPlan)} onClick={() => beginCheckout("season")} style={{ width: "100%", textAlign: "right", border: `2px solid ${C.cobalt}`, background: C.bgSoft, color: C.ink, borderRadius: 18, padding: "15px 16px", fontFamily: "inherit", cursor: checkoutPlan ? "wait" : "pointer", opacity: checkoutPlan ? 0.65 : 1, position: "relative" }}>
+                  <span style={{ position: "absolute", top: -9, left: 14, background: C.gold, color: "#fff", borderRadius: 999, padding: "3px 9px", fontSize: 10.5, fontWeight: 700 }}>الأفضل قيمة</span>
+                  <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <b style={{ fontSize: 16 }}>اشتراك ٩٠ يومًا</b>
+                    <b style={{ marginRight: "auto", color: C.cobalt, fontSize: 19 }}>٣٩ ر.س</b>
+                  </span>
+                  <span style={{ display: "block", marginTop: 4, fontSize: 11.5, opacity: 0.65 }}>يتجدد كل ٩٠ يومًا · وفّر ٣٢٪</span>
+                </button>
+
+                <button disabled={Boolean(checkoutPlan)} onClick={() => beginCheckout("month")} style={{ width: "100%", textAlign: "right", border: `1px solid ${C.bgSoft}`, background: "#FAF8FF", color: C.ink, borderRadius: 18, padding: "14px 16px", fontFamily: "inherit", cursor: checkoutPlan ? "wait" : "pointer", opacity: checkoutPlan ? 0.65 : 1 }}>
+                  <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <b style={{ fontSize: 15 }}>اشتراك ٣٠ يومًا</b>
+                    <b style={{ marginRight: "auto", color: C.cobalt, fontSize: 18 }}>١٩ ر.س</b>
+                  </span>
+                  <span style={{ display: "block", marginTop: 4, fontSize: 11.5, opacity: 0.65 }}>يتجدد كل ٣٠ يومًا</span>
+                </button>
+              </div>
+
+              {checkoutPlan && <div style={{ color: C.cobalt, fontSize: 12.5, fontWeight: 700, textAlign: "center", marginTop: 10 }}>جارٍ تجهيز الاشتراك…</div>}
+              {checkoutError && <div role="alert" style={{ color: C.bad, fontSize: 12.5, fontWeight: 700, marginTop: 10, textAlign: "center" }}>{checkoutError}</div>}
+              <div style={{ fontSize: 11.5, opacity: 0.62, marginTop: 12, lineHeight: 1.75, textAlign: "center" }}>يمكنك إيقاف التجديد في أي وقت، ويستمر وصولك حتى نهاية المدة المدفوعة.</div>
+            </div>
           </div>
         </div>
       )}
@@ -2136,54 +2160,60 @@ export default function PhosApp() {
 
         {/* --- التدريب --- */}
         {tab === "train" && (
-          <div style={{ padding: "16px 20px 20px", maxWidth: 520, width: "100%", margin: "0 auto", boxSizing: "border-box" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-              <span style={{ fontWeight: 700, fontSize: 17, color: C.cobalt }}>التدريب</span>
-              <span style={{ marginRight: "auto", fontSize: 12, fontWeight: 700, color: C.ok, background: "rgba(255,255,255,0.7)", borderRadius: 999, padding: "5px 12px" }}>١٠ أسئلة مجانية يومياً</span>
+          <div style={{ padding: "18px 18px 24px", maxWidth: 560, width: "100%", margin: "0 auto", boxSizing: "border-box" }}>
+            <div style={{ background: `linear-gradient(135deg, ${C.cobalt}, ${C.cobaltDark})`, borderRadius: 24, padding: "21px 20px", color: "#fff", boxShadow: "0 14px 34px rgba(27,58,200,0.24)", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", width: 120, height: 120, borderRadius: "50%", background: "rgba(255,255,255,0.08)", left: -25, top: -48 }} />
+              <div style={{ display: "flex", alignItems: "center", gap: 11, position: "relative" }}>
+                <div style={{ width: 44, height: 44, borderRadius: 15, background: "rgba(255,255,255,0.16)", display: "flex", alignItems: "center", justifyContent: "center" }}><IconTarget size={24} color="#fff" /></div>
+                <div>
+                  <h2 style={{ margin: 0, fontSize: 23 }}>التدريب</h2>
+                  <div style={{ marginTop: 3, fontSize: 12.5, opacity: 0.82 }}>{isPaid ? "تدريب مفتوح بلا حدود" : "١٠ أسئلة مجانية يوميًا"}</div>
+                </div>
+                <div style={{ marginRight: "auto", textAlign: "center" }}>
+                  <div style={{ fontSize: 18, fontWeight: 700 }}>{toAr(lvl)}</div>
+                  <div style={{ fontSize: 10.5, opacity: 0.76 }}>المستوى</div>
+                </div>
+              </div>
+              <div style={{ height: 7, background: "rgba(255,255,255,0.2)", borderRadius: 999, overflow: "hidden", marginTop: 16 }}>
+                <div style={{ height: "100%", width: `${progress * 100}%`, background: "#fff", borderRadius: 999, transition: "width .6s ease" }} />
+              </div>
+              <div style={{ display: "flex", marginTop: 7, fontSize: 11.5, opacity: 0.78 }}>
+                <span>{TIER_LABEL[tier]}</span>
+                <span style={{ marginRight: "auto" }}>{toAr(into)} / {toAr(need)} نقطة</span>
+              </div>
             </div>
 
-            <div style={{ background: C.card, borderRadius: 20, padding: 18, boxShadow: "0 8px 24px rgba(27,58,200,0.09)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <div style={{ width: 46, height: 46, borderRadius: "50%", background: C.bgSoft, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, color: C.cobalt, fontSize: 17 }}>{toAr(lvl)}</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 700, fontSize: 15 }}>المستوى {toAr(lvl)} <span style={{ opacity: 0.55, fontWeight: 500 }}>· {TIER_LABEL[tier]}</span>{dayStreak > 0 ? <span style={{ color: C.gold }}> · شرارة {toAr(dayStreak)} ✦</span> : <span style={{ opacity: 0.45 }}> · شرارتك تشتعل بأول سؤال ✦</span>}</div>
-                  <div style={{ fontSize: 12, opacity: 0.6, marginTop: 2 }}>{toAr(into)} / {toAr(need)} نقطة للمستوى {toAr(lvl + 1)}</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginTop: 11 }}>
+              {[["الأسئلة", toAr(solved)], ["الدقة", `${toAr(accuracy)}٪`], ["أفضل سلسلة", toAr(best)]].map(([label, value]) => (
+                <div key={label} style={{ background: "rgba(255,255,255,0.8)", border: `1px solid ${C.bgSoft}`, borderRadius: 15, padding: "11px 5px", textAlign: "center" }}>
+                  <div style={{ fontSize: 17, fontWeight: 700, color: C.cobalt }}>{value}</div>
+                  <div style={{ fontSize: 10.5, opacity: 0.58, marginTop: 2 }}>{label}</div>
                 </div>
-                <div style={{ fontWeight: 700, color: C.cobalt, fontSize: 15 }}>{toAr(xp)}</div>
-              </div>
-              <div style={{ height: 8, background: C.bgSoft, borderRadius: 999, overflow: "hidden", marginTop: 12 }}>
-                <div style={{ height: "100%", width: `${progress * 100}%`, background: C.cobalt, borderRadius: 999, transition: "width .6s ease" }} />
-              </div>
+              ))}
             </div>
 
             {(() => {
               const top = Object.entries(interests).sort((a, b) => b[1] - a[1])[0];
               return top && top[1] >= 3 ? (
-                <button onClick={() => setChapter(top[0])} style={{ width: "100%", marginTop: 12, padding: "11px 14px", borderRadius: 14, border: `2px dashed ${C.cobalt}`, background: "rgba(255,255,255,0.55)", color: C.cobalt, fontWeight: 700, fontFamily: "inherit", fontSize: 13.5, cursor: "pointer", textAlign: "right" }}>
-                  مقترح لك حسب اهتماماتك في الفيد: {top[0]}
+                <button onClick={() => setChapter(top[0])} style={{ width: "100%", marginTop: 11, padding: "10px 13px", borderRadius: 13, border: "none", background: "#FFF8E8", color: "#8A5A08", fontWeight: 700, fontFamily: "inherit", fontSize: 12.5, cursor: "pointer", textAlign: "right" }}>
+                  مقترح لك: {top[0]}
                 </button>
               ) : null;
             })()}
-            <div style={{ display: "flex", gap: 8, overflowX: "auto", padding: "14px 0 8px" }}>
-              {CHAPTERS.map((c) => (
-                <button key={c} className="chip" onClick={() => setChapter(c)}
-                  style={{ background: chapter === c ? C.cobalt : "rgba(255,255,255,0.7)", color: chapter === c ? "#fff" : C.ink }}>{c}</button>
-              ))}
-            </div>
 
-            <button onClick={startQuiz} style={{ ...primaryBtn, width: "100%", marginTop: 6, padding: 17, fontSize: 17 }}>
-              ابدأ التدريب — {TIER_LABEL[tier]} · {chapter}
-            </button>
-            {!isPaid && <div style={{ fontSize: 12.5, fontWeight: 700, color: freeLeft <= 2 ? "#E4536B" : C.cobalt, textAlign: "center", marginTop: 8 }}>المتبقي اليوم: {toAr(freeLeft)} ✦</div>}
+            <section style={{ background: C.card, borderRadius: 20, padding: "16px 15px", marginTop: 11, boxShadow: "0 8px 22px rgba(27,58,200,0.08)", border: `1px solid ${C.bgSoft}` }}>
+              <div style={{ fontWeight: 700, fontSize: 14.5, marginBottom: 11 }}>اختر باب التدريب</div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+                {CHAPTERS.map((item) => (
+                  <button key={item} onClick={() => setChapter(item)} style={{ border: "none", borderRadius: 999, padding: "8px 11px", background: chapter === item ? C.cobalt : C.bgSoft, color: chapter === item ? "#fff" : C.ink, fontFamily: "inherit", fontWeight: 700, fontSize: 11.5, cursor: "pointer" }}>{item}</button>
+                ))}
+              </div>
 
-            <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
-              {[["أسئلة", toAr(solved)], ["الدقة", `${toAr(accuracy)}٪`], ["أفضل سلسلة", toAr(best)]].map(([k, v]) => (
-                <div key={k} style={{ flex: 1, background: "rgba(255,255,255,0.7)", borderRadius: 14, padding: "10px 6px", textAlign: "center" }}>
-                  <div style={{ fontSize: 16, fontWeight: 700 }}>{v}</div>
-                  <div style={{ fontSize: 11, opacity: 0.6 }}>{k}</div>
-                </div>
-              ))}
-            </div>
+              <button onClick={startQuiz} style={{ ...primaryBtn, width: "100%", marginTop: 15, padding: 15, fontSize: 15.5, borderRadius: 15 }}>
+                ابدأ الآن · {chapter}
+              </button>
+              {!isPaid && <div style={{ fontSize: 12, fontWeight: 700, color: freeLeft <= 2 ? C.bad : C.cobalt, textAlign: "center", marginTop: 8 }}>المتبقي اليوم: {toAr(freeLeft)}</div>}
+            </section>
           </div>
         )}
 

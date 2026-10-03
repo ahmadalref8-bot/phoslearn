@@ -169,6 +169,19 @@ export default function useMembership() {
     return data?.session || null;
   }, []);
 
+  const signUpWithPassword = useCallback(async (email, password) => {
+    if (!supabase) throw new Error("لم تُضبط خدمة تسجيل الدخول بعد.");
+    const redirect = new URL("/", window.location.origin);
+    redirect.searchParams.set("auth", "confirmed");
+    const { data, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { emailRedirectTo: redirect.toString() },
+    });
+    if (signUpError) throw signUpError;
+    return { session: data?.session || null, needsConfirmation: !data?.session };
+  }, []);
+
   const signOut = useCallback(async () => {
     requestGeneration.current += 1;
     try {
@@ -199,6 +212,7 @@ export default function useMembership() {
     refresh,
     sendMagicLink,
     signInWithPassword,
+    signUpWithPassword,
     signOut,
-  }), [session, membership, authReady, membershipLoading, error, refresh, sendMagicLink, signInWithPassword, signOut]);
+  }), [session, membership, authReady, membershipLoading, error, refresh, sendMagicLink, signInWithPassword, signUpWithPassword, signOut]);
 }
