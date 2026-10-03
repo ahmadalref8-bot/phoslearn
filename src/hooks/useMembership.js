@@ -162,6 +162,13 @@ export default function useMembership() {
     if (signInError) throw signInError;
   }, []);
 
+  const signInWithPassword = useCallback(async (email, password) => {
+    if (!supabase) throw new Error("لم تُضبط خدمة تسجيل الدخول بعد.");
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+    if (signInError) throw signInError;
+    return data?.session || null;
+  }, []);
+
   const signOut = useCallback(async () => {
     requestGeneration.current += 1;
     try {
@@ -191,6 +198,7 @@ export default function useMembership() {
     error,
     refresh,
     sendMagicLink,
+    signInWithPassword,
     signOut,
-  }), [session, membership, authReady, membershipLoading, error, refresh, sendMagicLink, signOut]);
+  }), [session, membership, authReady, membershipLoading, error, refresh, sendMagicLink, signInWithPassword, signOut]);
 }

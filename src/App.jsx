@@ -880,6 +880,7 @@ export default function PhosApp() {
     error: accessError,
     refresh: refreshMembership,
     sendMagicLink,
+    signInWithPassword,
     signOut,
   } = useMembership();
   const [screen, setScreen] = useState("loading");
@@ -1655,6 +1656,7 @@ export default function PhosApp() {
           try { localStorage.removeItem("phos-pending-checkout"); } catch (error) {}
         }}
         onSend={sendMagicLink}
+        onPasswordSignIn={signInWithPassword}
         configured={authConfigured}
         color={C.cobalt}
         ink={C.ink}
