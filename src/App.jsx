@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import AuthModal from "./components/AuthModal.jsx";
+import ProfileSettings, { AppSettings } from "./components/ProfileSettings.jsx";
 import { LEGAL_VERSION } from "./components/PublicPages.jsx";
 import useMembership from "./hooks/useMembership.js";
+import useProfile from "./hooks/useProfile.js";
 
 // ============ هوية فوس (هادئة وبسيطة) ============
 const C = {
@@ -884,6 +886,7 @@ export default function PhosApp() {
     signInWithPassword,
     signOut,
   } = useMembership();
+  const { profile: accountProfile, loading: profileLoading, saving: profileSaving, error: profileError, saveProfile } = useProfile(user);
   const [screen, setScreen] = useState("loading");
   const firstProgressLoad = useRef(true);
   const [tab, setTab] = useState("feed");
@@ -2268,24 +2271,20 @@ export default function PhosApp() {
         {/* --- أنا --- */}
         {tab === "me" && (
           <div style={{ padding: "16px 20px 20px", maxWidth: 520, width: "100%", margin: "0 auto", boxSizing: "border-box" }}>
-            <div style={{ background: C.card, borderRadius: 20, padding: "16px 17px", boxShadow: "0 8px 24px rgba(27,58,200,0.09)", display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{ width: 44, height: 44, flex: "0 0 auto", borderRadius: 14, background: C.bgSoft, display: "flex", alignItems: "center", justifyContent: "center", color: C.cobalt }}>
-                <IconUser size={22} color={C.cobalt} />
-              </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div dir="ltr" style={{ fontWeight: 700, fontSize: 14.5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textAlign: "right" }}>
-                  {user?.email || "لم تسجّل الدخول"}
-                </div>
-                <div style={{ fontSize: 11.5, opacity: 0.58, marginTop: 3 }}>
-                  {accessLoading ? "جارٍ التحقق…" : plan === "season" ? "اشتراك ٩٠ يومًا" : plan === "month" ? "اشتراك ٣٠ يومًا" : "الخطة المجانية"}
-                </div>
-              </div>
-              {user ? (
-                <button onClick={signOut} style={{ border: "none", background: C.bgSoft, color: C.cobalt, borderRadius: 10, padding: "7px 10px", fontFamily: "inherit", fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}>خروج</button>
-              ) : (
-                <button onClick={() => setAuthOpen(true)} style={{ border: "none", background: C.cobalt, color: "#fff", borderRadius: 10, padding: "8px 11px", fontFamily: "inherit", fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}>دخول</button>
-              )}
-            </div>
+            <ProfileSettings
+              user={user}
+              profile={accountProfile}
+              loading={profileLoading}
+              saving={profileSaving}
+              error={profileError}
+              onSave={saveProfile}
+              onSignIn={() => setAuthOpen(true)}
+              plan={plan}
+              accessLoading={accessLoading}
+              color={C.cobalt}
+              ink={C.ink}
+              soft={C.bgSoft}
+            />
             {accessError && (
               <div role="alert" style={{ color: C.bad, background: "#FFF1F2", borderRadius: 12, padding: "9px 11px", fontSize: 12.5, fontWeight: 700, marginTop: 8 }}>
                 {accessError}
@@ -2394,9 +2393,22 @@ export default function PhosApp() {
               <div style={{ background: "rgba(255,255,255,0.5)", borderRadius: 13, padding: "10px 12px", fontSize: 11.5, opacity: 0.7, marginTop: 9, lineHeight: 1.7, textAlign: "center" }}>تقدر توقف التجديد في أي وقت، ويستمر وصولك حتى نهاية المدة المدفوعة.</div>
             </section>
 
-            <a href="/about" style={{ display: "block", width: "100%", marginTop: 16, padding: 12, borderRadius: 14, boxSizing: "border-box", textAlign: "center", textDecoration: "none", background: "rgba(255,255,255,0.72)", color: C.cobalt, fontWeight: 700, fontSize: 13.5 }}>معلومات فوس والسياسات</a>
-
-            <button onClick={() => { try { if (progressStorageKey) localStorage.removeItem(progressStorageKey); } catch (e) {} setXp(0); setBest(0); setSolved(0); setCorrectCount(0); setStreak(0); setSkills({}); setSavedQs([]); setSavedTitles([]); setSavedCards([]); setInterests({}); setDayStreak(0); setLastDay(""); interestsRef.current = {}; weakRef.current = {}; setFcBase(null); setProfile(null); setObStep(0); setObAns({}); setIntroSeen(false); setScreen("welcome"); }} style={{ width: "100%", marginTop: 16, padding: 12, borderRadius: 14, border: "none", background: "rgba(255,255,255,0.6)", color: C.ink, fontWeight: 700, fontFamily: "inherit", fontSize: 13.5, cursor: "pointer" }}>إعادة ضبط تقدمي</button>
+            <AppSettings
+              user={user}
+              onSignOut={signOut}
+              color={C.cobalt}
+              ink={C.ink}
+              soft={C.bgSoft}
+              onReset={() => {
+                try { if (progressStorageKey) localStorage.removeItem(progressStorageKey); } catch (e) {}
+                setXp(0); setBest(0); setSolved(0); setCorrectCount(0); setStreak(0);
+                setSkills({}); setSavedQs([]); setSavedTitles([]); setSavedCards([]);
+                setInterests({}); setDayStreak(0); setLastDay("");
+                interestsRef.current = {}; weakRef.current = {};
+                setFcBase(null); setProfile(null); setObStep(0); setObAns({});
+                setIntroSeen(false); setScreen("welcome");
+              }}
+            />
           </div>
         )}
       </div>
@@ -2404,13 +2416,14 @@ export default function PhosApp() {
       {/* شريط التنقل — أيقونات بسيطة */}
       <div style={{ display: "flex", background: "rgba(255,255,255,0.94)", borderTop: `1px solid ${C.bgSoft}`, zIndex: 5 }}>
         {[
-          ["feed", <Sparkle key="f" size={22} color={tab === "feed" ? C.cobalt : "rgba(36,27,77,0.4)"} />, "الصفحة الرئيسية"],
+          ["feed", <Sparkle key="f" size={22} color={tab === "feed" ? C.cobalt : "rgba(36,27,77,0.4)"} />, "الرئيسية"],
           ["train", <IconTarget key="t" size={22} color={tab === "train" ? C.cobalt : "rgba(36,27,77,0.4)"} />, "تدريب"],
           ["lib", <IconTriangle key="l" size={22} color={tab === "lib" ? C.cobalt : "rgba(36,27,77,0.4)"} />, "مرجع"],
-          ["me", <IconUser key="m" size={22} color={tab === "me" ? C.cobalt : "rgba(36,27,77,0.4)"} />, "الصفحة الشخصية"],
+          ["me", <IconUser key="m" size={22} color={tab === "me" ? C.cobalt : "rgba(36,27,77,0.4)"} />, "حسابي"],
         ].map(([k, icon, label]) => (
           <button key={k} className="navBtn" aria-label={label} onClick={() => setTab(k)} style={{ color: tab === k ? C.cobalt : "rgba(36,27,77,0.45)" }}>
             {icon}
+            <span>{label}</span>
           </button>
         ))}
       </div>
