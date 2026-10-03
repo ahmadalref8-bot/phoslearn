@@ -1050,7 +1050,7 @@ returns trigger
 language plpgsql
 security definer
 set search_path = public
-as $
+as $$
 declare
   v_name text;
 begin
@@ -1067,7 +1067,7 @@ begin
   on conflict (id) do nothing;
   return new;
 end;
-$;
+$$;
 
 drop trigger if exists create_phos_profile_after_signup on auth.users;
 create trigger create_phos_profile_after_signup
