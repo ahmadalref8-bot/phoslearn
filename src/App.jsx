@@ -2187,39 +2187,56 @@ export default function PhosApp() {
 
         {/* --- مكتبتي --- */}
         {tab === "lib" && (
-          <div style={{ padding: "16px 20px 20px", maxWidth: 520, width: "100%", margin: "0 auto", boxSizing: "border-box" }}>
-            <div style={{ fontWeight: 700, fontSize: 19, color: C.cobalt, marginBottom: 12 }}>المرجع ✦</div>
-
-            <div style={{ background: C.card, borderRadius: 20, padding: 16, boxShadow: "0 8px 24px rgba(27,58,200,0.09)" }}>
-              <div style={{ fontWeight: 700, fontSize: 15 }}>تقرير الدرجة</div>
-              <div style={{ fontSize: 12.5, opacity: 0.65, marginTop: 3 }}>نطاق توقعك وأضعف أبوابك وسهم الأسبوع</div>
-              <button onClick={() => setScreen("report")} style={{ width: "100%", marginTop: 10, padding: 13, borderRadius: 16, border: `2px solid ${C.cobalt}`, background: "transparent", color: C.cobalt, fontWeight: 700, fontFamily: "inherit", fontSize: 14, cursor: "pointer" }}>
-                تقريري وتوقع درجتي
-              </button>
+          <div style={{ padding: "18px 18px 24px", maxWidth: 560, width: "100%", margin: "0 auto", boxSizing: "border-box" }}>
+            <div style={{ background: `linear-gradient(135deg, ${C.cobalt}, ${C.cobaltDark})`, borderRadius: 24, padding: "22px 20px", color: "#fff", boxShadow: "0 14px 34px rgba(27,58,200,0.24)", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", width: 120, height: 120, borderRadius: "50%", background: "rgba(255,255,255,0.08)", left: -28, top: -48 }} />
+              <div style={{ display: "flex", alignItems: "center", gap: 10, position: "relative" }}>
+                <Sparkle size={25} color="#fff" glow={false} />
+                <div>
+                  <h2 style={{ margin: 0, fontSize: 23 }}>المرجع</h2>
+                  <div style={{ marginTop: 4, fontSize: 13, opacity: 0.82 }}>تقاريرك ومحفوظاتك ومراجعتك في مكان واحد</div>
+                </div>
+              </div>
             </div>
 
-            <div style={{ background: C.card, borderRadius: 20, padding: 16, marginTop: 12, boxShadow: "0 8px 24px rgba(27,58,200,0.09)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 6, fontWeight: 700, fontSize: 15 }}><Heart size={15} filled={savedQs.length > 0} color={C.cobalt} /> أسئلتي المحفوظة ({toAr(savedQs.length)})</div>
-              <div style={{ fontSize: 12.5, opacity: 0.65, marginTop: 3 }}>كل سؤال حفظته بالقلب أثناء التدريب — راجعها كجولة</div>
-              <button onClick={startReview} disabled={!savedQs.length} style={{ width: "100%", marginTop: 10, padding: 13, borderRadius: 16, border: `2px solid ${C.cobalt}`, background: savedQs.length ? "transparent" : C.bgSoft, color: savedQs.length ? C.cobalt : "rgba(36,27,77,0.4)", fontWeight: 700, fontFamily: "inherit", fontSize: 14, cursor: savedQs.length ? "pointer" : "default" }}>
-                ابدأ مراجعة المحفوظات
-              </button>
-            <button onClick={() => setSavedListOpen(true)} disabled={!savedQs.length} style={{ width: "100%", marginTop: 8, padding: 12, borderRadius: 14, border: `1.5px solid ${C.cobalt}`, background: "transparent", color: savedQs.length ? C.cobalt : "rgba(36,27,77,0.35)", fontWeight: 700, fontFamily: "inherit", fontSize: 13.5, cursor: "pointer" }}>استعرض القائمة كاملة ({toAr(savedQs.length)})</button>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(215px, 1fr))", gap: 12, marginTop: 14 }}>
+              <section style={{ background: C.card, borderRadius: 20, padding: 17, boxShadow: "0 8px 22px rgba(27,58,200,0.08)", border: `1px solid ${C.bgSoft}` }}>
+                <div style={{ width: 38, height: 38, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", background: C.bgSoft, color: C.cobalt, fontWeight: 700 }}>١</div>
+                <div style={{ fontWeight: 700, fontSize: 16, marginTop: 11 }}>تقرير الدرجة</div>
+                <div style={{ minHeight: 42, fontSize: 12.5, lineHeight: 1.7, opacity: 0.62, marginTop: 4 }}>توقع درجتك، تقدمك الأسبوعي، والأبواب التي تحتاج تركيزًا.</div>
+                <button onClick={() => setScreen("report")} style={{ width: "100%", marginTop: 12, padding: 12, borderRadius: 13, border: "none", background: C.cobalt, color: "#fff", fontWeight: 700, fontFamily: "inherit", fontSize: 13.5, cursor: "pointer" }}>افتح التقرير</button>
+              </section>
+
+              <section style={{ background: C.card, borderRadius: 20, padding: 17, boxShadow: "0 8px 22px rgba(27,58,200,0.08)", border: `1px solid ${C.bgSoft}` }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <div style={{ width: 38, height: 38, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(228,83,107,0.12)" }}><Heart size={18} filled={savedQs.length > 0} color={C.bad} /></div>
+                  <span style={{ background: C.bgSoft, color: C.cobalt, borderRadius: 999, padding: "4px 9px", fontSize: 11.5, fontWeight: 700 }}>{toAr(savedQs.length)}</span>
+                </div>
+                <div style={{ fontWeight: 700, fontSize: 16, marginTop: 11 }}>الأسئلة المحفوظة</div>
+                <div style={{ minHeight: 42, fontSize: 12.5, lineHeight: 1.7, opacity: 0.62, marginTop: 4 }}>راجع الأسئلة التي حفظتها أثناء التدريب أو اختبر نفسك فيها.</div>
+                <button onClick={startReview} disabled={!savedQs.length} style={{ width: "100%", marginTop: 12, padding: 12, borderRadius: 13, border: "none", background: savedQs.length ? C.cobalt : C.bgSoft, color: savedQs.length ? "#fff" : "rgba(36,27,77,0.4)", fontWeight: 700, fontFamily: "inherit", fontSize: 13.5, cursor: savedQs.length ? "pointer" : "default" }}>ابدأ المراجعة</button>
+                <button onClick={() => setSavedListOpen(true)} disabled={!savedQs.length} style={{ width: "100%", marginTop: 7, padding: 10, borderRadius: 12, border: "none", background: "transparent", color: savedQs.length ? C.cobalt : "rgba(36,27,77,0.35)", fontWeight: 700, fontFamily: "inherit", fontSize: 12.5, cursor: savedQs.length ? "pointer" : "default" }}>عرض القائمة</button>
+              </section>
+
+              <section style={{ background: C.card, borderRadius: 20, padding: 17, boxShadow: "0 8px 22px rgba(27,58,200,0.08)", border: `1px solid ${C.bgSoft}` }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <div style={{ width: 38, height: 38, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(217,154,43,0.13)" }}><Sparkle size={18} color={C.gold} glow={false} /></div>
+                  <span style={{ background: "#FFF8E8", color: "#A46C0B", borderRadius: 999, padding: "4px 9px", fontSize: 11.5, fontWeight: 700 }}>{toAr(savedCards.length)}</span>
+                </div>
+                <div style={{ fontWeight: 700, fontSize: 16, marginTop: 11 }}>بطاقات الفيد</div>
+                <div style={{ minHeight: 42, fontSize: 12.5, lineHeight: 1.7, opacity: 0.62, marginTop: 4 }}>القوانين والفخاخ التي اخترت حفظها من فيد فوس.</div>
+                <button onClick={() => savedCards.length && (isPaid ? setScreen("savedFeed") : setPaywall(true))} disabled={!savedCards.length} style={{ width: "100%", marginTop: 12, padding: 12, borderRadius: 13, border: "none", background: savedCards.length ? C.cobalt : C.bgSoft, color: savedCards.length ? "#fff" : "rgba(36,27,77,0.4)", fontWeight: 700, fontFamily: "inherit", fontSize: 13.5, cursor: savedCards.length ? "pointer" : "default" }}>استعرض البطاقات</button>
+                <button onClick={startCardQuiz} disabled={savedCards.length < 3} style={{ width: "100%", marginTop: 7, padding: 10, borderRadius: 12, border: "none", background: "transparent", color: savedCards.length >= 3 ? C.cobalt : "rgba(36,27,77,0.35)", fontWeight: 700, fontFamily: "inherit", fontSize: 12.5, cursor: savedCards.length >= 3 ? "pointer" : "default" }}>{savedCards.length < 3 ? "احفظ ٣ بطاقات للاختبار" : "اختبرني عليها"}</button>
+              </section>
             </div>
 
-            <div style={{ background: C.card, borderRadius: 20, padding: 16, marginTop: 12, boxShadow: "0 8px 24px rgba(27,58,200,0.09)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 6, fontWeight: 700, fontSize: 15 }}><Heart size={15} filled={savedCards.length > 0} color={C.cobalt} /> بطاقاتي من الفيد ({toAr(savedCards.length)})</div>
-              <div style={{ fontSize: 12.5, opacity: 0.65, marginTop: 3 }}>القوانين والفخاخ التي حفظتها من الفيد</div>
-              <button onClick={() => savedCards.length && (isPaid ? setScreen("savedFeed") : setPaywall(true))} disabled={!savedCards.length} style={{ width: "100%", marginTop: 10, padding: 13, borderRadius: 16, border: `2px solid ${C.cobalt}`, background: savedCards.length ? "transparent" : C.bgSoft, color: savedCards.length ? C.cobalt : "rgba(36,27,77,0.4)", fontWeight: 700, fontFamily: "inherit", fontSize: 14, cursor: savedCards.length ? "pointer" : "default" }}>
-                استعرض البطاقات
-              </button>
-            <button onClick={startCardQuiz} disabled={savedCards.length < 3} style={{ width: "100%", marginTop: 8, padding: 12, borderRadius: 14, border: "none", background: savedCards.length >= 3 ? C.cobalt : "rgba(27,58,200,0.25)", color: "#fff", fontWeight: 700, fontFamily: "inherit", fontSize: 13.5, cursor: "pointer" }}>اختبرني على بطاقاتي ✦{savedCards.length < 3 ? " (احفظ ٣ بطاقات أولاً)" : ""}</button>
-            </div>
-
-            <a href={TG_LINK} target="_blank" rel="noreferrer" style={{ display: "block", textDecoration: "none", background: C.cobalt, borderRadius: 20, padding: 16, marginTop: 12, boxShadow: "0 8px 24px rgba(27,58,200,0.2)" }}>
-              <div style={{ fontWeight: 700, fontSize: 15, color: "#fff", display: "flex", alignItems: "center", gap: 6 }}><Sparkle size={15} /> قناة فوس بالتيلقرام</div>
-              <div style={{ fontSize: 12.5, color: "rgba(255,255,255,0.85)", marginTop: 3 }}>القناة الرئيسية — تحديثات المقطع والتطبيق</div>
-              <div style={{ background: C.gold, color: "#fff", fontWeight: 700, borderRadius: 14, padding: 12, marginTop: 10, textAlign: "center", fontSize: 14 }}>انضم الآن ✦</div>
+            <a href={TG_LINK} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", background: C.card, color: C.ink, borderRadius: 20, padding: "15px 17px", marginTop: 12, boxShadow: "0 8px 22px rgba(27,58,200,0.08)", border: `1px solid ${C.bgSoft}` }}>
+              <div style={{ width: 42, height: 42, flex: "0 0 auto", borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", background: C.cobalt }}><Sparkle size={19} color="#fff" glow={false} /></div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 700, fontSize: 14.5 }}>قناة فوس في تيليجرام</div>
+                <div style={{ fontSize: 12, opacity: 0.58, marginTop: 2 }}>التحديثات والمحتوى الجديد</div>
+              </div>
+              <span style={{ color: C.cobalt, fontWeight: 700, fontSize: 13 }}>افتح ←</span>
             </a>
           </div>
         )}

@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from "react";
 
+function friendlyAuthError(authError) {
+  const raw = String(authError?.code || authError?.message || "").toLowerCase();
+  if (raw.includes("rate") || raw.includes("too many") || authError?.status === 429) {
+    return "تم طلب روابط كثيرة خلال وقت قصير. انتظر ساعة من آخر محاولة، ثم اطلب رابطًا واحدًا جديدًا.";
+  }
+  if (raw.includes("not authorized") || raw.includes("email address")) {
+    return "إرسال البريد التجريبي لا يسمح بهذا العنوان حاليًا. تواصل مع دعم فوس.";
+  }
+  return "تعذر إرسال رابط الدخول الآن. حاول مرة أخرى بعد قليل.";
+}
+
 export default function AuthModal({ open, onClose, onSend, configured, color = "#1B3AC8", ink = "#241B4D" }) {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,7 +33,7 @@ export default function AuthModal({ open, onClose, onSend, configured, color = "
       await onSend(clean);
       setSent(true);
     } catch (sendError) {
-      setError(sendError.message || "تعذر إرسال رابط الدخول.");
+      setError(friendlyAuthError(sendError));
     } finally {
       setLoading(false);
     }
@@ -36,7 +47,7 @@ export default function AuthModal({ open, onClose, onSend, configured, color = "
           <p style={{ lineHeight: 1.9, fontSize: 14 }}>تسجيل الدخول غير مفعّل في هذه النسخة بعد. أضف مفاتيح Supabase في إعدادات النشر أولًا.</p>
         ) : sent ? (
           <>
-            <p style={{ lineHeight: 1.9, fontSize: 14 }}>أرسلنا رابط دخول إلى <b>{email}</b>. افتحه من نفس الجهاز. إذا اخترت باقة قبل تسجيل الدخول، ستعود إلى خطوة مراجعة الاشتراك والموافقة قبل الانتقال إلى الدفع.</p>
+            <p style={{ lineHeight: 1.9, fontSize: 14 }}>أرسلنا رابط دخول إلى <b>{email}</b>. افتح أحدث رسالة فقط واضغط الرابط مرة واحدة. إذا اخترت باقة قبل تسجيل الدخول، ستعود إلى خطوة مراجعة الاشتراك قبل الدفع.</p>
             <button type="button" onClick={() => setSent(false)} style={{ width: "100%", border: `2px solid ${color}`, color, background: "transparent", borderRadius: 14, padding: 12, fontFamily: "inherit", fontWeight: 700, cursor: "pointer" }}>استخدم بريدًا آخر</button>
           </>
         ) : (
