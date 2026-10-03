@@ -28,6 +28,8 @@ export default function ProfileSettings({
   error,
   onSave,
   onSignIn,
+  onSignOut,
+  onReset,
   plan,
   accessLoading,
   color = "#1B3AC8",
@@ -101,12 +103,24 @@ export default function ProfileSettings({
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontWeight: 800, fontSize: 18, color: ink, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{loading ? "جارٍ التحميل…" : shownName}</div>
-            <div dir="ltr" style={{ fontSize: 12.5, opacity: 0.56, marginTop: 3, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textAlign: "right" }}>{user.email}</div>
             <div style={{ display: "inline-block", background: soft, color, borderRadius: 999, padding: "4px 9px", fontSize: 11, fontWeight: 800, marginTop: 8 }}>{accessLoading ? "جارٍ التحقق…" : planLabel(plan)}</div>
           </div>
         </div>
         <button onClick={openEditor} disabled={loading} style={{ width: "100%", border: `2px solid ${color}`, borderRadius: 14, background: "transparent", color, padding: 11, marginTop: 15, fontFamily: "inherit", fontWeight: 800, fontSize: 13.5, cursor: loading ? "wait" : "pointer", opacity: loading ? 0.55 : 1 }}>تعديل الملف الشخصي</button>
         {error && <div role="alert" style={{ color: "#C83C55", background: "#FFF1F2", borderRadius: 12, padding: "9px 11px", fontSize: 12, fontWeight: 700, marginTop: 9 }}>{error}</div>}
+
+        <div style={{ borderTop: `1px solid ${soft}`, marginTop: 17, paddingTop: 15 }}>
+          <div style={{ fontWeight: 800, fontSize: 16.5, color: ink }}>إعدادات التطبيق</div>
+          <a href="/about" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginTop: 9, padding: "12px 0", textDecoration: "none", color: ink, fontWeight: 700, fontSize: 13.5 }}>
+            <span>معلومات فوس والسياسات</span>
+            <span style={{ color, fontSize: 18 }}>‹</span>
+          </a>
+          <button onClick={() => window.confirm("هل تريد إعادة ضبط تقدمك؟ لا يمكن التراجع عن ذلك.") && onReset()} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", border: "none", borderTop: `1px solid ${soft}`, background: "none", color: ink, padding: "12px 0", fontFamily: "inherit", fontWeight: 700, fontSize: 13.5, cursor: "pointer", textAlign: "right" }}>
+            <span>إعادة ضبط التقدم</span>
+            <span style={{ color: "#C83C55", fontSize: 12 }}>مسح</span>
+          </button>
+          <button onClick={onSignOut} style={{ width: "100%", border: "none", borderRadius: 13, background: "#FFF1F2", color: "#C83C55", padding: 12, marginTop: 8, fontFamily: "inherit", fontWeight: 800, fontSize: 13.5, cursor: "pointer" }}>تسجيل الخروج</button>
+        </div>
       </section>
 
       {editing && (
@@ -133,28 +147,5 @@ export default function ProfileSettings({
         </div>
       )}
     </>
-  );
-}
-
-export function AppSettings({ user, onSignOut, onReset, color = "#1B3AC8", ink = "#241B4D", soft = "#EDE5FC" }) {
-  return (
-    <section style={{ ...cardStyle, marginTop: 14 }}>
-      <div style={{ fontWeight: 800, fontSize: 17, color: ink }}>إعدادات التطبيق</div>
-      <div style={{ fontSize: 12, opacity: 0.58, marginTop: 3 }}>الحساب والبيانات والسياسات</div>
-
-      <a href="/about" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginTop: 14, padding: "13px 0", borderTop: `1px solid ${soft}`, textDecoration: "none", color: ink, fontWeight: 700, fontSize: 13.5 }}>
-        <span>معلومات فوس والسياسات</span>
-        <span style={{ color, fontSize: 18 }}>‹</span>
-      </a>
-
-      <button onClick={() => window.confirm("هل تريد إعادة ضبط تقدمك؟ لا يمكن التراجع عن ذلك.") && onReset()} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", border: "none", borderTop: `1px solid ${soft}`, background: "none", color: ink, padding: "13px 0", fontFamily: "inherit", fontWeight: 700, fontSize: 13.5, cursor: "pointer", textAlign: "right" }}>
-        <span>إعادة ضبط التقدم</span>
-        <span style={{ color: "#C83C55", fontSize: 12 }}>مسح</span>
-      </button>
-
-      {user && (
-        <button onClick={onSignOut} style={{ width: "100%", border: "none", borderRadius: 13, background: "#FFF1F2", color: "#C83C55", padding: 12, marginTop: 8, fontFamily: "inherit", fontWeight: 800, fontSize: 13.5, cursor: "pointer" }}>تسجيل الخروج</button>
-      )}
-    </section>
   );
 }

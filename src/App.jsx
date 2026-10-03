@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import AuthModal from "./components/AuthModal.jsx";
-import ProfileSettings, { AppSettings } from "./components/ProfileSettings.jsx";
+import ProfileSettings from "./components/ProfileSettings.jsx";
 import { LEGAL_VERSION } from "./components/PublicPages.jsx";
 import useMembership from "./hooks/useMembership.js";
 import useProfile from "./hooks/useProfile.js";
@@ -1687,21 +1687,17 @@ export default function PhosApp() {
               {profile && profile.when && <div style={{ background: "#FFF8E8", color: "#8A5A08", borderRadius: 13, padding: "9px 12px", fontSize: 12, fontWeight: 700, marginBottom: 11 }}>اختبارك «{prTxt(profile.when)}» — اختر المدة الأنسب لك.</div>}
 
               <div style={{ display: "grid", gap: 10 }}>
-                <button disabled={Boolean(checkoutPlan)} onClick={() => beginCheckout("season")} style={{ width: "100%", textAlign: "right", border: `2px solid ${C.cobalt}`, background: C.bgSoft, color: C.ink, borderRadius: 18, padding: "15px 16px", fontFamily: "inherit", cursor: checkoutPlan ? "wait" : "pointer", opacity: checkoutPlan ? 0.65 : 1, position: "relative" }}>
+                <button disabled={Boolean(checkoutPlan)} onClick={() => beginCheckout("season")} style={{ width: "100%", textAlign: "right", border: `2px solid ${C.cobalt}`, background: C.bgSoft, color: C.ink, borderRadius: 18, padding: "20px 16px", minHeight: 132, fontFamily: "inherit", cursor: checkoutPlan ? "wait" : "pointer", opacity: checkoutPlan ? 0.65 : 1, position: "relative" }}>
                   <span style={{ position: "absolute", top: -9, left: 14, background: C.gold, color: "#fff", borderRadius: 999, padding: "3px 9px", fontSize: 10.5, fontWeight: 700 }}>الأفضل قيمة</span>
-                  <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <b style={{ fontSize: 16 }}>اشتراك ٩٠ يومًا</b>
-                    <b style={{ marginRight: "auto", color: C.cobalt, fontSize: 19 }}>٣٩ ر.س</b>
-                  </span>
-                  <span style={{ display: "block", marginTop: 4, fontSize: 11.5, opacity: 0.65 }}>يتجدد كل ٩٠ يومًا · وفّر ٣٢٪</span>
+                  <span style={{ display: "block", fontSize: 15, fontWeight: 700 }}>اشتراك ٩٠ يومًا</span>
+                  <b style={{ display: "block", color: C.cobalt, fontSize: 25, marginTop: 7 }}>٣٩ ر.س</b>
+                  <span style={{ display: "block", marginTop: 5, fontSize: 11.5, opacity: 0.65 }}>يتجدد كل ٩٠ يومًا · وفّر ٣٢٪</span>
                 </button>
 
-                <button disabled={Boolean(checkoutPlan)} onClick={() => beginCheckout("month")} style={{ width: "100%", textAlign: "right", border: `1px solid ${C.bgSoft}`, background: "#FAF8FF", color: C.ink, borderRadius: 18, padding: "14px 16px", fontFamily: "inherit", cursor: checkoutPlan ? "wait" : "pointer", opacity: checkoutPlan ? 0.65 : 1 }}>
-                  <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <b style={{ fontSize: 15 }}>اشتراك ٣٠ يومًا</b>
-                    <b style={{ marginRight: "auto", color: C.cobalt, fontSize: 18 }}>١٩ ر.س</b>
-                  </span>
-                  <span style={{ display: "block", marginTop: 4, fontSize: 11.5, opacity: 0.65 }}>يتجدد كل ٣٠ يومًا</span>
+                <button disabled={Boolean(checkoutPlan)} onClick={() => beginCheckout("month")} style={{ width: "100%", textAlign: "right", border: `1px solid ${C.bgSoft}`, background: "#FAF8FF", color: C.ink, borderRadius: 18, padding: "20px 16px", minHeight: 126, fontFamily: "inherit", cursor: checkoutPlan ? "wait" : "pointer", opacity: checkoutPlan ? 0.65 : 1 }}>
+                  <span style={{ display: "block", fontSize: 15, fontWeight: 700 }}>اشتراك ٣٠ يومًا</span>
+                  <b style={{ display: "block", color: C.cobalt, fontSize: 25, marginTop: 7 }}>١٩ ر.س</b>
+                  <span style={{ display: "block", marginTop: 5, fontSize: 11.5, opacity: 0.65 }}>يتجدد كل ٣٠ يومًا</span>
                 </button>
               </div>
 
@@ -2279,6 +2275,16 @@ export default function PhosApp() {
               error={profileError}
               onSave={saveProfile}
               onSignIn={() => setAuthOpen(true)}
+              onSignOut={signOut}
+              onReset={() => {
+                try { if (progressStorageKey) localStorage.removeItem(progressStorageKey); } catch (e) {}
+                setXp(0); setBest(0); setSolved(0); setCorrectCount(0); setStreak(0);
+                setSkills({}); setSavedQs([]); setSavedTitles([]); setSavedCards([]);
+                setInterests({}); setDayStreak(0); setLastDay("");
+                interestsRef.current = {}; weakRef.current = {};
+                setFcBase(null); setProfile(null); setObStep(0); setObAns({});
+                setIntroSeen(false); setScreen("welcome");
+              }}
               plan={plan}
               accessLoading={accessLoading}
               color={C.cobalt}
@@ -2367,9 +2373,9 @@ export default function PhosApp() {
               <div style={{ background: C.card, borderRadius: 22, padding: "20px 18px 17px", marginTop: 12, border: plan === "season" ? `2px solid ${C.cobalt}` : `1px solid ${C.bgSoft}`, boxShadow: "0 10px 26px rgba(27,58,200,0.09)", position: "relative", overflow: "hidden" }}>
                 <div style={{ position: "absolute", top: 13, left: 13, background: C.gold, color: "#fff", borderRadius: 999, fontSize: 10.5, fontWeight: 700, padding: "4px 9px" }}>الأفضل قيمة</div>
                 <div style={{ color: C.cobalt, fontSize: 12, fontWeight: 700 }}>وصول كامل</div>
-                <div style={{ display: "flex", alignItems: "baseline", gap: 7, marginTop: 4 }}>
-                  <div style={{ fontWeight: 700, fontSize: 20 }}>٩٠ يومًا</div>
-                  <div style={{ marginRight: "auto", color: C.cobalt, fontWeight: 700, fontSize: 26 }}>٣٩ <span style={{ fontSize: 12 }}>ر.س</span></div>
+                <div style={{ marginTop: 7 }}>
+                  <div style={{ fontWeight: 700, fontSize: 19 }}>٩٠ يومًا</div>
+                  <div style={{ color: C.cobalt, fontWeight: 800, fontSize: 30, marginTop: 5 }}>٣٩ <span style={{ fontSize: 12 }}>ر.س</span></div>
                 </div>
                 <div style={{ height: 1, background: C.bgSoft, margin: "14px 0 11px" }} />
                 <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12.5 }}>
@@ -2381,9 +2387,9 @@ export default function PhosApp() {
 
               <div style={{ background: "rgba(255,255,255,0.76)", borderRadius: 22, padding: "18px", marginTop: 10, border: plan === "month" ? `2px solid ${C.cobalt}` : `1px solid ${C.bgSoft}`, position: "relative" }}>
                 {recMonthly && <div style={{ position: "absolute", top: -9, left: 13, background: C.gold, color: "#fff", borderRadius: 999, fontSize: 10.5, fontWeight: 700, padding: "4px 9px" }}>مناسب لموعدك</div>}
-                <div style={{ display: "flex", alignItems: "baseline", gap: 7 }}>
+                <div>
                   <div style={{ fontWeight: 700, fontSize: 18 }}>٣٠ يومًا</div>
-                  <div style={{ marginRight: "auto", color: C.cobalt, fontWeight: 700, fontSize: 24 }}>١٩ <span style={{ fontSize: 12 }}>ر.س</span></div>
+                  <div style={{ color: C.cobalt, fontWeight: 800, fontSize: 29, marginTop: 5 }}>١٩ <span style={{ fontSize: 12 }}>ر.س</span></div>
                 </div>
                 <div style={{ fontSize: 12, opacity: 0.6, marginTop: 5 }}>وصول كامل · يتجدد كل ٣٠ يومًا</div>
                 <button disabled={Boolean(checkoutPlan) || isPaid} onClick={() => beginCheckout("month")} style={{ width: "100%", marginTop: 13, padding: 12, borderRadius: 14, border: `2px solid ${C.cobalt}`, background: "transparent", color: C.cobalt, fontWeight: 700, fontFamily: "inherit", fontSize: 14, cursor: checkoutPlan ? "wait" : isPaid ? "default" : "pointer", opacity: checkoutPlan || isPaid ? 0.55 : 1 }}>{checkoutPlan === "month" ? "جارٍ التجهيز…" : isPaid ? (plan === "month" ? "اشتراكك الحالي" : "متاح بعد انتهاء اشتراكك") : "اختر باقة ٣٠ يومًا"}</button>
@@ -2393,22 +2399,6 @@ export default function PhosApp() {
               <div style={{ background: "rgba(255,255,255,0.5)", borderRadius: 13, padding: "10px 12px", fontSize: 11.5, opacity: 0.7, marginTop: 9, lineHeight: 1.7, textAlign: "center" }}>تقدر توقف التجديد في أي وقت، ويستمر وصولك حتى نهاية المدة المدفوعة.</div>
             </section>
 
-            <AppSettings
-              user={user}
-              onSignOut={signOut}
-              color={C.cobalt}
-              ink={C.ink}
-              soft={C.bgSoft}
-              onReset={() => {
-                try { if (progressStorageKey) localStorage.removeItem(progressStorageKey); } catch (e) {}
-                setXp(0); setBest(0); setSolved(0); setCorrectCount(0); setStreak(0);
-                setSkills({}); setSavedQs([]); setSavedTitles([]); setSavedCards([]);
-                setInterests({}); setDayStreak(0); setLastDay("");
-                interestsRef.current = {}; weakRef.current = {};
-                setFcBase(null); setProfile(null); setObStep(0); setObAns({});
-                setIntroSeen(false); setScreen("welcome");
-              }}
-            />
           </div>
         )}
       </div>
