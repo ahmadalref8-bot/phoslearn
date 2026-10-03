@@ -2354,35 +2354,48 @@ export default function PhosApp() {
               </button>
             )}
             {communityError && <div style={{ color: C.bad, fontSize: 12.5, marginTop: 6 }}>{communityError}</div>}
-            <div style={{ marginTop: 16 }}>
-              <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 10 }}>باقات فوس</div>
-
-              <div style={{ background: C.card, borderRadius: 18, padding: 18, border: plan === "season" ? `2px solid ${C.cobalt}` : "2px solid transparent", boxShadow: "0 6px 18px rgba(27,58,200,0.07)", position: "relative" }}>
-                <div style={{ position: "absolute", top: -10, right: 14, background: C.gold, color: "#fff", borderRadius: 999, fontSize: 10.5, fontWeight: 700, padding: "3px 12px" }}>{recMonthly ? "وفّر ٣٢٪ عن ٣٠ يومًا" : profile && profile.when ? "الأنسب لاختبارك — وفّر ٣٢٪" : "الأفضل — وفّر ٣٢٪"}</div>
-                <div style={{ display: "flex", alignItems: "center", marginTop: 4 }}>
-                  <div style={{ fontWeight: 700, fontSize: 17 }}>اشتراك ٩٠ يومًا ✦</div>
-                  <div style={{ marginRight: "auto", fontWeight: 700, color: C.cobalt, fontSize: 16 }}>٣٩ ر.س</div>
+            <section style={{ marginTop: 17 }}>
+              <div style={{ background: `linear-gradient(135deg, ${C.cobalt}, ${C.cobaltDark})`, borderRadius: 22, padding: "20px 18px", color: "#fff", position: "relative", overflow: "hidden", boxShadow: "0 12px 30px rgba(27,58,200,0.2)" }}>
+                <div style={{ position: "absolute", width: 115, height: 115, borderRadius: "50%", background: "rgba(255,255,255,0.08)", left: -28, top: -50 }} />
+                <div style={{ position: "relative" }}>
+                  <div style={{ fontSize: 20, fontWeight: 700 }}>اختر باقتك</div>
+                  <div style={{ fontSize: 12.5, opacity: 0.8, marginTop: 3 }}>نفس المزايا، اختر المدة التي تناسبك.</div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 13 }}>
+                    {["تدريب بلا حدود", "شرح ذكي", "تقرير كامل", "مجتمع خاص"].map((feature) => (
+                      <span key={feature} style={{ background: "rgba(255,255,255,0.14)", borderRadius: 999, padding: "5px 8px", fontSize: 10.5, fontWeight: 700 }}>{feature}</span>
+                    ))}
+                  </div>
                 </div>
-                <div style={{ fontSize: 13.5, lineHeight: 2, opacity: 0.85, marginTop: 8 }}>
-                  أسئلة تدريب بلا حدود + الفيد التكيفي (يتشكل من أخطائك) + الشرح الذكي بضغطة لكل سؤال + التقرير الكامل وتوقع درجتك المتجدد + المجتمع الخاص
-                </div>
-                <div style={{ fontSize: 12, fontWeight: 700, color: C.cobalt, marginTop: 8 }}>٣٩ ر.س كل ٩٠ يومًا — يتجدد تلقائيًا حتى الإلغاء</div>
-                <button disabled={Boolean(checkoutPlan) || isPaid} onClick={() => beginCheckout("season")} style={{ ...primaryBtn, width: "100%", marginTop: 10, padding: 12, fontSize: 14.5, borderRadius: 12, opacity: checkoutPlan || isPaid ? 0.55 : 1, cursor: checkoutPlan ? "wait" : isPaid ? "default" : "pointer" }}>{checkoutPlan === "season" ? "جارٍ فتح الدفع…" : isPaid ? (plan === "season" ? "اشتراكك الحالي" : "متاح بعد انتهاء اشتراكك الحالي") : "اشترك بـ٣٩ ر.س"}</button>
               </div>
 
-              <div style={{ background: C.card, borderRadius: 18, padding: 18, marginTop: 10, border: plan === "month" ? `2px solid ${C.cobalt}` : "2px solid transparent", boxShadow: "0 6px 18px rgba(27,58,200,0.07)", position: "relative" }}>
-                {recMonthly && <div style={{ position: "absolute", top: -10, right: 14, background: C.gold, color: "#fff", borderRadius: 999, fontSize: 10.5, fontWeight: 700, padding: "3px 12px" }}>الأنسب لاختبارك</div>}
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <div style={{ fontWeight: 700, fontSize: 16 }}>اشتراك ٣٠ يومًا</div>
-                  <div style={{ marginRight: "auto", fontWeight: 700, color: C.cobalt, fontSize: 15 }}>١٩ ر.س</div>
+              <div style={{ background: C.card, borderRadius: 22, padding: "20px 18px 17px", marginTop: 12, border: plan === "season" ? `2px solid ${C.cobalt}` : `1px solid ${C.bgSoft}`, boxShadow: "0 10px 26px rgba(27,58,200,0.09)", position: "relative", overflow: "hidden" }}>
+                <div style={{ position: "absolute", top: 13, left: 13, background: C.gold, color: "#fff", borderRadius: 999, fontSize: 10.5, fontWeight: 700, padding: "4px 9px" }}>الأفضل قيمة</div>
+                <div style={{ color: C.cobalt, fontSize: 12, fontWeight: 700 }}>وصول كامل</div>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 7, marginTop: 4 }}>
+                  <div style={{ fontWeight: 700, fontSize: 20 }}>٩٠ يومًا</div>
+                  <div style={{ marginRight: "auto", color: C.cobalt, fontWeight: 700, fontSize: 26 }}>٣٩ <span style={{ fontSize: 12 }}>ر.س</span></div>
                 </div>
-                <div style={{ fontSize: 13, lineHeight: 1.9, opacity: 0.8, marginTop: 6 }}>كل مزايا فوس نفسها؛ ١٩ ر.س كل ٣٠ يومًا مع تجديد تلقائي حتى الإلغاء</div>
-                <button disabled={Boolean(checkoutPlan) || isPaid} onClick={() => beginCheckout("month")} style={{ width: "100%", marginTop: 10, padding: 12, borderRadius: 12, border: `2px solid ${C.cobalt}`, background: "transparent", color: C.cobalt, fontWeight: 700, fontFamily: "inherit", fontSize: 14, cursor: checkoutPlan ? "wait" : isPaid ? "default" : "pointer", opacity: checkoutPlan || isPaid ? 0.55 : 1 }}>{checkoutPlan === "month" ? "جارٍ فتح الدفع…" : isPaid ? (plan === "month" ? "اشتراكك الحالي" : "متاح بعد انتهاء اشتراكك الحالي") : "اشترك بـ١٩ ر.س"}</button>
+                <div style={{ height: 1, background: C.bgSoft, margin: "14px 0 11px" }} />
+                <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12.5 }}>
+                  <span style={{ width: 20, height: 20, borderRadius: "50%", background: C.bgSoft, color: C.cobalt, display: "grid", placeItems: "center", fontWeight: 700 }}>✓</span>
+                  يتجدد كل ٩٠ يومًا · وفّر ٣٢٪
+                </div>
+                <button disabled={Boolean(checkoutPlan) || isPaid} onClick={() => beginCheckout("season")} style={{ ...primaryBtn, width: "100%", marginTop: 14, padding: 13, fontSize: 14.5, borderRadius: 14, opacity: checkoutPlan || isPaid ? 0.55 : 1, cursor: checkoutPlan ? "wait" : isPaid ? "default" : "pointer" }}>{checkoutPlan === "season" ? "جارٍ التجهيز…" : isPaid ? (plan === "season" ? "اشتراكك الحالي" : "متاح بعد انتهاء اشتراكك") : "اختر باقة ٩٠ يومًا"}</button>
               </div>
 
-              {checkoutError && <div role="alert" style={{ color: C.bad, fontSize: 12.5, fontWeight: 700, marginTop: 8 }}>{checkoutError}</div>}
-              <div style={{ fontSize: 11.5, opacity: 0.65, marginTop: 8, lineHeight: 1.7 }}>الدفع عبر صفحة Tap الآمنة. تُحفظ وسيلة الدفع لدى Tap للتجديد التلقائي بعد موافقتك الصريحة. يمكنك إلغاء التجديد من هذه الصفحة، ويظل الوصول حتى نهاية المدة الحالية. المساعد الذكي يخضع لحد استخدام عادل لحماية الخدمة.</div>
-            </div>
+              <div style={{ background: "rgba(255,255,255,0.76)", borderRadius: 22, padding: "18px", marginTop: 10, border: plan === "month" ? `2px solid ${C.cobalt}` : `1px solid ${C.bgSoft}`, position: "relative" }}>
+                {recMonthly && <div style={{ position: "absolute", top: -9, left: 13, background: C.gold, color: "#fff", borderRadius: 999, fontSize: 10.5, fontWeight: 700, padding: "4px 9px" }}>مناسب لموعدك</div>}
+                <div style={{ display: "flex", alignItems: "baseline", gap: 7 }}>
+                  <div style={{ fontWeight: 700, fontSize: 18 }}>٣٠ يومًا</div>
+                  <div style={{ marginRight: "auto", color: C.cobalt, fontWeight: 700, fontSize: 24 }}>١٩ <span style={{ fontSize: 12 }}>ر.س</span></div>
+                </div>
+                <div style={{ fontSize: 12, opacity: 0.6, marginTop: 5 }}>وصول كامل · يتجدد كل ٣٠ يومًا</div>
+                <button disabled={Boolean(checkoutPlan) || isPaid} onClick={() => beginCheckout("month")} style={{ width: "100%", marginTop: 13, padding: 12, borderRadius: 14, border: `2px solid ${C.cobalt}`, background: "transparent", color: C.cobalt, fontWeight: 700, fontFamily: "inherit", fontSize: 14, cursor: checkoutPlan ? "wait" : isPaid ? "default" : "pointer", opacity: checkoutPlan || isPaid ? 0.55 : 1 }}>{checkoutPlan === "month" ? "جارٍ التجهيز…" : isPaid ? (plan === "month" ? "اشتراكك الحالي" : "متاح بعد انتهاء اشتراكك") : "اختر باقة ٣٠ يومًا"}</button>
+              </div>
+
+              {checkoutError && <div role="alert" style={{ color: C.bad, background: "#FFF1F2", borderRadius: 12, padding: "9px 11px", fontSize: 12.5, fontWeight: 700, marginTop: 9 }}>{checkoutError}</div>}
+              <div style={{ background: "rgba(255,255,255,0.5)", borderRadius: 13, padding: "10px 12px", fontSize: 11.5, opacity: 0.7, marginTop: 9, lineHeight: 1.7, textAlign: "center" }}>تقدر توقف التجديد في أي وقت، ويستمر وصولك حتى نهاية المدة المدفوعة.</div>
+            </section>
 
             <a href="/about" style={{ display: "block", width: "100%", marginTop: 16, padding: 12, borderRadius: 14, boxSizing: "border-box", textAlign: "center", textDecoration: "none", background: "rgba(255,255,255,0.72)", color: C.cobalt, fontWeight: 700, fontSize: 13.5 }}>معلومات فوس والسياسات</a>
 
