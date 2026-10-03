@@ -881,7 +881,6 @@ export default function PhosApp() {
     refresh: refreshMembership,
     sendMagicLink,
     signInWithPassword,
-    signUpWithPassword,
     signOut,
   } = useMembership();
   const [screen, setScreen] = useState("loading");
@@ -1658,7 +1657,6 @@ export default function PhosApp() {
         }}
         onSend={sendMagicLink}
         onPasswordSignIn={signInWithPassword}
-        onCreateAccount={signUpWithPassword}
         configured={authConfigured}
         color={C.cobalt}
         ink={C.ink}
@@ -2262,14 +2260,6 @@ export default function PhosApp() {
               </section>
             </div>
 
-            <a href={TG_LINK} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", background: C.card, color: C.ink, borderRadius: 20, padding: "15px 17px", marginTop: 12, boxShadow: "0 8px 22px rgba(27,58,200,0.08)", border: `1px solid ${C.bgSoft}` }}>
-              <div style={{ width: 42, height: 42, flex: "0 0 auto", borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", background: C.cobalt }}><Sparkle size={19} color="#fff" glow={false} /></div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 700, fontSize: 14.5 }}>قناة فوس في تيليجرام</div>
-                <div style={{ fontSize: 12, opacity: 0.58, marginTop: 2 }}>التحديثات والمحتوى الجديد</div>
-              </div>
-              <span style={{ color: C.cobalt, fontWeight: 700, fontSize: 13 }}>افتح ←</span>
-            </a>
           </div>
         )}
 
@@ -2321,30 +2311,44 @@ export default function PhosApp() {
               </div>
             )}
 
-            {isPaid ? (
-              <button onClick={openCommunity} disabled={communityLoading} style={{ display: "block", width: "100%", border: "none", padding: 0, background: "none", textAlign: "right", fontFamily: "inherit", cursor: communityLoading ? "wait" : "pointer", marginTop: 12 }}>
-                <div style={{ background: C.card, borderRadius: 16, padding: "14px 16px", boxShadow: "0 6px 18px rgba(27,58,200,0.07)", display: "flex", alignItems: "center", gap: 10 }}>
-                  <Sparkle size={18} />
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 700, fontSize: 14.5, color: C.ink }}>المجتمع الخاص في تيلقرام</div>
-                    <div style={{ fontSize: 12, opacity: 0.6, color: C.ink }}>مشتركو فوس — ملفات التأسيس والنقاش</div>
-                  </div>
-                  <span style={{ color: C.cobalt, fontWeight: 700, fontSize: 13 }}>{communityLoading ? "جارٍ الفتح…" : "انضم ←"}</span>
+            <section style={{ background: C.card, borderRadius: 20, padding: "15px 16px", marginTop: 12, boxShadow: "0 8px 22px rgba(27,58,200,0.08)", border: `1px solid ${C.bgSoft}` }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div style={{ width: 40, height: 40, flex: "0 0 auto", borderRadius: 13, display: "flex", alignItems: "center", justifyContent: "center", background: C.cobalt }}>
+                  <Sparkle size={18} color="#fff" glow={false} />
                 </div>
-              </button>
-            ) : (
-              <button onClick={() => setPaywall(true)} style={{ width: "100%", textAlign: "right", border: "none", padding: 0, background: "none", cursor: "pointer", marginTop: 12, fontFamily: "inherit" }}>
-                <div style={{ background: C.card, borderRadius: 16, padding: "14px 16px", boxShadow: "0 6px 18px rgba(27,58,200,0.07)", display: "flex", alignItems: "center", gap: 10 }}>
-                  <Sparkle size={18} color="rgba(36,27,77,0.35)" glow={false} />
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 700, fontSize: 14.5, color: C.ink }}>المجتمع الخاص في تيلقرام</div>
-                    <div style={{ fontSize: 12, opacity: 0.6, color: C.ink }}>حصري لمشتركي باقة فوس</div>
-                  </div>
-                  <span style={{ color: "rgba(36,27,77,0.45)", fontWeight: 700, fontSize: 13 }}>مقفول</span>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 15.5 }}>تيليجرام فوس</div>
+                  <div style={{ fontSize: 12, opacity: 0.58, marginTop: 2 }}>القناة الرئيسية والمجتمع الخاص في مكان واحد</div>
                 </div>
-              </button>
-            )}
-            {communityError && <div style={{ color: C.bad, fontSize: 12.5, marginTop: 6 }}>{communityError}</div>}
+              </div>
+
+              <a href={TG_LINK} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: C.ink, padding: "13px 1px 11px", marginTop: 10, borderTop: `1px solid ${C.bgSoft}` }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 700, fontSize: 14 }}>القناة الرئيسية</div>
+                  <div style={{ fontSize: 11.5, opacity: 0.58, marginTop: 2 }}>التحديثات والمحتوى الجديد · متاحة للجميع</div>
+                </div>
+                <span style={{ color: C.cobalt, fontWeight: 700, fontSize: 12.5 }}>افتح ←</span>
+              </a>
+
+              {isPaid ? (
+                <button onClick={openCommunity} disabled={communityLoading} style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", border: "none", borderTop: `1px solid ${C.bgSoft}`, padding: "12px 1px 1px", background: "none", textAlign: "right", fontFamily: "inherit", cursor: communityLoading ? "wait" : "pointer", color: C.ink }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 700, fontSize: 14 }}>المجتمع الخاص</div>
+                    <div style={{ fontSize: 11.5, opacity: 0.58, marginTop: 2 }}>للمشتركين · ملفات التأسيس والنقاش</div>
+                  </div>
+                  <span style={{ color: C.cobalt, fontWeight: 700, fontSize: 12.5 }}>{communityLoading ? "جارٍ الفتح…" : "انضم ←"}</span>
+                </button>
+              ) : (
+                <button onClick={() => setPaywall(true)} style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", border: "none", borderTop: `1px solid ${C.bgSoft}`, padding: "12px 1px 1px", background: "none", textAlign: "right", fontFamily: "inherit", cursor: "pointer", color: C.ink }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 700, fontSize: 14 }}>المجتمع الخاص</div>
+                    <div style={{ fontSize: 11.5, opacity: 0.58, marginTop: 2 }}>حصري لمشتركي فوس</div>
+                  </div>
+                  <span style={{ color: "rgba(36,27,77,0.45)", fontWeight: 700, fontSize: 12.5 }}>مقفول</span>
+                </button>
+              )}
+              {communityError && <div role="alert" style={{ color: C.bad, fontSize: 12.5, marginTop: 8 }}>{communityError}</div>}
+            </section>
             <section style={{ marginTop: 17 }}>
               <div style={{ background: `linear-gradient(135deg, ${C.cobalt}, ${C.cobaltDark})`, borderRadius: 22, padding: "20px 18px", color: "#fff", position: "relative", overflow: "hidden", boxShadow: "0 12px 30px rgba(27,58,200,0.2)" }}>
                 <div style={{ position: "absolute", width: 115, height: 115, borderRadius: "50%", background: "rgba(255,255,255,0.08)", left: -28, top: -50 }} />
