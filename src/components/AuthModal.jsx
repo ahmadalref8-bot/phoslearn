@@ -10,6 +10,47 @@ function normalizeOtp(value) {
     .slice(0, 8);
 }
 
+const OTP_COOLDOWN_SECONDS = 60;
+const OTP_STORAGE_PREFIX = "phos-otp-cooldown:";
+
+function cooldownKey(email) {
+  return `${OTP_STORAGE_PREFIX}${String(email || "").trim().toLowerCase()}`;
+}
+
+function readCooldown(email) {
+  if (typeof window === "undefined" || !email) return 0;
+  try {
+    const until = Number(window.sessionStorage.getItem(cooldownKey(email)) || 0);
+    const remaining = Math.max(0, Math.ceil((until - Date.now()) / 1000));
+    if (!remaining) window.sessionStorage.removeItem(cooldownKey(email));
+    return remaining;
+  } catch (error) {
+    return 0;
+  }
+}
+
+function saveCooldown(email, seconds = OTP_COOLDOWN_SECONDS) {
+  const safeSeconds = Math.max(1, Number(seconds) || OTP_COOLDOWN_SECONDS);
+  if (typeof window !== "undefined") {
+    try {
+      window.sessionStorage.setItem(cooldownKey(email), String(Date.now() + safeSeconds * 1000));
+    } catch (error) {}
+  }
+  return safeSeconds;
+}
+
+function retryAfterSeconds(authError) {
+  const raw = String(authError?.message || "");
+  const match = raw.match(/(?:after|in|wait)\s*(\d+)\s*(?:seconds?|secs?|s)\b/i) ||
+    raw.match(/(\d+)\s*(?:seconds?|secs?)\b/i);
+  return match ? Math.max(1, Number(match[1])) : 0;
+}
+
+function isRateLimitError(authError) {
+  const raw = String(authError?.code || authError?.message || "").toLowerCase();
+  return authError?.status === 429 || raw.includes("rate") || raw.includes("too many");
+}
+
 function friendlyAuthError(authError) {
   const raw = String(authError?.code || authError?.message || "").toLowerCase();
   if (
@@ -46,10 +87,29 @@ export default function AuthModal({ open, onClose, onSend, onVerifyOtp, onPasswo
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
+  const [cooldown, setCooldown] = useState(0);
+  const [resending, setResending] = useState(false);
 
   useEffect(() => {
-    if (open) { setError(""); setSent(false); setCode(""); setMode("magic"); }
+    if (open) {
+      setError("");
+      setNotice("");
+      setSent(false);
+      setCode("");
+      setCooldown(0);
+      setResending(false);
+      setMode("magic");
+    }
   }, [open]);
+
+  useEffect(() => {
+    if (!open || !sent || !email) return undefined;
+    const updateCooldown = () => setCooldown(readCooldown(email));
+    updateCooldown();
+    const timer = window.setInterval(updateCooldown, 1000);
+    return () => window.clearInterval(timer);
+  }, [open, sent, email]);
 
   if (!open) return null;
 
@@ -68,13 +128,54 @@ export default function AuthModal({ open, onClose, onSend, onVerifyOtp, onPasswo
         await onPasswordSignIn(clean, password);
         onClose?.();
       } else {
+        const existingCooldown = readCooldown(clean);
+        if (existingCooldown > 0) {
+          setCooldown(existingCooldown);
+          setNotice("استخدم آخر رمز وصلك، أو انتظر حتى يتاح إرسال رمز جديد.");
+          setSent(true);
+          return;
+        }
         await onSend(clean);
+        setCooldown(saveCooldown(clean));
+        setNotice("تم إرسال رمز الدخول إلى بريدك.");
         setSent(true);
       }
     } catch (sendError) {
+      const retrySeconds = retryAfterSeconds(sendError);
+      if (isRateLimitError(sendError)) {
+        setCooldown(saveCooldown(clean, retrySeconds || OTP_COOLDOWN_SECONDS));
+        setNotice("استخدم آخر رمز وصلك، ثم أعد الإرسال بعد انتهاء العدّاد.");
+        setSent(true);
+      }
       setError(friendlyAuthError(sendError));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const resendCode = async () => {
+    const clean = email.trim().toLowerCase();
+    const remaining = readCooldown(clean);
+    if (remaining > 0) {
+      setCooldown(remaining);
+      return;
+    }
+    setResending(true);
+    setError("");
+    setNotice("");
+    try {
+      await onSend(clean);
+      setCode("");
+      setCooldown(saveCooldown(clean));
+      setNotice("أرسلنا رمزًا جديدًا إلى بريدك.");
+    } catch (sendError) {
+      const retrySeconds = retryAfterSeconds(sendError);
+      if (isRateLimitError(sendError)) {
+        setCooldown(saveCooldown(clean, retrySeconds || OTP_COOLDOWN_SECONDS));
+      }
+      setError(friendlyAuthError(sendError));
+    } finally {
+      setResending(false);
     }
   };
 
@@ -119,9 +220,13 @@ export default function AuthModal({ open, onClose, onSend, onVerifyOtp, onPasswo
               autoFocus
               style={{ width: "100%", boxSizing: "border-box", border: "1px solid rgba(36,27,77,0.2)", borderRadius: 14, padding: "13px 14px", fontSize: 22, fontWeight: 700, letterSpacing: 6, textAlign: "center", outlineColor: color }}
             />
+            {notice && <div role="status" style={{ color: "#147A5B", background: "#E8FAF3", borderRadius: 11, padding: "8px 10px", fontSize: 12.5, fontWeight: 700, marginTop: 9 }}>{notice}</div>}
             {error && <div role="alert" style={{ color: "#C83C55", fontSize: 12.5, marginTop: 8 }}>{error}</div>}
-            <button type="submit" disabled={loading || code.length < 6} style={{ width: "100%", border: "none", background: color, color: "#fff", borderRadius: 14, padding: 14, marginTop: 12, fontFamily: "inherit", fontWeight: 700, fontSize: 15, cursor: loading ? "wait" : "pointer", opacity: loading || code.length < 6 ? 0.55 : 1 }}>{loading ? "جارٍ التحقق…" : "تأكيد الرمز"}</button>
-            <button type="button" onClick={() => { setSent(false); setCode(""); setError(""); }} style={{ width: "100%", border: `2px solid ${color}`, color, background: "transparent", borderRadius: 14, padding: 11, marginTop: 8, fontFamily: "inherit", fontWeight: 700, cursor: "pointer" }}>تغيير البريد</button>
+            <button type="submit" disabled={loading || resending || code.length < 6} style={{ width: "100%", border: "none", background: color, color: "#fff", borderRadius: 14, padding: 14, marginTop: 12, fontFamily: "inherit", fontWeight: 700, fontSize: 15, cursor: loading ? "wait" : "pointer", opacity: loading || resending || code.length < 6 ? 0.55 : 1 }}>{loading ? "جارٍ التحقق…" : "تأكيد الرمز"}</button>
+            <button type="button" onClick={resendCode} disabled={resending || cooldown > 0} style={{ width: "100%", border: `2px solid ${color}`, color, background: "transparent", borderRadius: 14, padding: 11, marginTop: 8, fontFamily: "inherit", fontWeight: 700, cursor: resending ? "wait" : cooldown > 0 ? "default" : "pointer", opacity: resending || cooldown > 0 ? 0.55 : 1 }}>
+              {resending ? "جارٍ إرسال رمز جديد…" : cooldown > 0 ? `إعادة الإرسال بعد ${cooldown.toLocaleString("ar-SA")} ث` : "إعادة إرسال الرمز"}
+            </button>
+            <button type="button" onClick={() => { setSent(false); setCode(""); setError(""); setNotice(""); }} style={{ width: "100%", border: "none", color, background: "transparent", borderRadius: 14, padding: 10, marginTop: 4, fontFamily: "inherit", fontWeight: 700, cursor: "pointer" }}>تغيير البريد</button>
           </form>
         ) : (
           <form onSubmit={submit}>
