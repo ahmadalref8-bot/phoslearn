@@ -2276,22 +2276,25 @@ export default function PhosApp() {
         {/* --- أنا --- */}
         {tab === "me" && (
           <div style={{ padding: "16px 20px 20px", maxWidth: 520, width: "100%", margin: "0 auto", boxSizing: "border-box" }}>
-            <div style={{ background: C.card, borderRadius: 20, padding: 18, boxShadow: "0 8px 24px rgba(27,58,200,0.09)", display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{ width: 50, height: 50, borderRadius: "50%", background: C.bgSoft, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, color: C.cobalt, fontSize: 18 }}>{toAr(lvl)}</div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 700, fontSize: 17 }}>{name}</div>
-                <div style={{ fontSize: 12.5, opacity: 0.6, fontWeight: 700 }}>المستوى {toAr(lvl)} · {toAr(xp)} نقطة</div>
-                {profile && (profile.when || profile.expect) && <div style={{ fontSize: 11.5, opacity: 0.55, marginTop: 2 }}>{profile.when ? `اختبارك: ${prTxt(profile.when)}` : ""}{profile.when && profile.expect ? " · " : ""}{profile.expect ? `توقعك: ${prTxt(profile.expect)}` : ""}</div>}
+            <div style={{ background: C.card, borderRadius: 20, padding: "16px 17px", boxShadow: "0 8px 24px rgba(27,58,200,0.09)", display: "flex", alignItems: "center", gap: 12 }}>
+              <div style={{ width: 44, height: 44, flex: "0 0 auto", borderRadius: 14, background: C.bgSoft, display: "flex", alignItems: "center", justifyContent: "center", color: C.cobalt }}>
+                <IconUser size={22} color={C.cobalt} />
               </div>
-              <div style={{ fontSize: 11.5, fontWeight: 700, background: C.bgSoft, borderRadius: 999, padding: "6px 12px" }}>
-                {accessLoading ? "جارٍ التحقق…" : plan === "season" ? "اشتراك ٩٠ يومًا" : plan === "month" ? "اشتراك ٣٠ يومًا" : "مجاني"}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div dir="ltr" style={{ fontWeight: 700, fontSize: 14.5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textAlign: "right" }}>{user?.email || "لم تسجّل الدخول"}</div>
+                <div style={{ fontSize: 11.5, opacity: 0.58, marginTop: 3 }}>
+                  {accessLoading ? "جارٍ التحقق…" : plan === "season" ? "اشتراك ٩٠ يومًا" : plan === "month" ? "اشتراك ٣٠ يومًا" : "الخطة المجانية"}
+                </div>
               </div>
+              {user ? (
+                <button onClick={signOut} style={{ border: "none", background: C.bgSoft, color: C.cobalt, borderRadius: 10, padding: "7px 10px", fontFamily: "inherit", fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}>خروج</button>
+              ) : (
+                <button onClick={() => setAuthOpen(true)} style={{ border: "none", background: C.cobalt, color: "#fff", borderRadius: 10, padding: "8px 11px", fontFamily: "inherit", fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}>دخول</button>
+              )}
             </div>
+            {accessError && <div style={{ color: C.bad, background: "#FFF1F2", borderRadius: 12, padding: "9px 11px", fontSize: 12.5, fontWeight: 700, marginTop: 8 }}>{accessError}</div>}
 
-            <div style={{ background: "rgba(255,255,255,0.58)", borderRadius: 14, padding: "11px 13px", marginTop: 10, fontSize: 12.5, display: "flex", alignItems: "center", gap: 8 }}>
-              <div style={{ flex: 1, overflow: "hidden" }}>
-                <div style={{ fontWeight: 700 }}>{user?.email || "لم تسجّل الدخول بعد"}</div>
-                {isPaid && (currentPeriodEnd || activeUntil) && (
+            {isPaid && (currentPeriodEnd || activeUntil) && (
                   <div style={{ opacity: 0.7, marginTop: 2 }}>
                     {inRenewalGrace
                       ? `التجديد قيد المعالجة؛ تنتهي مهلة المحاولة في ${new Date(activeUntil).toLocaleDateString("ar-SA")}`
