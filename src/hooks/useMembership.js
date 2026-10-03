@@ -162,6 +162,17 @@ export default function useMembership() {
     if (signInError) throw signInError;
   }, []);
 
+  const verifyEmailOtp = useCallback(async (email, token) => {
+    if (!supabase) throw new Error("لم تُضبط خدمة تسجيل الدخول بعد.");
+    const { data, error: verifyError } = await supabase.auth.verifyOtp({
+      email,
+      token,
+      type: "email",
+    });
+    if (verifyError) throw verifyError;
+    return data?.session || null;
+  }, []);
+
   const signInWithPassword = useCallback(async (email, password) => {
     if (!supabase) throw new Error("لم تُضبط خدمة تسجيل الدخول بعد.");
     const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
@@ -211,8 +222,9 @@ export default function useMembership() {
     error,
     refresh,
     sendMagicLink,
+    verifyEmailOtp,
     signInWithPassword,
     signUpWithPassword,
     signOut,
-  }), [session, membership, authReady, membershipLoading, error, refresh, sendMagicLink, signInWithPassword, signUpWithPassword, signOut]);
+  }), [session, membership, authReady, membershipLoading, error, refresh, sendMagicLink, verifyEmailOtp, signInWithPassword, signUpWithPassword, signOut]);
 }
