@@ -106,26 +106,15 @@ export default function ProfileSettings({
             <div style={{ display: "inline-block", background: soft, color, borderRadius: 999, padding: "4px 9px", fontSize: 11, fontWeight: 800, marginTop: 8 }}>{accessLoading ? "جارٍ التحقق…" : planLabel(plan)}</div>
           </div>
         </div>
-        <button onClick={openEditor} disabled={loading} style={{ width: "100%", border: `2px solid ${color}`, borderRadius: 14, background: "transparent", color, padding: 11, marginTop: 15, fontFamily: "inherit", fontWeight: 800, fontSize: 13.5, cursor: loading ? "wait" : "pointer", opacity: loading ? 0.55 : 1 }}>تعديل الملف الشخصي</button>
+        <button onClick={openEditor} disabled={loading} style={{ width: "100%", border: `2px solid ${color}`, borderRadius: 14, background: "transparent", color, padding: 11, marginTop: 15, fontFamily: "inherit", fontWeight: 800, fontSize: 13.5, cursor: loading ? "wait" : "pointer", opacity: loading ? 0.55 : 1 }}>الملف الشخصي والإعدادات</button>
         {error && <div role="alert" style={{ color: "#C83C55", background: "#FFF1F2", borderRadius: 12, padding: "9px 11px", fontSize: 12, fontWeight: 700, marginTop: 9 }}>{error}</div>}
 
-        <div style={{ borderTop: `1px solid ${soft}`, marginTop: 17, paddingTop: 15 }}>
-          <div style={{ fontWeight: 800, fontSize: 16.5, color: ink }}>إعدادات التطبيق</div>
-          <a href="/about" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginTop: 9, padding: "12px 0", textDecoration: "none", color: ink, fontWeight: 700, fontSize: 13.5 }}>
-            <span>معلومات فوس والسياسات</span>
-            <span style={{ color, fontSize: 18 }}>‹</span>
-          </a>
-          <button onClick={() => window.confirm("هل تريد إعادة ضبط تقدمك؟ لا يمكن التراجع عن ذلك.") && onReset()} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", border: "none", borderTop: `1px solid ${soft}`, background: "none", color: ink, padding: "12px 0", fontFamily: "inherit", fontWeight: 700, fontSize: 13.5, cursor: "pointer", textAlign: "right" }}>
-            <span>إعادة ضبط التقدم</span>
-            <span style={{ color: "#C83C55", fontSize: 12 }}>مسح</span>
-          </button>
-          <button onClick={onSignOut} style={{ width: "100%", border: "none", borderRadius: 13, background: "#FFF1F2", color: "#C83C55", padding: 12, marginTop: 8, fontFamily: "inherit", fontWeight: 800, fontSize: 13.5, cursor: "pointer" }}>تسجيل الخروج</button>
-        </div>
+
       </section>
 
       {editing && (
         <div role="dialog" aria-modal="true" aria-label="تعديل الملف الشخصي" onClick={() => !saving && setEditing(false)} style={{ position: "absolute", inset: 0, zIndex: 95, background: "rgba(36,27,77,0.58)", display: "flex", alignItems: "center", justifyContent: "center", padding: 22 }}>
-          <form onSubmit={submit} onClick={(event) => event.stopPropagation()} style={{ width: "100%", maxWidth: 390, background: "#fff", color: ink, borderRadius: 24, padding: "24px 20px", boxShadow: "0 24px 80px rgba(36,27,77,0.3)", textAlign: "right" }}>
+          <form onSubmit={submit} onClick={(event) => event.stopPropagation()} style={{ width: "100%", maxWidth: 390, maxHeight: "88vh", overflowY: "auto", background: "#fff", color: ink, borderRadius: 24, padding: "24px 20px", boxShadow: "0 24px 80px rgba(36,27,77,0.3)", textAlign: "right" }}>
             <div style={{ fontWeight: 800, fontSize: 20 }}>تعديل الملف الشخصي</div>
             <div style={{ display: "grid", placeItems: "center", margin: "20px 0 17px" }}>
               <button type="button" onClick={() => inputRef.current?.click()} style={{ width: 92, height: 92, borderRadius: "50%", overflow: "hidden", border: `3px solid ${soft}`, background: soft, color, display: "grid", placeItems: "center", fontFamily: "inherit", fontSize: 22, fontWeight: 800, cursor: "pointer", padding: 0 }}>
@@ -143,6 +132,18 @@ export default function ProfileSettings({
             {formError && <div role="alert" style={{ color: "#C83C55", fontSize: 12.5, fontWeight: 700, marginTop: 8 }}>{formError}</div>}
             <button type="submit" disabled={saving} style={{ width: "100%", border: "none", borderRadius: 14, background: color, color: "#fff", padding: 13, marginTop: 14, fontFamily: "inherit", fontWeight: 800, fontSize: 14.5, cursor: saving ? "wait" : "pointer", opacity: saving ? 0.6 : 1 }}>{saving ? "جارٍ الحفظ…" : "حفظ التغييرات"}</button>
             <button type="button" disabled={saving} onClick={() => setEditing(false)} style={{ width: "100%", border: "none", background: "none", color: "rgba(36,27,77,0.6)", padding: 11, marginTop: 4, fontFamily: "inherit", fontWeight: 800, cursor: "pointer" }}>إلغاء</button>
+        <div style={{ borderTop: `1px solid ${soft}`, marginTop: 18, paddingTop: 16 }}>
+          <div style={{ fontWeight: 800, fontSize: 16.5, color: ink }}>إعدادات التطبيق</div>
+          <a href="/about" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginTop: 9, padding: "12px 0", textDecoration: "none", color: ink, fontWeight: 700, fontSize: 13.5 }}>
+            <span>معلومات فوس والسياسات</span>
+            <span style={{ color, fontSize: 18 }}>‹</span>
+          </a>
+          <button type="button" onClick={() => window.confirm("هل تريد إعادة ضبط تقدمك؟ لا يمكن التراجع عن ذلك.") && onReset()} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", border: "none", borderTop: `1px solid ${soft}`, background: "none", color: ink, padding: "12px 0", fontFamily: "inherit", fontWeight: 700, fontSize: 13.5, cursor: "pointer", textAlign: "right" }}>
+            <span>إعادة ضبط التقدم</span>
+            <span style={{ color: "#C83C55", fontSize: 12 }}>مسح</span>
+          </button>
+          <button type="button" onClick={onSignOut} style={{ width: "100%", border: "none", borderRadius: 13, background: "#FFF1F2", color: "#C83C55", padding: 12, marginTop: 8, fontFamily: "inherit", fontWeight: 800, fontSize: 13.5, cursor: "pointer" }}>تسجيل الخروج</button>
+        </div>
           </form>
         </div>
       )}

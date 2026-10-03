@@ -1637,6 +1637,11 @@ export default function PhosApp() {
       @keyframes fadeOutLate { 0%, 72% { opacity: 1;} 100% { opacity: 0;} }
       button { transition: transform .08s ease; }
       button:active { transform: scale(.97); }
+      @keyframes profileEnter {
+        0% { opacity:0; transform:translateY(18px) scale(.985); }
+        65% { opacity:1; transform:translateY(-3px) scale(1.005); }
+        100% { opacity:1; transform:translateY(0) scale(1); }
+      }
       @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
       input:focus, button:focus-visible { outline: 3px solid ${C.cobalt}; outline-offset: 2px; }
       .chip { border:none; border-radius:999px; padding:8px 14px; font-family:inherit; font-weight:700; font-size:12.5px; cursor:pointer; white-space:nowrap; }
@@ -1686,15 +1691,15 @@ export default function PhosApp() {
 
               {profile && profile.when && <div style={{ background: "#FFF8E8", color: "#8A5A08", borderRadius: 13, padding: "9px 12px", fontSize: 12, fontWeight: 700, marginBottom: 11 }}>اختبارك «{prTxt(profile.when)}» — اختر المدة الأنسب لك.</div>}
 
-              <div style={{ display: "grid", gap: 10 }}>
-                <button disabled={Boolean(checkoutPlan)} onClick={() => beginCheckout("season")} style={{ width: "100%", textAlign: "right", border: `2px solid ${C.cobalt}`, background: C.bgSoft, color: C.ink, borderRadius: 18, padding: "20px 16px", minHeight: 132, fontFamily: "inherit", cursor: checkoutPlan ? "wait" : "pointer", opacity: checkoutPlan ? 0.65 : 1, position: "relative" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 10, alignItems: "stretch" }}>
+                <button disabled={Boolean(checkoutPlan)} onClick={() => beginCheckout("season")} style={{ width: "100%", textAlign: "center", border: `2px solid ${C.cobalt}`, background: C.bgSoft, color: C.ink, borderRadius: 18, padding: "20px 16px", minHeight: 132, fontFamily: "inherit", cursor: checkoutPlan ? "wait" : "pointer", opacity: checkoutPlan ? 0.65 : 1, position: "relative" }}>
                   <span style={{ position: "absolute", top: -9, left: 14, background: C.gold, color: "#fff", borderRadius: 999, padding: "3px 9px", fontSize: 10.5, fontWeight: 700 }}>الأفضل قيمة</span>
                   <span style={{ display: "block", fontSize: 15, fontWeight: 700 }}>اشتراك ٩٠ يومًا</span>
                   <b style={{ display: "block", color: C.cobalt, fontSize: 25, marginTop: 7 }}>٣٩ ر.س</b>
                   <span style={{ display: "block", marginTop: 5, fontSize: 11.5, opacity: 0.65 }}>يتجدد كل ٩٠ يومًا · وفّر ٣٢٪</span>
                 </button>
 
-                <button disabled={Boolean(checkoutPlan)} onClick={() => beginCheckout("month")} style={{ width: "100%", textAlign: "right", border: `1px solid ${C.bgSoft}`, background: "#FAF8FF", color: C.ink, borderRadius: 18, padding: "20px 16px", minHeight: 126, fontFamily: "inherit", cursor: checkoutPlan ? "wait" : "pointer", opacity: checkoutPlan ? 0.65 : 1 }}>
+                <button disabled={Boolean(checkoutPlan)} onClick={() => beginCheckout("month")} style={{ width: "100%", textAlign: "center", border: `1px solid ${C.bgSoft}`, background: "#FAF8FF", color: C.ink, borderRadius: 18, padding: "20px 16px", minHeight: 126, fontFamily: "inherit", cursor: checkoutPlan ? "wait" : "pointer", opacity: checkoutPlan ? 0.65 : 1 }}>
                   <span style={{ display: "block", fontSize: 15, fontWeight: 700 }}>اشتراك ٣٠ يومًا</span>
                   <b style={{ display: "block", color: C.cobalt, fontSize: 25, marginTop: 7 }}>١٩ ر.س</b>
                   <span style={{ display: "block", marginTop: 5, fontSize: 11.5, opacity: 0.65 }}>يتجدد كل ٣٠ يومًا</span>
@@ -2266,7 +2271,7 @@ export default function PhosApp() {
 
         {/* --- أنا --- */}
         {tab === "me" && (
-          <div style={{ padding: "16px 20px 20px", maxWidth: 520, width: "100%", margin: "0 auto", boxSizing: "border-box" }}>
+          <div style={{ padding: "16px 20px 20px", maxWidth: 520, width: "100%", margin: "0 auto", boxSizing: "border-box", animation: "profileEnter .5s cubic-bezier(.22,1,.36,1) both" }}>
             <ProfileSettings
               user={user}
               profile={accountProfile}
@@ -2370,7 +2375,8 @@ export default function PhosApp() {
                 </div>
               </div>
 
-              <div style={{ background: C.card, borderRadius: 22, padding: "20px 18px 17px", marginTop: 12, border: plan === "season" ? `2px solid ${C.cobalt}` : `1px solid ${C.bgSoft}`, boxShadow: "0 10px 26px rgba(27,58,200,0.09)", position: "relative", overflow: "hidden" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 10, alignItems: "stretch", marginTop: 12 }}>
+              <div style={{ background: C.card, borderRadius: 22, padding: "20px 14px 15px", border: plan === "season" ? `2px solid ${C.cobalt}` : `1px solid ${C.bgSoft}`, boxShadow: "0 10px 26px rgba(27,58,200,0.09)", position: "relative", overflow: "hidden", minHeight: 300, display: "flex", flexDirection: "column" }}>
                 <div style={{ position: "absolute", top: 13, left: 13, background: C.gold, color: "#fff", borderRadius: 999, fontSize: 10.5, fontWeight: 700, padding: "4px 9px" }}>الأفضل قيمة</div>
                 <div style={{ color: C.cobalt, fontSize: 12, fontWeight: 700 }}>وصول كامل</div>
                 <div style={{ marginTop: 7 }}>
@@ -2382,17 +2388,19 @@ export default function PhosApp() {
                   <span style={{ width: 20, height: 20, borderRadius: "50%", background: C.bgSoft, color: C.cobalt, display: "grid", placeItems: "center", fontWeight: 700 }}>✓</span>
                   يتجدد كل ٩٠ يومًا · وفّر ٣٢٪
                 </div>
-                <button disabled={Boolean(checkoutPlan) || isPaid} onClick={() => beginCheckout("season")} style={{ ...primaryBtn, width: "100%", marginTop: 14, padding: 13, fontSize: 14.5, borderRadius: 14, opacity: checkoutPlan || isPaid ? 0.55 : 1, cursor: checkoutPlan ? "wait" : isPaid ? "default" : "pointer" }}>{checkoutPlan === "season" ? "جارٍ التجهيز…" : isPaid ? (plan === "season" ? "اشتراكك الحالي" : "متاح بعد انتهاء اشتراكك") : "اختر باقة ٩٠ يومًا"}</button>
+                <button disabled={Boolean(checkoutPlan) || isPaid} onClick={() => beginCheckout("season")} style={{ ...primaryBtn, width: "100%", marginTop: "auto", padding: 13, fontSize: 14.5, borderRadius: 14, opacity: checkoutPlan || isPaid ? 0.55 : 1, cursor: checkoutPlan ? "wait" : isPaid ? "default" : "pointer" }}>{checkoutPlan === "season" ? "جارٍ التجهيز…" : isPaid ? (plan === "season" ? "اشتراكك الحالي" : "متاح بعد انتهاء اشتراكك") : "اختر باقة ٩٠ يومًا"}</button>
               </div>
 
-              <div style={{ background: "rgba(255,255,255,0.76)", borderRadius: 22, padding: "18px", marginTop: 10, border: plan === "month" ? `2px solid ${C.cobalt}` : `1px solid ${C.bgSoft}`, position: "relative" }}>
+              <div style={{ background: "rgba(255,255,255,0.76)", borderRadius: 22, padding: "18px 14px 15px", border: plan === "month" ? `2px solid ${C.cobalt}` : `1px solid ${C.bgSoft}`, position: "relative", minHeight: 300, display: "flex", flexDirection: "column" }}>
                 {recMonthly && <div style={{ position: "absolute", top: -9, left: 13, background: C.gold, color: "#fff", borderRadius: 999, fontSize: 10.5, fontWeight: 700, padding: "4px 9px" }}>مناسب لموعدك</div>}
                 <div>
                   <div style={{ fontWeight: 700, fontSize: 18 }}>٣٠ يومًا</div>
                   <div style={{ color: C.cobalt, fontWeight: 800, fontSize: 29, marginTop: 5 }}>١٩ <span style={{ fontSize: 12 }}>ر.س</span></div>
                 </div>
                 <div style={{ fontSize: 12, opacity: 0.6, marginTop: 5 }}>وصول كامل · يتجدد كل ٣٠ يومًا</div>
-                <button disabled={Boolean(checkoutPlan) || isPaid} onClick={() => beginCheckout("month")} style={{ width: "100%", marginTop: 13, padding: 12, borderRadius: 14, border: `2px solid ${C.cobalt}`, background: "transparent", color: C.cobalt, fontWeight: 700, fontFamily: "inherit", fontSize: 14, cursor: checkoutPlan ? "wait" : isPaid ? "default" : "pointer", opacity: checkoutPlan || isPaid ? 0.55 : 1 }}>{checkoutPlan === "month" ? "جارٍ التجهيز…" : isPaid ? (plan === "month" ? "اشتراكك الحالي" : "متاح بعد انتهاء اشتراكك") : "اختر باقة ٣٠ يومًا"}</button>
+                <button disabled={Boolean(checkoutPlan) || isPaid} onClick={() => beginCheckout("month")} style={{ width: "100%", marginTop: "auto", padding: 12, borderRadius: 14, border: `2px solid ${C.cobalt}`, background: "transparent", color: C.cobalt, fontWeight: 700, fontFamily: "inherit", fontSize: 14, cursor: checkoutPlan ? "wait" : isPaid ? "default" : "pointer", opacity: checkoutPlan || isPaid ? 0.55 : 1 }}>{checkoutPlan === "month" ? "جارٍ التجهيز…" : isPaid ? (plan === "month" ? "اشتراكك الحالي" : "متاح بعد انتهاء اشتراكك") : "اختر باقة ٣٠ يومًا"}</button>
+              </div>
+
               </div>
 
               {checkoutError && <div role="alert" style={{ color: C.bad, background: "#FFF1F2", borderRadius: 12, padding: "9px 11px", fontSize: 12.5, fontWeight: 700, marginTop: 9 }}>{checkoutError}</div>}
