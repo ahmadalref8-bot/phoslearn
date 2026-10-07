@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import AuthModal from "./components/AuthModal.jsx";
 import ProfileSettings from "./components/ProfileSettings.jsx";
 import { LEGAL_VERSION } from "./components/PublicPages.jsx";
+import VisitorFooter from "./components/VisitorFooter.jsx";
 import useMembership from "./hooks/useMembership.js";
 import useProfile from "./hooks/useProfile.js";
 
@@ -2121,7 +2122,7 @@ export default function PhosApp() {
     <div dir="rtl" style={shell}>
       {css}
       {accessOverlays}
-      <div style={{ flex: 1, overflowY: tab === "feed" ? "hidden" : "auto", display: "flex", flexDirection: "column", position: "relative" }}>
+      <div style={{ flex: 1, overflowY: tab === "feed" && isPaid ? "hidden" : "auto", display: "flex", flexDirection: "column", position: "relative" }}>
 
         {/* --- الفيد: شاشة كاملة بسحب تيك توك (للمشتركين) --- */}
         {tab === "feed" && isPaid && (
@@ -2154,11 +2155,14 @@ export default function PhosApp() {
 
         {/* --- قفل الفيد لغير المشتركين --- */}
         {tab === "feed" && !isPaid && (
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 28, textAlign: "center" }}>
-            <Sparkle size={46} />
-            <h2 style={{ fontSize: 24, fontWeight: 700, margin: "16px 0 18px", lineHeight: 1.6 }}>فيد فوس</h2>
-            <button onClick={() => setPaywall(true)} style={{ ...primaryBtn, width: "100%", maxWidth: 340, padding: 15, fontSize: 15.5 }}>اشترك في فوس — يبدأ من ١٩ ر.س</button>
-            <button onClick={() => setTab("train")} style={{ border: "none", background: "none", color: "rgba(36,27,77,0.55)", fontFamily: "inherit", fontWeight: 700, fontSize: 13, marginTop: 14, cursor: "pointer" }}>ابدأ التدريب</button>
+          <div style={{ width: "100%" }}>
+            <div style={{ minHeight: "calc(100vh - 64px)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 28, textAlign: "center", boxSizing: "border-box" }}>
+              <Sparkle size={46} />
+              <h2 style={{ fontSize: 24, fontWeight: 700, margin: "16px 0 18px", lineHeight: 1.6 }}>فيد فوس</h2>
+              <button onClick={() => setPaywall(true)} style={{ ...primaryBtn, width: "100%", maxWidth: 340, padding: 15, fontSize: 15.5 }}>اشترك في فوس — يبدأ من ١٩ ر.س</button>
+              <button onClick={() => setTab("train")} style={{ border: "none", background: "none", color: "rgba(36,27,77,0.55)", fontFamily: "inherit", fontWeight: 700, fontSize: 13, marginTop: 14, cursor: "pointer" }}>ابدأ التدريب</button>
+            </div>
+            {!user && <VisitorFooter />}
           </div>
         )}
 
@@ -2323,44 +2327,6 @@ export default function PhosApp() {
               </div>
             )}
 
-            <section style={{ background: C.card, borderRadius: 20, padding: "15px 16px", marginTop: 12, boxShadow: "0 8px 22px rgba(27,58,200,0.08)", border: `1px solid ${C.bgSoft}` }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div style={{ width: 40, height: 40, flex: "0 0 auto", borderRadius: 13, display: "flex", alignItems: "center", justifyContent: "center", background: C.cobalt }}>
-                  <Sparkle size={18} color="#fff" glow={false} />
-                </div>
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: 15.5 }}>تيليجرام فوس</div>
-                  <div style={{ fontSize: 12, opacity: 0.58, marginTop: 2 }}>القناة الرئيسية والمجتمع الخاص في مكان واحد</div>
-                </div>
-              </div>
-
-              <a href={TG_LINK} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: C.ink, padding: "13px 1px 11px", marginTop: 10, borderTop: `1px solid ${C.bgSoft}` }}>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 700, fontSize: 14 }}>القناة الرئيسية</div>
-                  <div style={{ fontSize: 11.5, opacity: 0.58, marginTop: 2 }}>التحديثات والمحتوى الجديد · متاحة للجميع</div>
-                </div>
-                <span style={{ color: C.cobalt, fontWeight: 700, fontSize: 12.5 }}>افتح ←</span>
-              </a>
-
-              {isPaid ? (
-                <button onClick={openCommunity} disabled={communityLoading} style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", border: "none", borderTop: `1px solid ${C.bgSoft}`, padding: "12px 1px 1px", background: "none", textAlign: "right", fontFamily: "inherit", cursor: communityLoading ? "wait" : "pointer", color: C.ink }}>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 700, fontSize: 14 }}>المجتمع الخاص</div>
-                    <div style={{ fontSize: 11.5, opacity: 0.58, marginTop: 2 }}>للمشتركين · ملفات التأسيس والنقاش</div>
-                  </div>
-                  <span style={{ color: C.cobalt, fontWeight: 700, fontSize: 12.5 }}>{communityLoading ? "جارٍ الفتح…" : "انضم ←"}</span>
-                </button>
-              ) : (
-                <button onClick={() => setPaywall(true)} style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", border: "none", borderTop: `1px solid ${C.bgSoft}`, padding: "12px 1px 1px", background: "none", textAlign: "right", fontFamily: "inherit", cursor: "pointer", color: C.ink }}>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 700, fontSize: 14 }}>المجتمع الخاص</div>
-                    <div style={{ fontSize: 11.5, opacity: 0.58, marginTop: 2 }}>حصري لمشتركي فوس</div>
-                  </div>
-                  <span style={{ color: "rgba(36,27,77,0.45)", fontWeight: 700, fontSize: 12.5 }}>مقفول</span>
-                </button>
-              )}
-              {communityError && <div role="alert" style={{ color: C.bad, fontSize: 12.5, marginTop: 8 }}>{communityError}</div>}
-            </section>
             <section style={{ marginTop: 17 }}>
               <div style={{ background: `linear-gradient(135deg, ${C.cobalt}, ${C.cobaltDark})`, borderRadius: 22, padding: "20px 18px", color: "#fff", position: "relative", overflow: "hidden", boxShadow: "0 12px 30px rgba(27,58,200,0.2)" }}>
                 <div style={{ position: "absolute", width: 115, height: 115, borderRadius: "50%", background: "rgba(255,255,255,0.08)", left: -28, top: -50 }} />
