@@ -2380,7 +2380,6 @@ export default function PhosApp() {
               <div style={{ background: "rgba(255,255,255,0.5)", borderRadius: 13, padding: "10px 12px", fontSize: 11.5, opacity: 0.7, marginTop: 9, lineHeight: 1.7, textAlign: "center" }}>تقدر توقف التجديد في أي وقت، ويستمر وصولك حتى نهاية المدة المدفوعة.</div>
             </section>
 
-          <VisitorFooter />
           </div>
         )}
       </div>
