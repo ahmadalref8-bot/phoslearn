@@ -1812,6 +1812,13 @@ export default function PhosApp() {
             </button>
           </div>
         )}
+        {!user && (
+          <nav aria-label="السياسات والشروط" style={{ position: "absolute", bottom: 17, left: 18, right: 18, display: "flex", justifyContent: "center", gap: 12, direction: "rtl", fontSize: 11.5, fontWeight: 700 }}>
+            <a href="/privacy" style={{ color: C.cobalt, textDecoration: "none" }}>الخصوصية</a>
+            <a href="/terms" style={{ color: C.cobalt, textDecoration: "none" }}>الشروط</a>
+            <a href="/refund-policy" style={{ color: C.cobalt, textDecoration: "none" }}>الاسترداد</a>
+          </nav>
+        )}
       </div>
     );
   }
@@ -2373,6 +2380,7 @@ export default function PhosApp() {
               <div style={{ background: "rgba(255,255,255,0.5)", borderRadius: 13, padding: "10px 12px", fontSize: 11.5, opacity: 0.7, marginTop: 9, lineHeight: 1.7, textAlign: "center" }}>تقدر توقف التجديد في أي وقت، ويستمر وصولك حتى نهاية المدة المدفوعة.</div>
             </section>
 
+          <VisitorFooter />
           </div>
         )}
       </div>
