@@ -25,7 +25,7 @@ function SocialIcon({ href, label, children }) {
   );
 }
 
-export default function VisitorFooter() {
+export default function VisitorFooter({ legal = true }) {
   return (
     <footer aria-label="روابط فوس المهمة" style={{
       padding: "18px 20px 28px",
@@ -34,13 +34,15 @@ export default function VisitorFooter() {
       textAlign: "center",
     }}>
       <div style={{ maxWidth: 430, margin: "0 auto" }}>
-        <div style={{ color: "#241B4D", fontSize: 13, fontWeight: 700 }}>روابط ومعلومات مهمة</div>
-        <nav aria-label="السياسات والشروط" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 7, marginTop: 10 }}>
-          <a href="/privacy" style={linkStyle}>سياسة الخصوصية</a>
-          <a href="/terms" style={linkStyle}>الشروط والأحكام</a>
-          <a href="/refund-policy" style={linkStyle}>المدفوعات والاسترداد</a>
-        </nav>
-        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: 9, marginTop: 14 }}>
+        <div style={{ color: "#241B4D", fontSize: 13, fontWeight: 700 }}>{legal ? "روابط ومعلومات مهمة" : "تابع فوس"}</div>
+        {legal && (
+          <nav aria-label="السياسات والشروط" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 7, marginTop: 10 }}>
+            <a href="/privacy" style={linkStyle}>سياسة الخصوصية</a>
+            <a href="/terms" style={linkStyle}>الشروط والأحكام</a>
+            <a href="/refund-policy" style={linkStyle}>المدفوعات والاسترداد</a>
+          </nav>
+        )}
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: 9, marginTop: legal ? 14 : 10 }}>
           <a href="mailto:phoslearn@gmail.com" style={{ color: "#241B4D", fontSize: 11.5, fontWeight: 700 }}>phoslearn@gmail.com</a>
           <span aria-hidden="true" style={{ width: 3, height: 3, borderRadius: "50%", background: "rgba(36,27,77,.35)" }} />
           <SocialIcon href="https://t.me/WJbU6YeRPg9jNTA0" label="تيليجرام">
