@@ -38,14 +38,13 @@ const shuffle = (arr) => { const a = [...arr]; for (let i = a.length - 1; i > 0;
 const toAr = (n) => Number(n).toLocaleString("ar-SA");
 const todayKey = () => new Date().toISOString().slice(0, 10);
 
-// ============ المستويات: لا نهائية (بدون سقف) ============
+// مستوى داخلي لاختيار صعوبة السؤال فقط — لا يظهر كتقييم للطالب
 const levelInfo = (xp) => {
   let lvl = 1, need = 100, acc = 0;
   while (xp >= acc + need && lvl < 500) { acc += need; lvl++; need = 100 + (lvl - 1) * 40; }
   return { lvl, progress: (xp - acc) / need, into: xp - acc, need };
 };
 const tierForLevel = (l) => (l <= 3 ? 0 : l <= 6 ? 1 : 2);
-const TIER_LABEL = ["تأسيس ١", "تأسيس ٢", "تأسيس ٣"];
 
 // ============ أيقونات SVG بسيطة (بدون إيموجي) ============
 const Sparkle = ({ size = 24, color = "var(--spark, #1B3AC8)", glow = true }) => (
@@ -203,7 +202,7 @@ const FEED_STATIC = [
   F("علم التعلم", "النوم جزء من المذاكرة", "الدماغ يثبّت أثناء النوم العميق — السهر يمحو جزءاً من جهدك", "آخر ليلة: مراجعة خفيفة + نوم مبكر."),
   F("علم التعلم", "أول ٢٤ ساعة حاسمة", "مراجعة ١٠ دقائق اليوم توازي ساعة بعد أسبوع", "خلصت درساً؟ حل ٥ أسئلة عليه اليوم نفسه."),
   F("علم التعلم", "راجع أخطاءك لا إجاباتك الصحيحة", "الخطأ المفهوم لا يتكرر", "لكل خطأ اسأل: وش الفكرة اللي نقصتني؟"),
-  F("علم التعلم", "الملل إشارة ترقية", "صارت الأسئلة سهلة؟ ارفع المستوى", "التعلم يحصل عند حافة قدرتك لا داخل راحتك."),
+  F("علم التعلم", "الملل إشارة ترقية", "صارت الأسئلة سهلة؟ ارفع التحدي", "التعلم يحصل عند حافة قدرتك لا داخل راحتك."),
   F("قانون كمي", "التوازي وزوايا القاطع", "المتبادلتان متساويتان، والمتناظرتان متساويتان، والمتحالفتان مجموعهما ١٨٠", "شفت متوازيين وقاطعاً؟ كل الزوايا إما تساوي المعطاة أو تكمّلها لـ ١٨٠."),
   F("قانون كمي", "الزاوية الخارجية للمثلث", "الخارجية عند رأس = مجموع الداخليتين البعيدتين عنها", "داخليتان ٥٥ و ٦٥؟ الخارجية عند الثالث ١٢٠ فوراً — بدون حساب الثالثة."),
   F("قانون كمي", "قطر المستطيل", "القطر وترٌ لمثلث قائم ضلعاه الطول والعرض — فيثاغورث", "مستطيل ٦ × ٨؟ قطره ١٠. دوّر على الثلاثيات الشهيرة."),
@@ -245,6 +244,8 @@ const FEED_STATIC = [
 const FEED_DYN = []; // «تمرين خاطف» أُزيل كلياً بقرار المالك — الهيكل باقٍ لمراسي البايبلاين
 const DYN_CH = [];
 const FEED_DYN2 = FEED_DYN.map((fn, i) => () => ({ ...fn(), ch: DYN_CH[i] }));
+// هوية البطاقة ثابتة عند تعديل شرحها أو مثالها؛ القانون الجديد بعنوان جديد يدخل تلقائياً في المسار.
+const feedCardKey = (card) => `${card?.tag || "بطاقة"}:${card?.title || "بدون عنوان"}`;
 // فيد موزون: أخطاؤك توزن أثقل من إعجاباتك — البطاقات من أبواب ضعفك تظهر أكثر
 const buildFeedBatch = (interests = {}, weak = {}, exclude = null) => {
   const weighted = FEED_STATIC.map((c) => ({ c, k: Math.random() * (1 + Math.min(3, (interests[c.ch] || 0) / 3) + (weak[c.ch] != null ? (1 - weak[c.ch]) * 3 : 0)) }));
@@ -814,6 +815,14 @@ META[1].push({ ch: "الجبر والأسس والجذور" }, { ch: "الجبر
 T3.push(gNthRootParity, gSameBaseHeightArea, gCylinderScale);
 META[2].push({ ch: "الجبر والأسس والجذور" }, { ch: "الهندسة" }, { ch: "الهندسة" });
 // ⟪/NEWGENS⟫
+// patternId اختياري للأنماط الجديدة؛ وبدونه تُعدّ (الباب + المفهوم) نمطاً واحداً مهما تغيّرت الأرقام.
+const questionPatternKey = (question) => question?.patternId || `${question?.ch || "عام"}:${question?.cat || "سؤال"}`;
+const FOUNDATION_CARD_IDS = [...new Set(FEED_STATIC.map(feedCardKey))];
+const FOUNDATION_PATTERN_IDS = [...new Set(TIERS.flatMap((tier, tierIndex) => tier.map((generator, templateIndex) => {
+  try { return questionPatternKey(generator()); } catch (error) { return `قالب:${tierIndex}:${templateIndex}`; }
+})))];
+const FOUNDATION_CARD_ID_SET = new Set(FOUNDATION_CARD_IDS);
+const FOUNDATION_PATTERN_ID_SET = new Set(FOUNDATION_PATTERN_IDS);
 const CH_MAP = META.map((t) => t.map((m) => m.ch));
 const ALL_CATS = [...new Set(META.flat().map((m) => m.cat))];
 const CAT_CH = {}; META.flat().forEach((m) => { if (!CAT_CH[m.cat]) CAT_CH[m.cat] = m.ch; });
@@ -901,7 +910,6 @@ export default function PhosApp() {
   const [introSeen, setIntroSeen] = useState(false);
   const [chapter, setChapter] = useState("الكل");
   const [loadedStorageKey, setLoadedStorageKey] = useState("");
-  const [lvlPop, setLvlPop] = useState(null);
   const [paywall, setPaywall] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [checkoutPlan, setCheckoutPlan] = useState(null);
@@ -930,6 +938,8 @@ export default function PhosApp() {
   const [reviewQueue, setReviewQueue] = useState(null);
   const [reviewIdx, setReviewIdx] = useState(0);
   const [skills, setSkills] = useState({});
+  const [seenFoundationCards, setSeenFoundationCards] = useState([]);
+  const [practicedQuestionPatterns, setPracticedQuestionPatterns] = useState([]);
   const [profile, setProfile] = useState(null);
   const [obStep, setObStep] = useState(0);
   const [obAns, setObAns] = useState({});
@@ -975,8 +985,13 @@ export default function PhosApp() {
     setPaymentNotice(null);
   }, [user?.id]);
 
-  const { lvl, progress, into, need } = levelInfo(xp);
+  const { lvl } = levelInfo(xp);
   const tier = tierForLevel(lvl);
+  const seenFoundationCount = seenFoundationCards.filter((id) => FOUNDATION_CARD_ID_SET.has(id)).length;
+  const practicedPatternCount = practicedQuestionPatterns.filter((id) => FOUNDATION_PATTERN_ID_SET.has(id)).length;
+  const cardCoverage = FOUNDATION_CARD_IDS.length ? seenFoundationCount / FOUNDATION_CARD_IDS.length : 0;
+  const questionCoverage = FOUNDATION_PATTERN_IDS.length ? practicedPatternCount / FOUNDATION_PATTERN_IDS.length : 0;
+  const foundationProgress = Math.min(100, Math.round((cardCoverage * 0.3 + questionCoverage * 0.7) * 100));
   const accuracy = solved ? Math.round((correctCount / solved) * 100) : 0;
   const dayKeyNow = () => { const d = new Date(); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); };
   const freeLeft = isPaid ? Infinity : Math.max(0, 10 - (freeQDay === dayKeyNow() ? freeQToday : 0));
@@ -1348,6 +1363,8 @@ export default function PhosApp() {
       setFreeQToday(Number.isFinite(d.freeQToday) ? d.freeQToday : 0);
       setFreeQDay(typeof d.freeQDay === "string" ? d.freeQDay : "");
       setSavedQs(Array.isArray(d.savedQs) ? d.savedQs : []);
+      setSeenFoundationCards(Array.isArray(d.seenFoundationCards) ? [...new Set(d.seenFoundationCards.filter((id) => typeof id === "string"))] : []);
+      setPracticedQuestionPatterns(Array.isArray(d.practicedQuestionPatterns) ? [...new Set(d.practicedQuestionPatterns.filter((id) => typeof id === "string"))] : []);
       setSkills(sk); weakRef.current = chWeakFrom(sk);
       setFeedDeck(buildFeedBatch(iv, weakRef.current)); setFeedIdx(0);
       setStreak(0); setHist([]); setHistPos(null); setReviewQueue(null); setReviewIdx(0);
@@ -1359,6 +1376,7 @@ export default function PhosApp() {
     } catch (e) {
       setName("طالب فوس"); setXp(0); setBest(0); setSolved(0); setCorrectCount(0);
       setInterests({}); interestsRef.current = {}; setSavedTitles([]); setSavedCards([]); setSavedQs([]);
+      setSeenFoundationCards([]); setPracticedQuestionPatterns([]);
       setSkills({}); weakRef.current = {}; setFcBase(null); setProfile(null); setIntroSeen(false);
       setDayStreak(0); setLastDay(""); setFreeQToday(0); setFreeQDay("");
       setFeedDeck(buildFeedBatch()); setFeedIdx(0); setStreak(0); setHist([]); setHistPos(null);
@@ -1374,12 +1392,21 @@ export default function PhosApp() {
   useEffect(() => {
     if (!progressStorageKey || loadedStorageKey !== progressStorageKey) return;
     const t = setTimeout(() => {
-      try { localStorage.setItem(progressStorageKey, JSON.stringify({ name, xp, best, solved, correct: correctCount, interests, saved: savedTitles, savedCards, savedQs, skills, fcBase, introSeen, profile, dayStreak, lastDay, freeQToday, freeQDay })); } catch (e) {}
+      try { localStorage.setItem(progressStorageKey, JSON.stringify({ name, xp, best, solved, correct: correctCount, interests, saved: savedTitles, savedCards, savedQs, skills, seenFoundationCards, practicedQuestionPatterns, fcBase, introSeen, profile, dayStreak, lastDay, freeQToday, freeQDay })); } catch (e) {}
     }, 400);
     return () => clearTimeout(t);
-  }, [name, xp, best, solved, correctCount, interests, savedTitles, savedCards, savedQs, skills, fcBase, introSeen, profile, dayStreak, lastDay, freeQToday, freeQDay, progressStorageKey, loadedStorageKey]);
+  }, [name, xp, best, solved, correctCount, interests, savedTitles, savedCards, savedQs, skills, seenFoundationCards, practicedQuestionPatterns, fcBase, introSeen, profile, dayStreak, lastDay, freeQToday, freeQDay, progressStorageKey, loadedStorageKey]);
 
   useEffect(() => { weakRef.current = chWeakFrom(skills); }, [skills]);
+
+  // البطاقة تُحسب عند ظهورها فعلياً في فيد المشترك، مرة واحدة فقط.
+  useEffect(() => {
+    if (screen !== "main" || tab !== "feed" || !isPaid || loadedStorageKey !== progressStorageKey) return;
+    const currentCard = feedDeck[Math.min(feedIdx, feedDeck.length - 1)];
+    const cardId = feedCardKey(currentCard);
+    if (!currentCard || !FOUNDATION_CARD_ID_SET.has(cardId)) return;
+    setSeenFoundationCards((ids) => ids.includes(cardId) ? ids : [...ids, cardId]);
+  }, [screen, tab, isPaid, feedDeck, feedIdx, loadedStorageKey, progressStorageKey]);
 
   useEffect(() => {
     if (accessLoading || isPaid) return;
@@ -1486,6 +1513,10 @@ export default function PhosApp() {
   const answer = (idx) => {
     if (phase !== "answering") return;
     if (histPos !== null) return;
+    const patternId = questionPatternKey(question);
+    if (FOUNDATION_PATTERN_ID_SET.has(patternId)) {
+      setPracticedQuestionPatterns((ids) => ids.includes(patternId) ? ids : [...ids, patternId]);
+    }
     if (reviewQueue) { setPicked(idx); setPhase("revealed"); return; }
     const right = question.opts[idx] === question.ans;
     if (question.cat) recordSkill(question.cat, right);
@@ -1503,12 +1534,9 @@ export default function PhosApp() {
     }
     if (right) {
       const add = 10 + Math.min(streak, 5) * 2 + tier * 4;
-      const before = levelInfo(xp).lvl;
-      const after = levelInfo(xp + add).lvl;
       setXp((x) => x + add);
       setCorrectCount((c) => c + 1);
       setStreak((s) => { const ns = s + 1; setBest((b) => Math.max(b, ns)); return ns; });
-      if (after > before) { setLvlPop(after); setTimeout(() => setLvlPop(null), 2400); }
     } else setStreak(0);
   };
   const nextQuestion = useCallback(() => {
@@ -1969,7 +1997,7 @@ export default function PhosApp() {
           <button onClick={() => { setScreen("main"); setReviewQueue(null); }} style={{ border: "none", background: "rgba(255,255,255,0.6)", borderRadius: 999, padding: "7px 14px", fontFamily: "inherit", fontWeight: 700, fontSize: 13, cursor: "pointer", color: C.ink }}>→ خروج</button>
           <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, fontWeight: 700, fontSize: 12.5, color: C.cobaltDark }}>
             <Sparkle size={12} />
-            <span>{reviewQueue ? `مراجعة المحفوظات ${toAr(reviewIdx + 1)} / ${toAr(reviewQueue.length)}` : `فوس · المستوى ${toAr(lvl)}${dayStreak > 0 ? ` · شرارة ${toAr(dayStreak)} ✦` : ""}`}</span>
+            <span>{reviewQueue ? `مراجعة المحفوظات ${toAr(reviewIdx + 1)} / ${toAr(reviewQueue.length)}` : `فوس${dayStreak > 0 ? ` · شرارة ${toAr(dayStreak)} ✦` : ""}`}</span>
           </div>
           <button onClick={toggleSaveQ} aria-label="حفظ السؤال" style={{ border: "none", background: "rgba(255,255,255,0.6)", borderRadius: 999, width: 34, height: 34, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
             <Heart size={16} filled={isQSaved} />
@@ -2008,7 +2036,7 @@ export default function PhosApp() {
             {phase === "revealed" && (
               <div style={{ animation: "popIn .3s ease both" }}>
                 <div style={{ background: "rgba(255,255,255,0.75)", borderRadius: 12, padding: "10px 14px", fontSize: 14, lineHeight: 1.8, borderRight: `4px solid ${question.opts[picked] === question.ans ? C.ok : C.bad}` }}>
-                  {question.opts[picked] === question.ans ? `صح — ${toAr(10 + Math.min(streak - 1, 5) * 2 + tier * 4)}+ نقطة${streak >= 3 ? ` · سلسلة ${toAr(streak)} ✦` : ""}` : "خطأ — شوف الطريقة:"}
+                  {question.opts[picked] === question.ans ? `صح${streak >= 3 ? ` · سلسلة ${toAr(streak)} ✦` : ""}` : "خطأ — شوف الطريقة:"}
                   <div style={{ marginTop: 4 }}>{question.exp}</div>
                 </div>
 
@@ -2072,16 +2100,6 @@ export default function PhosApp() {
             ) : null
           )}
         </div>
-
-        {lvlPop && (
-          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(36,27,77,0.5)", zIndex: 50, animation: "popIn .35s ease both" }}>
-            <div style={{ textAlign: "center", padding: "32px 44px", borderRadius: 24, background: C.card, boxShadow: "0 0 50px rgba(27,58,200,0.35)" }}>
-              <Sparkle size={46} />
-              <div style={{ fontSize: 14, opacity: 0.7, marginTop: 8 }}>مستوى جديد</div>
-              <div style={{ fontSize: 32, fontWeight: 700, color: C.cobalt }}>المستوى {toAr(lvlPop)}</div>
-            </div>
-          </div>
-        )}
 
         {streakPop > 0 && (
           <div onClick={() => setStreakPop(0)} style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(36,27,77,0.55)", zIndex: 55, animation: "popIn .35s ease both", padding: 20, boxSizing: "border-box" }}>
@@ -2181,20 +2199,20 @@ export default function PhosApp() {
               <div style={{ display: "flex", alignItems: "center", gap: 11, position: "relative" }}>
                 <div style={{ width: 44, height: 44, borderRadius: 15, background: "rgba(255,255,255,0.16)", display: "flex", alignItems: "center", justifyContent: "center" }}><IconTarget size={24} color="#fff" /></div>
                 <div>
-                  <h2 style={{ margin: 0, fontSize: 23 }}>التدريب</h2>
-                  <div style={{ marginTop: 3, fontSize: 12.5, opacity: 0.82 }}>{isPaid ? "تدريب مفتوح بلا حدود" : "١٠ أسئلة مجانية يوميًا"}</div>
+                  <h2 style={{ margin: 0, fontSize: 23 }}>رحلة التأسيس</h2>
+                  <div style={{ marginTop: 3, fontSize: 12.5, opacity: 0.82 }}>{foundationProgress === 100 ? "أكملت محتوى التأسيس الأساسي" : "يتحدّث تلقائيًا مع البطاقات والتدريب"}</div>
                 </div>
-                <div style={{ marginRight: "auto", textAlign: "center" }}>
-                  <div style={{ fontSize: 18, fontWeight: 700 }}>{toAr(lvl)}</div>
-                  <div style={{ fontSize: 10.5, opacity: 0.76 }}>المستوى</div>
+                <div style={{ marginRight: "auto", textAlign: "center", minWidth: 58 }}>
+                  <div style={{ fontSize: 24, fontWeight: 800 }}>{toAr(foundationProgress)}٪</div>
+                  <div style={{ fontSize: 10.5, opacity: 0.76 }}>مكتمل</div>
                 </div>
               </div>
               <div style={{ height: 7, background: "rgba(255,255,255,0.2)", borderRadius: 999, overflow: "hidden", marginTop: 16 }}>
-                <div style={{ height: "100%", width: `${progress * 100}%`, background: "#fff", borderRadius: 999, transition: "width .6s ease" }} />
+                <div style={{ height: "100%", width: `${foundationProgress}%`, background: foundationProgress === 100 ? C.gold : "#fff", borderRadius: 999, transition: "width .6s ease" }} />
               </div>
-              <div style={{ display: "flex", marginTop: 7, fontSize: 11.5, opacity: 0.78 }}>
-                <span>{TIER_LABEL[tier]}</span>
-                <span style={{ marginRight: "auto" }}>{toAr(into)} / {toAr(need)} نقطة</span>
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 8, fontSize: 11.5, opacity: 0.86 }}>
+                <span>البطاقات {toAr(seenFoundationCount)} / {toAr(FOUNDATION_CARD_IDS.length)}</span>
+                <span style={{ marginRight: "auto" }}>أنماط الأسئلة {toAr(practicedPatternCount)} / {toAr(FOUNDATION_PATTERN_IDS.length)}</span>
               </div>
             </div>
 
@@ -2296,6 +2314,7 @@ export default function PhosApp() {
                 try { if (progressStorageKey) localStorage.removeItem(progressStorageKey); } catch (e) {}
                 setXp(0); setBest(0); setSolved(0); setCorrectCount(0); setStreak(0);
                 setSkills({}); setSavedQs([]); setSavedTitles([]); setSavedCards([]);
+                setSeenFoundationCards([]); setPracticedQuestionPatterns([]);
                 setInterests({}); setDayStreak(0); setLastDay("");
                 interestsRef.current = {}; weakRef.current = {};
                 setFcBase(null); setProfile(null); setObStep(0); setObAns({});
@@ -2437,3 +2456,4 @@ export default function PhosApp() {
     </div>
   );
 }
+
