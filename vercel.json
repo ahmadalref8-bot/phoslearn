@@ -5,6 +5,16 @@
       "maxDuration": 300
     }
   },
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        { "type": "host", "value": "phoslearn.vercel.app" }
+      ],
+      "destination": "https://phoslearn-xusg.vercel.app/:path*",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

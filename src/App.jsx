@@ -1749,7 +1749,7 @@ export default function PhosApp() {
             <div style={{ color: C.cobalt, fontWeight: 700, fontSize: 14, marginBottom: 14 }}>
               {purchasePlan === "month" ? "١٩ ر.س كل ٣٠ يومًا" : "٣٩ ر.س كل ٩٠ يومًا"}
             </div>
-            <div style={{ fontSize: 12.5, opacity: 0.72, lineHeight: 1.8, marginBottom: 12 }}>الاسم والجوال مطلوبان لإنشاء عميل الدفع المتجدد لدى Tap. لا تحفظ هذه الحقول في جهازك.</div>
+            <div style={{ fontSize: 12.5, opacity: 0.72, lineHeight: 1.8, marginBottom: 12 }}>الاسم والجوال مطلوبان لإعداد اشتراكك المتجدد، ولا تُحفظ هذه الحقول في جهازك.</div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
               <label style={{ fontSize: 12.5, fontWeight: 700 }}>الاسم الأول
                 <input required maxLength={60} autoComplete="given-name" value={checkoutCustomer.firstName} onChange={(e) => setCheckoutCustomer((v) => ({ ...v, firstName: e.target.value }))} style={{ width: "100%", boxSizing: "border-box", marginTop: 5, border: `1.5px solid ${C.bgSoft}`, borderRadius: 11, padding: "10px 11px", fontFamily: "inherit", fontSize: 14 }} />
@@ -1766,12 +1766,12 @@ export default function PhosApp() {
             </label>
             <label style={{ display: "flex", alignItems: "flex-start", gap: 9, background: C.bgSoft, borderRadius: 14, padding: 12, marginTop: 14, cursor: "pointer", fontSize: 12.5, fontWeight: 600, lineHeight: 1.8 }}>
               <input type="checkbox" checked={recurringConsent} onChange={(e) => setRecurringConsent(e.target.checked)} style={{ width: 18, height: 18, marginTop: 3, accentColor: C.cobalt, flex: "0 0 auto" }} />
-              <span>أوافق صراحةً على حفظ وسيلة الدفع لدى Tap وخصم {purchasePlan === "month" ? "١٩ ر.س تلقائيًا كل ٣٠ يومًا" : "٣٩ ر.س تلقائيًا كل ٩٠ يومًا"} حتى ألغي التجديد. أفهم أن الإلغاء يوقف الدفعات القادمة وتبقى المزايا حتى نهاية المدة المدفوعة.</span>
+              <span>أوافق صراحةً على حفظ وسيلة الدفع بشكل آمن وخصم {purchasePlan === "month" ? "١٩ ر.س تلقائيًا كل ٣٠ يومًا" : "٣٩ ر.س تلقائيًا كل ٩٠ يومًا"} حتى ألغي التجديد. أفهم أن الإلغاء يوقف الدفعات القادمة وتبقى المزايا حتى نهاية المدة المدفوعة.</span>
             </label>
             <div style={{ fontSize: 11.5, lineHeight: 1.7, marginTop: 9, opacity: 0.7 }}>بالاستمرار أوافق على <a href="/terms" target="_blank" rel="noreferrer" style={{ color: C.cobalt }}>الشروط والأحكام</a> و<a href="/privacy" target="_blank" rel="noreferrer" style={{ color: C.cobalt }}>سياسة الخصوصية</a> وأطّلع على <a href="/refund-policy" target="_blank" rel="noreferrer" style={{ color: C.cobalt }}>سياسة المدفوعات والاسترداد</a>.</div>
             {checkoutError && <div role="alert" style={{ color: C.bad, fontSize: 12.5, fontWeight: 700, marginTop: 9 }}>{checkoutError}</div>}
             <button type="submit" disabled={!recurringConsent || Boolean(checkoutPlan)} style={{ ...primaryBtn, width: "100%", padding: 14, fontSize: 15, marginTop: 13, opacity: recurringConsent && !checkoutPlan ? 1 : 0.48, cursor: checkoutPlan ? "wait" : recurringConsent ? "pointer" : "not-allowed" }}>
-              {checkoutPlan ? "جارٍ فتح صفحة Tap…" : "الموافقة والمتابعة إلى الدفع"}
+              {checkoutPlan ? "جارٍ فتح صفحة الدفع…" : "الموافقة والمتابعة إلى الدفع"}
             </button>
             <button type="button" disabled={Boolean(checkoutPlan)} onClick={() => setPurchasePlan(null)} style={{ display: "block", margin: "9px auto 0", border: "none", background: "none", color: "rgba(36,27,77,0.58)", fontFamily: "inherit", fontWeight: 700, cursor: "pointer" }}>رجوع</button>
           </form>
