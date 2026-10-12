@@ -9,9 +9,9 @@
     {
       "source": "/:path*",
       "has": [
-        { "type": "host", "value": "phoslearn.vercel.app" }
+        { "type": "host", "value": "phoslearn-xusg.vercel.app" }
       ],
-      "destination": "https://phoslearn-xusg.vercel.app/:path*",
+      "destination": "https://phoslearn.vercel.app/:path*",
       "permanent": true
     }
   ],
