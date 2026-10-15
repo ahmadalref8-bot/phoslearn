@@ -915,7 +915,7 @@ export default function PhosApp() {
   const [checkoutPlan, setCheckoutPlan] = useState(null);
   const [purchasePlan, setPurchasePlan] = useState(null);
   const [checkoutCustomer, setCheckoutCustomer] = useState({ firstName: "", lastName: "", phoneNumber: "" });
-  const [recurringConsent, setRecurringConsent] = useState(false);
+  const [purchaseConsent, setPurchaseConsent] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
   const [cancelLoading, setCancelLoading] = useState(false);
   const [cancelError, setCancelError] = useState("");
@@ -978,7 +978,7 @@ export default function PhosApp() {
     setCheckoutPlan(null);
     setPurchasePlan(null);
     setCheckoutCustomer({ firstName: "", lastName: "", phoneNumber: "" });
-    setRecurringConsent(false);
+    setPurchaseConsent(false);
     setCheckoutError("");
     setCancelLoading(false);
     setCancelError("");
@@ -1032,19 +1032,19 @@ export default function PhosApp() {
     if (isPaid) {
       setPaywall(false);
       setPurchasePlan(null);
-      setPaymentNotice({ type: "success", text: "لديك اشتراك ساري بالفعل. يمكنك إدارة التجديد من صفحة حسابك." });
+      setPaymentNotice({ type: "success", text: "لديك مدة وصول سارية بالفعل." });
       return;
     }
     setPaywall(false);
     setPurchasePlan(uiPlan);
     setCheckoutCustomer({ firstName: "", lastName: "", phoneNumber: "" });
-    setRecurringConsent(false);
+    setPurchaseConsent(false);
   }, [session?.access_token, isPaid]);
 
   const startCheckout = useCallback(async () => {
     const uiPlan = purchasePlan;
     const planCode = PLAN_CODES[uiPlan];
-    if (!planCode || !session?.access_token || !recurringConsent) return;
+    if (!planCode || !session?.access_token || !purchaseConsent) return;
     const firstName = checkoutCustomer.firstName.trim().replace(/\s+/g, " ");
     const lastName = checkoutCustomer.lastName.trim().replace(/\s+/g, " ");
     const phoneNumber = normalizeSaudiMobile(checkoutCustomer.phoneNumber);
@@ -1068,7 +1068,7 @@ export default function PhosApp() {
         },
         body: JSON.stringify({
           planCode,
-          recurringConsent: true,
+          purchaseConsent: true,
           termsVersion: LEGAL_VERSION,
           customer: { firstName, lastName, phoneCountryCode: "966", phoneNumber },
         }),
@@ -1099,7 +1099,7 @@ export default function PhosApp() {
         setCheckoutPlan(null);
       }
     }
-  }, [purchasePlan, session, recurringConsent, checkoutCustomer, refreshMembership]);
+  }, [purchasePlan, session, purchaseConsent, checkoutCustomer, refreshMembership]);
 
   useEffect(() => {
     if (!session?.access_token || accessLoading || checkoutPlan) return;
@@ -1723,21 +1723,21 @@ export default function PhosApp() {
               <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 10, alignItems: "stretch" }}>
                 <button disabled={Boolean(checkoutPlan)} onClick={() => beginCheckout("season")} style={{ width: "100%", textAlign: "center", border: `2px solid ${C.cobalt}`, background: C.bgSoft, color: C.ink, borderRadius: 18, padding: "20px 16px", minHeight: 132, fontFamily: "inherit", cursor: checkoutPlan ? "wait" : "pointer", opacity: checkoutPlan ? 0.65 : 1, position: "relative" }}>
                   <span style={{ position: "absolute", top: -9, left: 14, background: C.gold, color: "#fff", borderRadius: 999, padding: "3px 9px", fontSize: 10.5, fontWeight: 700 }}>الأفضل قيمة</span>
-                  <span style={{ display: "block", fontSize: 15, fontWeight: 700 }}>اشتراك ٩٠ يومًا</span>
+                  <span style={{ display: "block", fontSize: 15, fontWeight: 700 }}>وصول ٩٠ يومًا</span>
                   <b style={{ display: "block", color: C.cobalt, fontSize: 25, marginTop: 7 }}>٣٩ ر.س</b>
-                  <span style={{ display: "block", marginTop: 5, fontSize: 11.5, opacity: 0.65 }}>يتجدد كل ٩٠ يومًا · وفّر ٣٢٪</span>
+                  <span style={{ display: "block", marginTop: 5, fontSize: 11.5, opacity: 0.65 }}>دفعة واحدة · وفّر ٣٢٪</span>
                 </button>
 
                 <button disabled={Boolean(checkoutPlan)} onClick={() => beginCheckout("month")} style={{ width: "100%", textAlign: "center", border: `1px solid ${C.bgSoft}`, background: "#FAF8FF", color: C.ink, borderRadius: 18, padding: "20px 16px", minHeight: 126, fontFamily: "inherit", cursor: checkoutPlan ? "wait" : "pointer", opacity: checkoutPlan ? 0.65 : 1 }}>
-                  <span style={{ display: "block", fontSize: 15, fontWeight: 700 }}>اشتراك ٣٠ يومًا</span>
+                  <span style={{ display: "block", fontSize: 15, fontWeight: 700 }}>وصول ٣٠ يومًا</span>
                   <b style={{ display: "block", color: C.cobalt, fontSize: 25, marginTop: 7 }}>١٩ ر.س</b>
-                  <span style={{ display: "block", marginTop: 5, fontSize: 11.5, opacity: 0.65 }}>يتجدد كل ٣٠ يومًا</span>
+                  <span style={{ display: "block", marginTop: 5, fontSize: 11.5, opacity: 0.65 }}>دفعة واحدة</span>
                 </button>
               </div>
 
               {checkoutPlan && <div style={{ color: C.cobalt, fontSize: 12.5, fontWeight: 700, textAlign: "center", marginTop: 10 }}>جارٍ تجهيز الاشتراك…</div>}
               {checkoutError && <div role="alert" style={{ color: C.bad, fontSize: 12.5, fontWeight: 700, marginTop: 10, textAlign: "center" }}>{checkoutError}</div>}
-              <div style={{ fontSize: 11.5, opacity: 0.62, marginTop: 12, lineHeight: 1.75, textAlign: "center" }}>يمكنك إيقاف التجديد في أي وقت، ويستمر وصولك حتى نهاية المدة المدفوعة.</div>
+              <div style={{ fontSize: 11.5, opacity: 0.62, marginTop: 12, lineHeight: 1.75, textAlign: "center" }}>دفعة واحدة فقط، ولا يحدث أي تجديد تلقائي.</div>
             </div>
           </div>
         </div>
@@ -1745,11 +1745,11 @@ export default function PhosApp() {
       {purchasePlan && (
         <div style={{ position: "absolute", inset: 0, background: "rgba(36,27,77,0.58)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 72, padding: 18, overflowY: "auto" }} onClick={() => !checkoutPlan && setPurchasePlan(null)}>
           <form onSubmit={(e) => { e.preventDefault(); startCheckout(); }} onClick={(e) => e.stopPropagation()} style={{ background: C.card, borderRadius: 24, padding: "24px 20px", maxWidth: 390, width: "100%", textAlign: "right", animation: "popIn .3s ease both" }}>
-            <h3 style={{ fontSize: 19, fontWeight: 700, margin: "0 0 6px" }}>بيانات الاشتراك المتجدد</h3>
+            <h3 style={{ fontSize: 19, fontWeight: 700, margin: "0 0 6px" }}>بيانات شراء مدة الوصول</h3>
             <div style={{ color: C.cobalt, fontWeight: 700, fontSize: 14, marginBottom: 14 }}>
-              {purchasePlan === "month" ? "١٩ ر.س كل ٣٠ يومًا" : "٣٩ ر.س كل ٩٠ يومًا"}
+              {purchasePlan === "month" ? "١٩ ر.س مقابل ٣٠ يومًا" : "٣٩ ر.س مقابل ٩٠ يومًا"}
             </div>
-            <div style={{ fontSize: 12.5, opacity: 0.72, lineHeight: 1.8, marginBottom: 12 }}>الاسم والجوال مطلوبان لإعداد اشتراكك المتجدد، ولا تُحفظ هذه الحقول في جهازك.</div>
+            <div style={{ fontSize: 12.5, opacity: 0.72, lineHeight: 1.8, marginBottom: 12 }}>الاسم والجوال مطلوبان لإتمام عملية الدفع، ولا تُحفظ هذه الحقول في جهازك.</div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
               <label style={{ fontSize: 12.5, fontWeight: 700 }}>الاسم الأول
                 <input required maxLength={60} autoComplete="given-name" value={checkoutCustomer.firstName} onChange={(e) => setCheckoutCustomer((v) => ({ ...v, firstName: e.target.value }))} style={{ width: "100%", boxSizing: "border-box", marginTop: 5, border: `1.5px solid ${C.bgSoft}`, borderRadius: 11, padding: "10px 11px", fontFamily: "inherit", fontSize: 14 }} />
@@ -1765,12 +1765,12 @@ export default function PhosApp() {
               </div>
             </label>
             <label style={{ display: "flex", alignItems: "flex-start", gap: 9, background: C.bgSoft, borderRadius: 14, padding: 12, marginTop: 14, cursor: "pointer", fontSize: 12.5, fontWeight: 600, lineHeight: 1.8 }}>
-              <input type="checkbox" checked={recurringConsent} onChange={(e) => setRecurringConsent(e.target.checked)} style={{ width: 18, height: 18, marginTop: 3, accentColor: C.cobalt, flex: "0 0 auto" }} />
-              <span>أوافق صراحةً على حفظ وسيلة الدفع بشكل آمن وخصم {purchasePlan === "month" ? "١٩ ر.س تلقائيًا كل ٣٠ يومًا" : "٣٩ ر.س تلقائيًا كل ٩٠ يومًا"} حتى ألغي التجديد. أفهم أن الإلغاء يوقف الدفعات القادمة وتبقى المزايا حتى نهاية المدة المدفوعة.</span>
+              <input type="checkbox" checked={purchaseConsent} onChange={(e) => setPurchaseConsent(e.target.checked)} style={{ width: 18, height: 18, marginTop: 3, accentColor: C.cobalt, flex: "0 0 auto" }} />
+              <span>أوافق على دفع {purchasePlan === "month" ? "١٩ ر.س مقابل وصول لمدة ٣٠ يومًا" : "٣٩ ر.س مقابل وصول لمدة ٩٠ يومًا"}. هذه دفعة واحدة، ولا تُحفظ وسيلة الدفع ولا يحدث تجديد تلقائي.</span>
             </label>
             <div style={{ fontSize: 11.5, lineHeight: 1.7, marginTop: 9, opacity: 0.7 }}>بالاستمرار أوافق على <a href="/terms" target="_blank" rel="noreferrer" style={{ color: C.cobalt }}>الشروط والأحكام</a> و<a href="/privacy" target="_blank" rel="noreferrer" style={{ color: C.cobalt }}>سياسة الخصوصية</a> وأطّلع على <a href="/refund-policy" target="_blank" rel="noreferrer" style={{ color: C.cobalt }}>سياسة المدفوعات والاسترداد</a>.</div>
             {checkoutError && <div role="alert" style={{ color: C.bad, fontSize: 12.5, fontWeight: 700, marginTop: 9 }}>{checkoutError}</div>}
-            <button type="submit" disabled={!recurringConsent || Boolean(checkoutPlan)} style={{ ...primaryBtn, width: "100%", padding: 14, fontSize: 15, marginTop: 13, opacity: recurringConsent && !checkoutPlan ? 1 : 0.48, cursor: checkoutPlan ? "wait" : recurringConsent ? "pointer" : "not-allowed" }}>
+            <button type="submit" disabled={!purchaseConsent || Boolean(checkoutPlan)} style={{ ...primaryBtn, width: "100%", padding: 14, fontSize: 15, marginTop: 13, opacity: purchaseConsent && !checkoutPlan ? 1 : 0.48, cursor: checkoutPlan ? "wait" : purchaseConsent ? "pointer" : "not-allowed" }}>
               {checkoutPlan ? "جارٍ فتح صفحة الدفع…" : "الموافقة والمتابعة إلى الدفع"}
             </button>
             <button type="button" disabled={Boolean(checkoutPlan)} onClick={() => setPurchasePlan(null)} style={{ display: "block", margin: "9px auto 0", border: "none", background: "none", color: "rgba(36,27,77,0.58)", fontFamily: "inherit", fontWeight: 700, cursor: "pointer" }}>رجوع</button>
@@ -2335,11 +2335,11 @@ export default function PhosApp() {
             {isPaid && (
               <div style={{ background: cancelAtPeriodEnd || !autoRenew ? "#FFF8E8" : "rgba(255,255,255,0.72)", borderRadius: 16, padding: "13px 15px", marginTop: 10, fontSize: 12.5, lineHeight: 1.8 }}>
                 <div style={{ fontWeight: 700 }}>
-                  {cancelAtPeriodEnd || !autoRenew ? "لن يحدث خصم جديد" : inRenewalGrace ? "التجديد قيد المعالجة" : "التجديد التلقائي مفعّل"}
+                  {cancelAtPeriodEnd || !autoRenew ? "دفعة واحدة" : inRenewalGrace ? "التجديد قيد المعالجة" : "التجديد التلقائي مفعّل"}
                 </div>
                 <div style={{ opacity: 0.7 }}>
                   {cancelAtPeriodEnd || !autoRenew
-                    ? "يستمر وصولك حتى نهاية المدة الحالية، ثم يعود الحساب للخطة المجانية."
+                    ? "لا يوجد تجديد تلقائي. يستمر وصولك حتى نهاية المدة الحالية، ثم يعود الحساب للخطة المجانية."
                     : inRenewalGrace
                       ? "تعذرت المحاولة الأولى، وقد نعيد المحاولة خلال مهلة لا تتجاوز ٤٨ ساعة مع استمرار الوصول مؤقتًا."
                     : `الحالة: ${subscriptionStatus === "active" ? "نشط" : subscriptionStatus}. يمكنك إيقاف الدفعة القادمة دون فقدان المدة المدفوعة.`}
@@ -2378,7 +2378,7 @@ export default function PhosApp() {
                 <div style={{ height: 1, background: C.bgSoft, margin: "14px 0 11px" }} />
                 <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12.5 }}>
                   <span style={{ width: 20, height: 20, borderRadius: "50%", background: C.bgSoft, color: C.cobalt, display: "grid", placeItems: "center", fontWeight: 700 }}>✓</span>
-                  يتجدد كل ٩٠ يومًا · وفّر ٣٢٪
+                  دفعة واحدة · وفّر ٣٢٪
                 </div>
                 <button disabled={Boolean(checkoutPlan) || isPaid} onClick={() => beginCheckout("season")} style={{ ...primaryBtn, width: "100%", marginTop: "auto", padding: 13, fontSize: 14.5, borderRadius: 14, opacity: checkoutPlan || isPaid ? 0.55 : 1, cursor: checkoutPlan ? "wait" : isPaid ? "default" : "pointer" }}>{checkoutPlan === "season" ? "جارٍ التجهيز…" : isPaid ? (plan === "season" ? "اشتراكك الحالي" : "متاح بعد انتهاء اشتراكك") : "اختر باقة ٩٠ يومًا"}</button>
               </div>
@@ -2389,14 +2389,14 @@ export default function PhosApp() {
                   <div style={{ fontWeight: 700, fontSize: 18 }}>٣٠ يومًا</div>
                   <div style={{ color: C.cobalt, fontWeight: 800, fontSize: 29, marginTop: 5 }}>١٩ <span style={{ fontSize: 12 }}>ر.س</span></div>
                 </div>
-                <div style={{ fontSize: 12, opacity: 0.6, marginTop: 5 }}>وصول كامل · يتجدد كل ٣٠ يومًا</div>
+                <div style={{ fontSize: 12, opacity: 0.6, marginTop: 5 }}>وصول كامل · دفعة واحدة</div>
                 <button disabled={Boolean(checkoutPlan) || isPaid} onClick={() => beginCheckout("month")} style={{ width: "100%", marginTop: "auto", padding: 12, borderRadius: 14, border: `2px solid ${C.cobalt}`, background: "transparent", color: C.cobalt, fontWeight: 700, fontFamily: "inherit", fontSize: 14, cursor: checkoutPlan ? "wait" : isPaid ? "default" : "pointer", opacity: checkoutPlan || isPaid ? 0.55 : 1 }}>{checkoutPlan === "month" ? "جارٍ التجهيز…" : isPaid ? (plan === "month" ? "اشتراكك الحالي" : "متاح بعد انتهاء اشتراكك") : "اختر باقة ٣٠ يومًا"}</button>
               </div>
 
               </div>
 
               {checkoutError && <div role="alert" style={{ color: C.bad, background: "#FFF1F2", borderRadius: 12, padding: "9px 11px", fontSize: 12.5, fontWeight: 700, marginTop: 9 }}>{checkoutError}</div>}
-              <div style={{ background: "rgba(255,255,255,0.5)", borderRadius: 13, padding: "10px 12px", fontSize: 11.5, opacity: 0.7, marginTop: 9, lineHeight: 1.7, textAlign: "center" }}>تقدر توقف التجديد في أي وقت، ويستمر وصولك حتى نهاية المدة المدفوعة.</div>
+              <div style={{ background: "rgba(255,255,255,0.5)", borderRadius: 13, padding: "10px 12px", fontSize: 11.5, opacity: 0.7, marginTop: 9, lineHeight: 1.7, textAlign: "center" }}>دفعة واحدة فقط، ولا يحدث أي تجديد تلقائي.</div>
             </section>
 
           </div>

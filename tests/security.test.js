@@ -8,7 +8,8 @@ import {
   getAiOrigin,
   getAppUrl,
   getPlan,
-  RECURRING_TERMS_VERSION,
+  CHECKOUT_PAYMENT_MODE,
+  PURCHASE_TERMS_VERSION,
   requireSecret,
 } from "../api/_lib/config.js";
 import { safeEqual } from "../api/_lib/http.js";
@@ -113,19 +114,20 @@ test("Tap SAR conversion is exact and webhook hash verification is fail-closed",
   });
 });
 
-test("frontend requires explicit recurring consent and keeps paid AI/community gates", async () => {
+test("frontend requires explicit one-time purchase consent and keeps paid AI/community gates", async () => {
   const [app, membership, pages] = await Promise.all([
     load("src/App.jsx"),
     load("src/hooks/useMembership.js"),
     load("src/components/PublicPages.jsx"),
   ]);
-  assert.match(app, /const \[recurringConsent, setRecurringConsent\] = useState\(false\)/);
-  assert.match(app, /recurringConsent: true/);
+  assert.match(app, /const \[purchaseConsent, setPurchaseConsent\] = useState\(false\)/);
+  assert.match(app, /purchaseConsent: true/);
   assert.match(app, /termsVersion: LEGAL_VERSION/);
-  assert.equal(RECURRING_TERMS_VERSION, "2026-09-26");
-  assert.match(pages, /LEGAL_VERSION = "2026-09-26"/);
-  assert.match(app, /١٩ ر\.س تلقائيًا كل ٣٠ يومًا/);
-  assert.match(app, /٣٩ ر\.س تلقائيًا كل ٩٠ يومًا/);
+  assert.equal(PURCHASE_TERMS_VERSION, "2026-10-15");
+  assert.equal(CHECKOUT_PAYMENT_MODE, "one_time");
+  assert.match(pages, /LEGAL_VERSION = "2026-10-15"/);
+  assert.match(app, /١٩ ر\.س مقابل وصول لمدة ٣٠ يومًا/);
+  assert.match(app, /٣٩ ر\.س مقابل وصول لمدة ٩٠ يومًا/);
   assert.match(app, /fetch\("\/api\/ai"/);
   assert.match(app, /fetch\("\/api\/community"/);
   assert.match(app, /const hasAI = isPaid/);
@@ -164,7 +166,8 @@ test("checkout blocks active, past-due, and already-due canceled cycles", async 
   assert.match(checkout, /reference: \{ transaction: referenceTransaction, order: orderId, idempotent: referenceTransaction \}/);
   assert.match(checkout, /customer_initiated: true/);
   assert.match(checkout, /threeDSecure: true/);
-  assert.match(checkout, /save_card: true/);
+  assert.match(checkout, /save_card: false/);
+  assert.match(checkout, /payment_mode: CHECKOUT_PAYMENT_MODE/);
   assert.match(checkout, /source: \{ id: "src_card" \}/);
   assert.doesNotMatch(checkout, /body\.amount|body\.duration/);
 });
@@ -188,7 +191,20 @@ test("renewal is MIT, bounded, and sized for the first 50 subscribers", async ()
 });
 
 test("database schema serializes subscription changes and preserves one claimed due cycle", async () => {
-  const schema = await load("supabase/schema.sql");
+  const [schema, oneTimeMigration] = await Promise.all([
+    load("supabase/schema.sql"),
+    load("supabase/one-time-payments.sql"),
+  ]);
+  assert.match(schema, /payment_mode text not null default 'recurring'/i);
+  assert.match(schema, /payment_mode in \('recurring', 'one_time'\)/i);
+  assert.match(schema, /v_one_time := v_order\.payment_mode = 'one_time'/i);
+  assert.match(schema, /auto_renew = excluded\.auto_renew/i);
+  assert.match(oneTimeMigration, /add column if not exists payment_mode text/i);
+  assert.match(oneTimeMigration, /one-time payment must not store recurring identifiers/i);
+  assert.match(oneTimeMigration, /not v_one_time, false, null/i);
+  assert.match(oneTimeMigration, /grant execute on function public\.activate_tap_initial_payment/i);
+  assert.match(oneTimeMigration, /^begin;/m);
+  assert.match(oneTimeMigration, /commit;\s*$/);
   assert.match(schema, /payment_orders_one_pending_user_idx/i);
   assert.match(schema, /where status = 'pending'/i);
   assert.match(schema, /perform pg_advisory_xact_lock\(hashtextextended\('subscription:'/i);
@@ -258,3 +274,4 @@ test("legacy provider implementation, merge markers, and real secrets are absent
     }
   }
 });
+

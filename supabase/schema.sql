@@ -1,4 +1,4 @@
--- Phos recurring subscriptions on Tap Payments
+-- Phos paid access on Tap Payments (one-time checkout; recurring records remain supported)
 -- Run this entire file in the Supabase SQL editor. It is safe to re-run.
 -- Existing one-time members keep their paid access, but are intentionally
 -- migrated with auto_renew = false until they complete the Tap consent flow.
@@ -12,6 +12,7 @@ create table if not exists public.payment_orders (
   user_id uuid not null references auth.users(id) on delete cascade,
   provider text not null default 'tap',
   order_kind text not null default 'initial',
+  payment_mode text not null default 'recurring',
   plan_code text not null,
   amount integer not null,
   currency text not null default 'SAR',
@@ -35,6 +36,7 @@ create table if not exists public.payment_orders (
 -- readable as provider=legacy and can never become recurring subscriptions.
 alter table public.payment_orders add column if not exists provider text;
 alter table public.payment_orders add column if not exists order_kind text;
+alter table public.payment_orders add column if not exists payment_mode text;
 alter table public.payment_orders add column if not exists tap_charge_id text;
 alter table public.payment_orders add column if not exists tap_checkout_url text;
 alter table public.payment_orders add column if not exists reference_transaction text;
@@ -47,6 +49,7 @@ alter table public.payment_orders add column if not exists failure_code text;
 
 update public.payment_orders set provider = 'legacy' where provider is null;
 update public.payment_orders set order_kind = 'initial' where order_kind is null;
+update public.payment_orders set payment_mode = 'recurring' where payment_mode is null;
 update public.payment_orders
    set checkout_expires_at = created_at + interval '30 minutes'
  where checkout_expires_at is null;
@@ -63,6 +66,8 @@ alter table public.payment_orders alter column provider set default 'tap';
 alter table public.payment_orders alter column provider set not null;
 alter table public.payment_orders alter column order_kind set default 'initial';
 alter table public.payment_orders alter column order_kind set not null;
+alter table public.payment_orders alter column payment_mode set default 'recurring';
+alter table public.payment_orders alter column payment_mode set not null;
 alter table public.payment_orders alter column checkout_expires_at set not null;
 
 alter table public.payment_orders drop constraint if exists payment_orders_provider_check;
@@ -71,6 +76,9 @@ alter table public.payment_orders add constraint payment_orders_provider_check
 alter table public.payment_orders drop constraint if exists payment_orders_order_kind_check;
 alter table public.payment_orders add constraint payment_orders_order_kind_check
   check (order_kind in ('initial', 'renewal'));
+alter table public.payment_orders drop constraint if exists payment_orders_payment_mode_check;
+alter table public.payment_orders add constraint payment_orders_payment_mode_check
+  check (payment_mode in ('recurring', 'one_time'));
 alter table public.payment_orders drop constraint if exists payment_orders_plan_code_check;
 alter table public.payment_orders add constraint payment_orders_plan_code_check
   check (plan_code in ('access_30_days', 'access_90_days'));
@@ -99,7 +107,8 @@ alter table public.payment_orders drop constraint if exists payment_orders_initi
 alter table public.payment_orders add constraint payment_orders_initial_consent_check check (
   provider <> 'tap'
   or order_kind = 'renewal'
-  or (recurring_consent_at is not null and nullif(btrim(terms_version), '') is not null)
+  or (payment_mode = 'recurring' and recurring_consent_at is not null and nullif(btrim(terms_version), '') is not null)
+  or (payment_mode = 'one_time' and recurring_consent_at is null and nullif(btrim(terms_version), '') is not null)
 );
 alter table public.payment_orders drop constraint if exists payment_orders_paid_evidence_check;
 alter table public.payment_orders add constraint payment_orders_paid_evidence_check check (
@@ -356,13 +365,11 @@ declare
   v_subscription public.subscriptions%rowtype;
   v_access_start timestamptz;
   v_access_end timestamptz;
+  v_one_time boolean;
   v_now timestamptz := now();
 begin
-  if p_charge_id !~ '^chg_[A-Za-z0-9_-]{6,120}$'
-     or p_customer_id !~ '^cus_[A-Za-z0-9_-]{3,120}$'
-     or p_card_id !~ '^card_[A-Za-z0-9_-]{3,120}$'
-     or p_agreement_id !~ '^payment_agreement_[A-Za-z0-9_-]{3,160}$' then
-    raise exception 'invalid Tap recurring identifiers';
+  if p_charge_id !~ '^chg_[A-Za-z0-9_-]{6,120}$' then
+    raise exception 'invalid Tap charge identifier';
   end if;
   if p_paid_at is null or p_period_start is null or p_period_end is null
      or p_paid_at > v_now + interval '5 minutes'
@@ -383,10 +390,22 @@ begin
      or v_order.provider <> 'tap' or v_order.order_kind <> 'initial' then
     raise exception 'invalid initial Tap order';
   end if;
+  v_one_time := v_order.payment_mode = 'one_time';
+  if v_one_time then
+    if p_customer_id is not null or p_card_id is not null or p_agreement_id is not null then
+      raise exception 'one-time payment must not store recurring identifiers';
+    end if;
+  elsif p_customer_id is null or p_customer_id !~ '^cus_[A-Za-z0-9_-]{3,120}$'
+     or p_card_id is null or p_card_id !~ '^card_[A-Za-z0-9_-]{3,120}$'
+     or p_agreement_id is null or p_agreement_id !~ '^payment_agreement_[A-Za-z0-9_-]{3,160}$' then
+    raise exception 'invalid Tap recurring identifiers';
+  end if;
   if not ((v_order.plan_code = 'access_30_days' and v_order.amount = 1900 and v_order.duration_days = 30)
        or (v_order.plan_code = 'access_90_days' and v_order.amount = 3900 and v_order.duration_days = 90))
-     or v_order.currency <> 'SAR' or v_order.recurring_consent_at is null
-     or nullif(btrim(v_order.terms_version), '') is null then
+     or v_order.currency <> 'SAR'
+     or nullif(btrim(v_order.terms_version), '') is null
+     or (v_one_time and v_order.recurring_consent_at is not null)
+     or (not v_one_time and v_order.recurring_consent_at is null) then
     raise exception 'initial order snapshot or consent mismatch';
   end if;
   if p_period_end <> p_period_start + make_interval(days => v_order.duration_days) then
@@ -425,8 +444,8 @@ begin
     renewal_failures, provider_checked_at, updated_at
   ) values (
     v_user_id, v_order.plan_code, 'active', v_access_end, v_access_start, v_access_end,
-    true, false, null, p_customer_id, p_card_id, p_agreement_id,
-    p_charge_id, v_order.id, v_access_end, 0, v_now, v_now
+    not v_one_time, false, null, p_customer_id, p_card_id, p_agreement_id,
+    p_charge_id, v_order.id, case when v_one_time then null else v_access_end end, 0, v_now, v_now
   )
   on conflict (user_id) do update set
     plan_code = excluded.plan_code,
@@ -434,9 +453,9 @@ begin
     active_until = excluded.active_until,
     current_period_start = excluded.current_period_start,
     current_period_end = excluded.current_period_end,
-    auto_renew = true,
-    cancel_at_period_end = false,
-    canceled_at = null,
+    auto_renew = excluded.auto_renew,
+    cancel_at_period_end = excluded.cancel_at_period_end,
+    canceled_at = excluded.canceled_at,
     tap_customer_id = excluded.tap_customer_id,
     tap_card_id = excluded.tap_card_id,
     tap_payment_agreement_id = excluded.tap_payment_agreement_id,
@@ -1144,3 +1163,4 @@ create policy "avatars_delete_own"
 
 
 commit;
+

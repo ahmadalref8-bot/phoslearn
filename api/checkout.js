@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import {
-  RECURRING_TERMS_VERSION,
+  CHECKOUT_PAYMENT_MODE,
+  PURCHASE_TERMS_VERSION,
   getAppUrl,
   getPlan,
   tapMerchantId,
@@ -59,13 +60,17 @@ function validateCreatedCharge(charge, orderId, plan, referenceTransaction) {
   if (tapAmountToMinor(charge.amount) !== plan.amount || charge.currency !== plan.currency) {
     throw new Error("Tap returned a mismatched amount");
   }
-  if (charge.customer_initiated !== true || charge.save_card !== true || charge.threeDSecure !== true) {
+  if (charge.customer_initiated !== true || charge.save_card !== false || charge.threeDSecure !== true) {
     throw new Error("Tap returned a mismatched initial-payment mode");
   }
   if (charge.reference?.order !== orderId || charge.reference?.transaction !== referenceTransaction) {
     throw new Error("Tap returned mismatched references");
   }
-  if (charge.metadata?.order_id !== orderId || charge.metadata?.plan_code !== plan.code || charge.metadata?.kind !== "initial") {
+  if (charge.metadata?.order_id !== orderId
+    || charge.metadata?.plan_code !== plan.code
+    || charge.metadata?.kind !== "initial"
+    || charge.metadata?.payment_mode !== CHECKOUT_PAYMENT_MODE
+    || charge.metadata?.terms_version !== PURCHASE_TERMS_VERSION) {
     throw new Error("Tap returned mismatched metadata");
   }
   const expiry = charge.transaction?.expiry;
@@ -148,8 +153,8 @@ export default async function handler(req, res) {
     const body = parseBody(req);
     const plan = getPlan(body.planCode);
     if (!plan) throw new HttpError(400, "الباقة غير صالحة.", "invalid_plan");
-    if (body.recurringConsent !== true || body.termsVersion !== RECURRING_TERMS_VERSION) {
-      throw new HttpError(400, "يجب الموافقة بوضوح على التجديد التلقائي وشروطه.", "recurring_consent_required");
+    if (body.purchaseConsent !== true || body.termsVersion !== PURCHASE_TERMS_VERSION) {
+      throw new HttpError(400, "يجب الموافقة بوضوح على شراء مدة الوصول وشروطها.", "purchase_consent_required");
     }
     const customer = customerDetails(body.customer, user.email);
 
@@ -159,7 +164,6 @@ export default async function handler(req, res) {
     const merchantId = tapMerchantId();
     const admin = getSupabaseAdmin();
     const now = new Date();
-    const nowIso = now.toISOString();
 
     const { data: existingSubscription, error: subscriptionError } = await admin
       .from("subscriptions")
@@ -192,7 +196,7 @@ export default async function handler(req, res) {
 
     const { data: recent, error: recentError } = await admin
       .from("payment_orders")
-      .select("id,order_kind,plan_code,tap_checkout_url,checkout_expires_at,failure_code")
+      .select("id,order_kind,payment_mode,plan_code,tap_checkout_url,checkout_expires_at,failure_code")
       .eq("user_id", user.id)
       .eq("status", "pending")
       .order("created_at", { ascending: false })
@@ -200,6 +204,7 @@ export default async function handler(req, res) {
       .maybeSingle();
     if (recentError) throw recentError;
     if (recent?.order_kind === "initial"
+      && recent.payment_mode === CHECKOUT_PAYMENT_MODE
       && recent.plan_code === plan.code
       && recent.tap_checkout_url
       && Date.parse(recent.checkout_expires_at) > now.getTime()) {
@@ -222,6 +227,7 @@ export default async function handler(req, res) {
       user_id: user.id,
       provider: "tap",
       order_kind: "initial",
+      payment_mode: CHECKOUT_PAYMENT_MODE,
       plan_code: plan.code,
       amount: plan.amount,
       currency: plan.currency,
@@ -229,8 +235,8 @@ export default async function handler(req, res) {
       status: "pending",
       checkout_expires_at: checkoutExpiresAt,
       reference_transaction: referenceTransaction,
-      recurring_consent_at: nowIso,
-      terms_version: RECURRING_TERMS_VERSION,
+      recurring_consent_at: null,
+      terms_version: PURCHASE_TERMS_VERSION,
       failure_code: "charge_submission_not_started",
     });
     if (insertError?.code === "23505") throw new HttpError(409, "يجري تجهيز صفحة دفع سابقة؛ حاول بعد لحظات.", "checkout_in_progress");
@@ -258,9 +264,15 @@ export default async function handler(req, res) {
         currency: plan.currency,
         customer_initiated: true,
         threeDSecure: true,
-        save_card: true,
+        save_card: false,
         description: plan.description,
-        metadata: { order_id: orderId, plan_code: plan.code, kind: "initial", terms_version: RECURRING_TERMS_VERSION },
+        metadata: {
+          order_id: orderId,
+          plan_code: plan.code,
+          kind: "initial",
+          payment_mode: CHECKOUT_PAYMENT_MODE,
+          terms_version: PURCHASE_TERMS_VERSION,
+        },
         reference: { transaction: referenceTransaction, order: orderId, idempotent: referenceTransaction },
         customer,
         merchant: { id: merchantId },
@@ -329,3 +341,4 @@ export default async function handler(req, res) {
     return sendError(res, error);
   }
 }
+

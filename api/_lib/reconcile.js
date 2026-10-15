@@ -71,6 +71,10 @@ function validateLocalOrder(order) {
     throw new Error("Order plan snapshot mismatch");
   }
   if (!['initial', 'renewal'].includes(order.order_kind)) throw new Error("Unknown Tap order kind");
+  if (!['recurring', 'one_time'].includes(order.payment_mode)) throw new Error("Unknown Tap payment mode");
+  if (order.order_kind === "renewal" && order.payment_mode !== "recurring") {
+    throw new Error("Renewal order cannot be one-time");
+  }
   return plan;
 }
 
@@ -87,11 +91,12 @@ function validateChargeBinding(charge, order) {
   }
   if (charge.metadata?.order_id !== order.id
     || charge.metadata?.plan_code !== order.plan_code
-    || charge.metadata?.kind !== order.order_kind) {
+    || charge.metadata?.kind !== order.order_kind
+    || charge.metadata?.payment_mode !== order.payment_mode) {
     throw new Error("Tap charge metadata mismatch");
   }
   if (order.order_kind === "initial" && charge.metadata?.terms_version !== order.terms_version) {
-    throw new Error("Tap recurring terms version mismatch");
+    throw new Error("Tap purchase terms version mismatch");
   }
   return plan;
 }
@@ -178,8 +183,26 @@ async function reversePaidOrder(order, chargeId, status) {
 }
 
 async function activateInitial(charge, order, plan) {
-  if (charge.customer_initiated !== true || charge.save_card !== true || charge.threeDSecure !== true) {
+  const oneTime = order.payment_mode === "one_time";
+  if (charge.customer_initiated !== true || charge.save_card !== !oneTime || charge.threeDSecure !== true) {
     throw new Error("Tap initial charge mode mismatch");
+  }
+  const paidAt = chargeCapturedAt(charge);
+  const periodStart = paidAt;
+  const periodEnd = addDays(periodStart, plan.durationDays);
+  if (oneTime) {
+    const { data, error } = await getSupabaseAdmin().rpc("activate_tap_initial_payment", {
+      p_order_id: order.id,
+      p_charge_id: charge.id,
+      p_customer_id: null,
+      p_card_id: null,
+      p_agreement_id: null,
+      p_paid_at: paidAt,
+      p_period_start: periodStart,
+      p_period_end: periodEnd,
+    });
+    if (error) throw error;
+    return data;
   }
   const customerId = typeof charge.customer?.id === "string" && charge.customer.id.startsWith("cus_")
     ? charge.customer.id : null;
@@ -202,9 +225,6 @@ async function activateInitial(charge, order, plan) {
     throw new Error("Tap agreement customer mismatch");
   }
 
-  const paidAt = chargeCapturedAt(charge);
-  const periodStart = paidAt;
-  const periodEnd = addDays(periodStart, plan.durationDays);
   const { data, error } = await getSupabaseAdmin().rpc("activate_tap_initial_payment", {
     p_order_id: order.id,
     p_charge_id: charge.id,
@@ -372,3 +392,4 @@ export async function refreshProviderStateIfDue(userId) {
     .eq("user_id", userId);
   if (checkedError) throw checkedError;
 }
+

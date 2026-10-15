@@ -5,7 +5,7 @@ export const PLANS = Object.freeze({
     amount: 1900,
     currency: "SAR",
     durationDays: 30,
-    description: "اشتراك فوس المتجدد كل 30 يومًا",
+    description: "وصول فوس لمدة 30 يومًا - دفعة واحدة",
   }),
   access_90_days: Object.freeze({
     code: "access_90_days",
@@ -13,14 +13,15 @@ export const PLANS = Object.freeze({
     amount: 3900,
     currency: "SAR",
     durationDays: 90,
-    description: "اشتراك فوس المتجدد كل 90 يومًا",
+    description: "وصول فوس لمدة 90 يومًا - دفعة واحدة",
   }),
 });
 
-// Increment this value whenever the recurring-payment wording changes. The
-// checkout endpoint requires the browser to send this exact version and stores
-// it with the order as evidence of the consent presented to the customer.
-export const RECURRING_TERMS_VERSION = "2026-09-26";
+// Increment this value whenever the purchase wording changes. The checkout
+// endpoint requires the browser to send this exact version and stores it with
+// the order as evidence of the terms presented to the customer.
+export const PURCHASE_TERMS_VERSION = "2026-10-15";
+export const CHECKOUT_PAYMENT_MODE = "one_time";
 export const RENEWAL_GRACE_HOURS = 48;
 
 export function getPlan(planCode) {
@@ -115,3 +116,4 @@ export function getTelegramCommunityUrl() {
   }
   return url.href;
 }
+
